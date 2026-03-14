@@ -51,6 +51,30 @@ export async function screenshot(
   return extractImage(content);
 }
 
+export async function evaluate(client: Client, fn: string, selector?: string): Promise<string> {
+  const args: Record<string, unknown> = { function: fn };
+  if (selector) args.selector = selector;
+  const content = await callTool(client, 'browser_evaluate', args);
+  return extractText(content);
+}
+
+export async function pressKey(client: Client, key: string): Promise<string> {
+  const content = await callTool(client, 'browser_press_key', { key });
+  return extractText(content);
+}
+
+export async function click(client: Client, ref: string, element?: string): Promise<string> {
+  const args: Record<string, unknown> = { ref };
+  if (element) args.element = element;
+  const content = await callTool(client, 'browser_click', args);
+  return extractText(content);
+}
+
+export async function waitFor(client: Client, options: { text?: string; time?: number }): Promise<string> {
+  const content = await callTool(client, 'browser_wait_for', options);
+  return extractText(content);
+}
+
 export async function closeBrowser(client: Client): Promise<void> {
   await callTool(client, 'browser_close');
 }
