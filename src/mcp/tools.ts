@@ -27,3 +27,7 @@ export async function navigate(client: Client, url: string): Promise<string> {
   const content = await callTool(client, 'browser_navigate', { url });
   return extractText(content);
 }
+
+export async function closeBrowser(client: Client): Promise<void> {
+  await callTool(client, 'browser_close');
+}
