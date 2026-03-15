@@ -6,5 +6,7 @@ import type { AxeResults } from 'axe-core';
 type AnyPage = PwTestPage | PwCorePage;
 
 export async function runAxe(page: AnyPage): Promise<AxeResults> {
-  return new AxeBuilder({ page: page as PwCorePage }).analyze();
+  return new AxeBuilder({ page: page as PwCorePage })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+    .analyze();
 }
