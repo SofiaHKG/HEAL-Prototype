@@ -31,6 +31,21 @@ export async function runAxe(page: AnyPage): Promise<AxeResults> {
     .analyze();
 }
 
+// Extract axe findings relevant to specific SC from AxeResults object
+export function getAxeFindingsForSC(results: AxeResults, sc: string): AxeNodeFinding[] {
+  const ruleIds = SC_RULE_MAP[sc] ?? [];
+  if (ruleIds.length === 0) return [];
+
+  const findings: AxeNodeFinding[] = [];
+
+  for (const ruleId of ruleIds) {
+    extractFromResults(results.violations, ruleId, 'fail', findings);
+    extractFromResults(results.incomplete, ruleId, 'incomplete', findings);
+  }
+
+  return findings; // Returns one AxeNodeFinding per affected element per rule
+}
+
 function extractFromResults(
   results: Result[],
   ruleId: string,
