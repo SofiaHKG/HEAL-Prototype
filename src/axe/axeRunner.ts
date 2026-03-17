@@ -28,6 +28,7 @@ export interface AxeNodeFinding {
 export async function runAxe(page: AnyPage): Promise<AxeResults> {
   return new AxeBuilder({ page: page as PwCorePage })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+    .options({ rules: { 'target-size': { enabled: true } } })
     .analyze();
 }
 
