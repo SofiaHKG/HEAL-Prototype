@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc",
     "smoke": "ts-node --project tsconfig.json src/mcp/smokeTest.ts",
+    "test:axe": "ts-node --project tsconfig.json src/axe/axeTest.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
