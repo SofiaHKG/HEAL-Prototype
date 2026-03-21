@@ -4,6 +4,7 @@
 // This is where the MCP backend calls addSection('Ran Playwright code', this._code, 'js') 
 // to assemble the tool response
 
+// Extract and JSON-parse the return value from a browser_evaluate response
 export function parseEvalJson<T>(raw: string): T {
   const match = raw.match(
     /###\s*Result\s*[\r\n]+([\s\S]*?)[\r\n]+###\s*Ran Playwright code/
@@ -23,5 +24,13 @@ export function parseEvalJson<T>(raw: string): T {
     }
   }
 
-  return JSON.parse(raw.trim()) as T;
+  // Fallback: try to parse the whole raw string (older format)
+  try {
+    return JSON.parse(raw.trim()) as T;
+  } catch {
+    throw new Error(
+      'parseEvalJson: no ### Result block found and raw string is not valid JSON.\n' +
+        'Raw (first 300 chars): ' + raw.slice(0, 300)
+    );
+  }
 }
