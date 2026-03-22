@@ -1,3 +1,11 @@
+// Shared minimal reference to the DOM element under assessment
+export interface ElementRef {
+  selector: string;
+  outerHTML: string;
+  ariaRole?: string | undefined;
+  computedName?: string | undefined;
+}
+
 // Evidence shape for SC 1.1.1 (Non-text Content)
 export interface SC111Evidence {
   altText: string | null;
