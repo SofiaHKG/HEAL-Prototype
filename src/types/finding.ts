@@ -23,3 +23,23 @@ export interface SC312Evidence {
   textContent: string;
   elementTag: string;
 }
+
+// One step in the keyboard focus traversal sequence (SC 2.1.2)
+export interface FocusStep {
+  tabIndex: number;
+  selector: string;
+  tagName: string;
+  id: string | null;
+}
+
+// Evidence for SC 2.1.2 (No Keyboard Trap)
+export interface SC212Evidence {
+  focusSequence: FocusStep[];
+  trapDetected: boolean;
+  stuckSelector: string | null;
+  escapeBehavior: 'moved' | 'stuck' | 'not_tested';
+  shiftTabBehavior: 'moved' | 'stuck' | 'not_tested';
+  totalTabsPressed: number;
+  uniqueSelectorsCount: number;
+  totalPageFocusable: number;
+}
