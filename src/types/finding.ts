@@ -1,3 +1,4 @@
+// Evidence shape for SC 1.1.1 (Non-text Content)
 export interface SC111Evidence {
   altText: string | null;
   ariaLabel: string | null;
@@ -6,4 +7,12 @@ export interface SC111Evidence {
   surroundingText: string;
   screenshotBase64: string | null;
   screenshotMimeType: string | null;
+}
+
+// Evidence shape for SC 2.4.4 (Link Purpose (In Context))
+export interface SC244Evidence {
+  accessibleName: string;
+  linkHref: string;
+  surroundingContext: string;
+  ariaSubtree: string;
 }
