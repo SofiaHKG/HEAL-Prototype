@@ -6,6 +6,14 @@ export interface ElementRef {
   computedName?: string | undefined;
 }
 
+// One Evidence bundle = one assessable instance of a WCAG SC
+// to be consumed by the LLM assessor
+export interface EvidenceBundle {
+  sc: string;
+  element: ElementRef;
+  evidence: Record<string, unknown>;
+}
+
 // Evidence shape for SC 1.1.1 (Non-text Content)
 export interface SC111Evidence {
   altText: string | null;
