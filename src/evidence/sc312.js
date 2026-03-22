@@ -2,8 +2,9 @@
 // Empty text-content elements are skipped (no content to assess)
 
 const result = [...document.querySelectorAll('[lang]')]
+  .filter(el => el.tagName.toLowerCase() !== 'html')
   .map(el => ({
     declaredLang: el.getAttribute('lang'),
     textContent: el.textContent,
-    elementTag: el.tagName,
+    elementTag: el.tagName.toLowerCase(),
   }));
