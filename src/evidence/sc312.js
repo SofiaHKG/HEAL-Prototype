@@ -5,11 +5,20 @@ const result = [...document.querySelectorAll('[lang]')]
   .filter(el => {
     if (el.tagName.toLowerCase() === 'html') return false;
 
-    const text = (el.textContent || '').trim();
+    const text = (el.textContent || '')
+      .replace(/\s+/g, ' ')
+      .trim();
+
     return text.length > 0;
   })
-  .map(el => ({
-    declaredLang: el.getAttribute('lang'),
-    textContent: el.textContent,
-    elementTag: el.tagName.toLowerCase(),
-  }));
+  .map(el => {
+    const text = (el.textContent || '')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    return {
+      declaredLang: el.getAttribute('lang'),
+      textContent: text,
+      elementTag: el.tagName.toLowerCase(),
+    };
+  });
