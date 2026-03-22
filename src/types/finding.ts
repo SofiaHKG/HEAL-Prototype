@@ -16,3 +16,10 @@ export interface SC244Evidence {
   surroundingContext: string;
   ariaSubtree: string;
 }
+
+// Evidence shape for SC 3.1.2 (Language of Parts)
+export interface SC312Evidence {
+  declaredLang: string;
+  textContent: string;
+  elementTag: string;
+}
