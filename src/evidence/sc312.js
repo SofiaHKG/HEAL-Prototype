@@ -26,9 +26,10 @@ const result = [...document.querySelectorAll('[lang]')]
 
     return {
       declaredLang: el.getAttribute('lang') || '',
-      textContent: text,
+      textContent: text.slice(0, 500),
       elementTag: el.tagName.toLowerCase(),
       selector: getSelector(el),
+      outerHTML: el.outerHTML.slice(0, 300)
     };
   })
   .filter(Boolean);
