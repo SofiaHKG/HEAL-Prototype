@@ -14,6 +14,14 @@
 document.querySelectorAll('[lang]')
 */
 
+interface SC312Data {
+  selector: string;
+  outerHTML: string;
+  declaredLang: string;
+  textContent: string;
+  elementTag: string;
+}
+
 /**
  * Collect every [lang] annotated element except the root <html>.
  * Empty text-content elements are skipped (no content to assess)
