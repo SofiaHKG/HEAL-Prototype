@@ -1,18 +1,7 @@
-// What elements are relevant for SC 3.1.2 (Language of Parts)?
-// - Elements with a [lang] attribute (declared language)
-// - Their text content (language used in the content)
-// - The element tag (to understand the context of the language declaration)
-// - Exclude <html lang="..."> element as it is covered by SC 3.1.1 (Language of Page)
-
-// Example:
-/*
-<div lang="fr">Bonjour</div>
-*/
-
-// Dom query for DevTools console to collect relevant info for SC 3.1.2
-/*
-document.querySelectorAll('[lang]')
-*/
+import type { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { evaluate } from '../mcp/tools';
+import type { EvidenceBundle, SC312Evidence } from '../types/finding';
+import { parseEvalJson } from '../mcp/evalUtils';
 
 interface SC312Data {
   selector: string;
@@ -63,3 +52,31 @@ const COLLECT_SC312_JS = `() => {
 
   return results;
 }`;
+
+/**
+ * Collect SC 3.1.2 evidence for all language-annotated elements on the page
+ */
+export async function collectSC312Evidence(client: Client): Promise<EvidenceBundle[]> {
+  const raw = await evaluate(client, COLLECT_SC312_JS);
+  const elements = parseEvalJson<SC312Data[]>(raw);
+  const bundles: EvidenceBundle[] = [];
+
+  for (const el of elements) {
+    const evidence: SC312Evidence = {
+      declaredLang: el.declaredLang,
+      textContent: el.textContent,
+      elementTag: el.elementTag,
+    };
+
+    bundles.push({
+      sc: '3.1.2',
+      element: {
+        selector: el.selector,
+        outerHTML: el.outerHTML,
+      },
+      evidence: evidence as unknown as Record<string, unknown>,
+    });
+  }
+
+  return bundles;
+}
