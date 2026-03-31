@@ -1,3 +1,6 @@
+import type { EvidenceBundle, SC312Evidence } from '../../types/finding';
+
+// System prompt
 export const SC312_SYSTEM_PROMPT =
 
 `You are an expert WCAG 2.2 accessibility auditor specialising in SC 3.1.2 Language of Parts.
@@ -13,3 +16,17 @@ Rules for your verdict:
 
 Respond with ONLY a JSON object in this exact shape - no prose, no markdown fences:
 {"verdict":"pass"|"fail"|"needs_review","rationale":"<one or two sentences>","uncertainty":"low"|"medium"|"high"}`;
+
+// Build the user message from one SC 3.1.2 evidence bundle
+export function buildSC312UserMessage(bundle: EvidenceBundle): string {
+  const ev = bundle.evidence as unknown as SC312Evidence;
+
+  return (
+    'Element: <' + ev.elementTag + '>\n' +
+    'CSS selector: ' + bundle.element.selector + '\n' +
+    'Declared lang attribute: "' + ev.declaredLang + '"\n' +
+    'Text content: ' + JSON.stringify(ev.textContent) + '\n' +
+    '\n' +
+    'Assess whether the declared language matches the text content and return your JSON verdict.'
+  );
+}
