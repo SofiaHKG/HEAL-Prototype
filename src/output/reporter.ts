@@ -1,3 +1,5 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import type { HealReport, HealFinding } from './schema';
 import type { SC312Result } from '../orchestrator/sc312orchstrator';
 
@@ -27,4 +29,15 @@ export function buildReport(url: string, sc312Results: SC312Result[]): HealRepor
     findings,
     summary,
   };
+}
+
+// Write a HealReport as formattet JSON
+export async function writeReport(report: HealReport, outPath: string): Promise<void> {
+  const resolved = path.resolve(outPath);
+  const dir = path.dirname(resolved);
+
+  await fs.promises.mkdir(dir, { recursive: true });
+  await fs.promises.writeFile(resolved, JSON.stringify(report, null, 2), 'utf-8');
+
+  console.log('Report written to: ' + resolved);
 }
