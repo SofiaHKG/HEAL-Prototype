@@ -31,7 +31,7 @@ export function buildReport(url: string, sc312Results: SC312Result[]): HealRepor
   };
 }
 
-// Write a HealReport as formattet JSON
+// Write a HealReport as formatted JSON
 export async function writeReport(report: HealReport, outPath: string): Promise<void> {
   const resolved = path.resolve(outPath);
   const dir = path.dirname(resolved);
@@ -40,4 +40,32 @@ export async function writeReport(report: HealReport, outPath: string): Promise<
   await fs.promises.writeFile(resolved, JSON.stringify(report, null, 2), 'utf-8');
 
   console.log('Report written to: ' + resolved);
+}
+
+// Print report summary to stdout
+export function printSummary(report: HealReport): void {
+  console.log('\n=== HEAL Report ===');
+  console.log('URL:       ' + report.url);
+  console.log('Timestamp: ' + report.timestamp);
+  console.log('Total:     ' + report.summary.total);
+  console.log('Pass:      ' + report.summary.pass);
+  console.log('Fail:      ' + report.summary.fail);
+  console.log('Review:    ' + report.summary.needs_review);
+
+  if (report.findings.length === 0) {
+    console.log('\nNo language-annotated elements found.');
+    return;
+  }
+
+  console.log('\nFindings:');
+  for (const f of report.findings) {
+    const flag = f.verdict === 'pass' ? '[pass]' : f.verdict === 'fail' ? '[fail]' : '[needs review]';
+    console.log(
+      '  [' + flag + '] SC ' + f.sc +
+      ' | ' + f.verdict.toUpperCase() +
+      ' (' + f.uncertainty + ')' +
+      '\n      ' + f.selector +
+      '\n      ' + f.rationale
+    );
+  }
 }
