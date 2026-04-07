@@ -1,4 +1,4 @@
-interface ImageElementData {
+interface SC111Data {
   selector: string;
   outerHTML: string;
   altText: string | null;
