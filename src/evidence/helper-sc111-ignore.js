@@ -3,15 +3,33 @@
 // - Elements with role="img" (non-img tags)
 // - <input type="image"> elements
 
+function getSelector(el) {
+  var tag = el.tagName.toLowerCase();
+
+  if (el.id) return tag + '#' + el.id;
+
+  var className =
+    typeof el.className === 'string' ? el.className.trim() : '';
+
+  var firstClass = className
+    ? className.split(/\\s+/)[0]
+    : null;
+
+  return firstClass ? tag + '.' + firstClass : tag;
+}
+
+function buildEntry(el) {
+  return {
+    selector: getSelector(el),
+    outerHTML: el.outerHTML.slice(0, 200),
+    altText: el.getAttribute('alt')
+  };
+}
+
 var results = [];
 
-var images = document.querySelectorAll('img');
-
-images.forEach(function(el) {
-  results.push({
-    tag: el.tagName.toLowerCase(),
-    alt: el.getAttribute('alt')
-  });
+document.querySelectorAll('img').forEach(function(el) {
+  results.push(buildEntry(el));
 });
 
 return results;
