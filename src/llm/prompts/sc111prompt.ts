@@ -1,3 +1,6 @@
+import type { AssessParams } from '../claudeClient';
+import type { EvidenceBundle, SC111Evidence } from '../../types/finding';
+
 export const SC111_SYSTEM_PROMPT = `You are an expert WCAG 2.2 accessibility auditor specialising in SC 1.1.1 Non-text Content.
 
 Your task is to assess whether a non-text element (image, icon, input image) has a text alternative that serves an equivalent purpose.
@@ -22,3 +25,53 @@ When no screenshot is available, base your judgement on the accessible name, rol
 
 Respond with ONLY a JSON object in this exact shape — no prose, no markdown fences:
 {"verdict":"pass"|"fail"|"needs_review","rationale":"<one or two sentences>","uncertainty":"low"|"medium"|"high"}`;
+
+
+// Build full AssessParams for one SC 1.1.1 evidence bundle
+// including screenshot as multimodal image block if available
+export function buildSC111AssessParams(bundle: EvidenceBundle): AssessParams {
+  const ev = bundle.evidence as unknown as SC111Evidence;
+
+  const accessibleName =
+    ev.ariaLabelledbyText ?? ev.ariaLabel ?? ev.altText ?? null;
+
+  const isDecorative =
+    ev.altText === '' ||
+    ev.role === 'presentation' ||
+    ev.role === 'none';
+
+  const userMessage =
+    'Element role: ' + ev.role + '\n' +
+    'Element HTML: ' + bundle.element.outerHTML + '\n' +
+    'alt attribute: ' + (ev.altText !== null ? JSON.stringify(ev.altText) : '(not present)') + '\n' +
+    'aria-label: ' + (ev.ariaLabel !== null ? JSON.stringify(ev.ariaLabel) : '(not present)') + '\n' +
+    'aria-labelledby resolved text: ' + (ev.ariaLabelledbyText !== null ? JSON.stringify(ev.ariaLabelledbyText) : '(not present)') + '\n' +
+    'Computed accessible name: ' + (accessibleName !== null ? JSON.stringify(accessibleName) : '(none)') + '\n' +
+    'Marked as decorative: ' + isDecorative + '\n' +
+    'Surrounding context text: ' + JSON.stringify(ev.surroundingText) + '\n' +
+    (ev.screenshotBase64 !== null
+      ? 'A screenshot of the element is attached.'
+      : 'No screenshot available (element not visible or off-screen).') + '\n' +
+    '\n' +
+    'Assess whether this element meets SC 1.1.1 and return your JSON verdict.';
+
+  const params: AssessParams = {
+    systemPrompt: SC111_SYSTEM_PROMPT,
+    userMessage,
+  };
+
+  if (ev.screenshotBase64 !== null && ev.screenshotMimeType !== null) {
+    params.imageBase64 = ev.screenshotBase64;
+    const mime = ev.screenshotMimeType;
+    if (
+      mime === 'image/png' ||
+      mime === 'image/jpeg' ||
+      mime === 'image/gif' ||
+      mime === 'image/webp'
+    ) {
+      params.imageMimeType = mime;
+    }
+  }
+
+  return params;
+}
