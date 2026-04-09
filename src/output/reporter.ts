@@ -1,11 +1,18 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import type { HealReport, HealFinding } from './schema';
-import type { SC312Result } from '../orchestrator/sc312orchstrator';
+import type { EvidenceBundle } from '../types/finding';
+import type { Assessment } from '../llm/parser';
 
-// Builder to convert SC312Result[] into a HealReport
-export function buildReport(url: string, sc312Results: SC312Result[]): HealReport {
-  const findings: HealFinding[] = sc312Results.map((r) => ({
+// Shared result shape - SC111Result, SC312Result etc. all satisfy this
+export interface SCResult {
+  bundle: EvidenceBundle;
+  assessment: Assessment;
+}
+
+// Builder to convert any SCResult[] into a HealReport
+export function buildReport(url: string, results: SCResult[]): HealReport {
+  const findings: HealFinding[] = results.map((r) => ({
     sc: r.bundle.sc,
     selector: r.bundle.element.selector,
     outerHTML: r.bundle.element.outerHTML,
@@ -53,7 +60,7 @@ export function printSummary(report: HealReport): void {
   console.log('Review:    ' + report.summary.needs_review);
 
   if (report.findings.length === 0) {
-    console.log('\nNo language-annotated elements found.');
+    console.log('\nNo findings.');
     return;
   }
 
