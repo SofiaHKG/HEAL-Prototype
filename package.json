@@ -7,6 +7,7 @@
     "build": "tsc",
     "smoke": "ts-node --project tsconfig.json src/mcp/smokeTest.ts",
     "test:axe": "ts-node --project tsconfig.json src/axe/axeTest.ts",
+    "eval:sc111": "ts-node --project tsconfig.json src/eval/runSC111.ts",
     "eval:sc312": "ts-node --project tsconfig.json src/eval/runSC312.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
