@@ -1,3 +1,6 @@
+// Just a helper file that is not directly used in the main codebase
+// but serves as a reference for how to collect the evidence for SC 1.1.1
+
 // What elements are relevant for SC 1.1.1 (Non-text Content)?
 // - <img> elements
 // - Elements with role="img" (non-img tags)
