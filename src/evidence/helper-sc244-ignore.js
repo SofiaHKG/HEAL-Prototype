@@ -74,3 +74,14 @@ function getSelector(el) {
 }
 
 var results = [];
+
+document.querySelectorAll('a[href], area[href]').forEach(function(el) {
+  results.push({
+    selector: getSelector(el),
+    outerHTML: el.outerHTML.slice(0, 500),
+    accessibleName: getAccessibleName(el),
+    linkHref: el.getAttribute('href') || '',
+    surroundingContext: getSurroundingContext(el),
+    role: el.getAttribute('role') || el.tagName.toLowerCase()
+  });
+});
