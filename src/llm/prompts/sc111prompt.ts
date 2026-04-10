@@ -1,7 +1,8 @@
 import type { AssessParams } from '../claudeClient';
 import type { EvidenceBundle, SC111Evidence } from '../../types/finding';
 
-export const SC111_SYSTEM_PROMPT = `You are an expert WCAG 2.2 accessibility auditor specialising in SC 1.1.1 Non-text Content.
+export const SC111_SYSTEM_PROMPT = 
+`You are an expert WCAG 2.2 accessibility auditor specialising in SC 1.1.1 Non-text Content.
 
 Your task is to assess whether a non-text element (image, icon, input image) has a text alternative that serves an equivalent purpose.
 

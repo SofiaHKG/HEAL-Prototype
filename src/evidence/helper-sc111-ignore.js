@@ -3,6 +3,12 @@
 // - Elements with role="img" (non-img tags)
 // - <input type="image"> elements
 
+
+// 1. Query all <img>, role="img", <input type="image"> via evaluate()
+// 2. For each: extract outerHTML, alt attribute, aria-label, aria-labelledby resolved text
+// 3. For each: take element-level screenshot (clip to bounding box)
+// 4. Bundle: { altText, ariaName, role, screenshotBase64, surroundingText }
+
 function resolveAriaLabelledby(el) {
   var ids = el.getAttribute('aria-labelledby');
   if (!ids) return null;
