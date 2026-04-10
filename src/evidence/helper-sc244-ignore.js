@@ -39,3 +39,38 @@ function getAccessibleName(el) {
   var alt = (el.getAttribute('alt') || '').trim();
   return alt;
 }
+
+function getSurroundingContext(el) {
+  var parent =
+    el.closest('p') ||
+    el.closest('li') ||
+    el.closest('td') ||
+    el.closest('nav') ||
+    el.closest('header') ||
+    el.closest('footer') ||
+    el.closest('section') ||
+    el.closest('article') ||
+    el.parentElement;
+
+  if (!parent || parent === el) return '';
+
+  return (parent.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 400);
+}
+
+function getSelector(el) {
+  var tag = el.tagName.toLowerCase();
+
+  if (el.id) return tag + '#' + el.id;
+
+  var href = el.getAttribute('href');
+  if (href) {
+    return tag + '[href="' + href.slice(0, 60).replace(/"/g, "'") + '"]';
+  }
+
+  var rawCls = typeof el.className === 'string' ? el.className.trim() : '';
+  var cls = rawCls.length > 0 ? rawCls.split(' ')[0] : null;
+
+  return cls ? (tag + '.' + cls) : tag;
+}
+
+var results = [];
