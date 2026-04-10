@@ -15,7 +15,8 @@ function resolveAriaLabelledby(el) {
   var ids = el.getAttribute('aria-labelledby');
   if (!ids) return null;
 
-  var parts = ids.split(' ')
+  var parts = ids
+    .split(/\s+/)
     .map(function(id) {
       var ref = document.getElementById(id);
       return ref ? normalizeText(ref.textContent) : '';
@@ -40,7 +41,8 @@ function getAccessibleName(el) {
   var title = normalizeText(el.getAttribute('title'));
   if (title) return title;
 
-  return normalizeText(el.getAttribute('alt'));
+  var alt = normalizeText(el.getAttribute('alt'));
+  return alt;
 }
 
 function getSurroundingContext(el) {
@@ -57,13 +59,15 @@ function getSurroundingContext(el) {
 
   if (!parent || parent === el) return '';
 
-  return normalizeText(parent.textContent).slice(0, 400);
+  var text = normalizeText(parent.textContent);
+  return text.slice(0, 400);
 }
 
 function getSelector(el) {
   var tag = el.tagName.toLowerCase();
 
-  if (el.id) return tag + '#' + el.id;
+  var id = el.id;
+  if (id) return tag + '#' + id;
 
   var href = el.getAttribute('href');
   if (href) {
@@ -71,10 +75,16 @@ function getSelector(el) {
     return tag + '[href="' + shortHref + '"]';
   }
 
-  var rawCls = typeof el.className === 'string' ? el.className.trim() : '';
-  var cls = rawCls ? rawCls.split(' ')[0] : null;
+  var className =
+    typeof el.className === 'string' ? el.className.trim() : '';
 
-  return cls ? (tag + '.' + cls) : tag;
+  var firstClass = className
+    ? className.split(/\s+/)[0]
+    : null;
+
+  if (firstClass) return tag + '.' + firstClass;
+
+  return tag;
 }
 
 var results = [];
