@@ -1,3 +1,8 @@
+import type { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { evaluate, snapshot } from '../mcp/tools';
+import type { EvidenceBundle, SC244Evidence } from '../types/finding';
+import { parseEvalJson } from '../mcp/evalUtils';
+
 interface SC244Data {
   selector: string;
   outerHTML: string;
@@ -107,3 +112,38 @@ const COLLECT_SC244_JS = `() => {
 
   return results;
 }`;
+
+/**
+ * Collect SC 2.4.4 evidence for all link elements on the currently loaded page
+ */
+export async function collectSC244Evidence(client: Client): Promise<EvidenceBundle[]> {
+  const [raw, ariaTree] = await Promise.all([
+    evaluate(client, COLLECT_SC244_JS),
+    snapshot(client),
+  ]);
+
+  const links = parseEvalJson<SC244Data[]>(raw);
+  const bundles: EvidenceBundle[] = [];
+
+  for (const link of links) {
+    const evidence: SC244Evidence = {
+      accessibleName: link.accessibleName,
+      linkHref: link.linkHref,
+      surroundingContext: link.surroundingContext,
+      ariaSubtree: ariaTree,
+    };
+
+    bundles.push({
+      sc: '2.4.4',
+      element: {
+        selector: link.selector,
+        outerHTML: link.outerHTML,
+        ariaRole: link.role,
+        computedName: link.accessibleName || undefined,
+      },
+      evidence: evidence as unknown as Record<string, unknown>,
+    });
+  }
+
+  return bundles;
+}
