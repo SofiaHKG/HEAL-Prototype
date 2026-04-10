@@ -1,3 +1,5 @@
+import type { EvidenceBundle, SC244Evidence } from '../../types/finding';
+
 // System prompt
 export const SC244_SYSTEM_PROMPT =
 `You are an expert WCAG 2.2 accessibility auditor specialising in SC 2.4.4 Link Purpose (In Context).
@@ -23,3 +25,20 @@ When reasoning, consider:
 
 Respond with ONLY a JSON object in this exact shape - no prose, no markdown fences:
 {"verdict":"pass"|"fail"|"needs_review","rationale":"<one or two sentences>","uncertainty":"low"|"medium"|"high"}`;
+
+// Build the user message from one SC 2.4.4 evidence bundle
+export function buildSC244UserMessage(bundle: EvidenceBundle): string {
+  const ev = bundle.evidence as unknown as SC244Evidence;
+
+  return (
+    'Element role: ' + (bundle.element.ariaRole ?? '(unknown)') + '\n' +
+    'CSS selector: ' + bundle.element.selector + '\n' +
+    'Outer HTML: ' + bundle.element.outerHTML + '\n' +
+    'Accessible name: ' + JSON.stringify(ev.accessibleName) + '\n' +
+    'Href: ' + JSON.stringify(ev.linkHref) + '\n' +
+    'Surrounding context: ' + JSON.stringify(ev.surroundingContext) + '\n' +
+    'ARIA snapshot excerpt: ' + JSON.stringify(ev.ariaSubtree.slice(0, 2500)) + '\n' +
+    '\n' +
+    'Assess whether this link meets SC 2.4.4 and return your JSON verdict.'
+  );
+}
