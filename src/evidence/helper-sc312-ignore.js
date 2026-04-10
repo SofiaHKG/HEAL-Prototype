@@ -1,3 +1,6 @@
+// Just a helper file that is not directly used in the main codebase
+// but serves as a reference for how to collect the evidence for SC 3.1.2
+
 // What elements are relevant for SC 3.1.2 (Language of Parts)?
 // - Elements with a [lang] attribute (declared language)
 // - Their text content (language used in the content)
