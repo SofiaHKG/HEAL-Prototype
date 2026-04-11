@@ -1,5 +1,6 @@
 import type { EvidenceBundle, SC212Evidence } from '../../types/finding';
 
+// System prompt
 export const SC212_SYSTEM_PROMPT =
 `You are an expert WCAG 2.2 accessibility auditor specialising in SC 2.1.2 No Keyboard Trap.
 
@@ -26,9 +27,11 @@ Respond with ONLY a JSON object in this exact shape - no prose, no markdown fenc
 {"verdict":"pass"|"fail"|"needs_review","rationale":"<one or two sentences>","uncertainty":"low"|"medium"|"high"}`;
 
 
+// Build the user message from one SC 2.1.2 evidence bundle
 export function buildSC212UserMessage(bundle: EvidenceBundle): string {
   const ev = bundle.evidence as unknown as SC212Evidence;
 
+  // Summarise the focus sequence (first and last 5 steps to stay concise)
   let sequenceSummary: string;
   if (ev.focusSequence.length <= 10) {
     sequenceSummary = ev.focusSequence
