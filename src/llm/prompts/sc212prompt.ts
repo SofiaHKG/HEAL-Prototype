@@ -1,3 +1,5 @@
+import type { EvidenceBundle, SC212Evidence } from '../../types/finding';
+
 export const SC212_SYSTEM_PROMPT =
 `You are an expert WCAG 2.2 accessibility auditor specialising in SC 2.1.2 No Keyboard Trap.
 
@@ -22,3 +24,34 @@ Consider:
 
 Respond with ONLY a JSON object in this exact shape - no prose, no markdown fences:
 {"verdict":"pass"|"fail"|"needs_review","rationale":"<one or two sentences>","uncertainty":"low"|"medium"|"high"}`;
+
+
+export function buildSC212UserMessage(bundle: EvidenceBundle): string {
+  const ev = bundle.evidence as unknown as SC212Evidence;
+
+  let sequenceSummary: string;
+  if (ev.focusSequence.length <= 10) {
+    sequenceSummary = ev.focusSequence
+      .map(s => `  ${s.tabIndex}. ${s.selector}`)
+      .join('\n');
+  } else {
+    const head = ev.focusSequence.slice(0, 5);
+    const tail = ev.focusSequence.slice(-5);
+    sequenceSummary =
+      head.map(s => `  ${s.tabIndex}. ${s.selector}`).join('\n') +
+      '\n  ... (' + (ev.focusSequence.length - 10) + ' steps omitted) ...\n' +
+      tail.map(s => `  ${s.tabIndex}. ${s.selector}`).join('\n');
+  }
+
+  return (
+    'Stuck element selector: ' + (ev.stuckSelector ?? '(none)') + '\n' +
+    'Trap detected: ' + String(ev.trapDetected) + '\n' +
+    'Escape behaviour: ' + ev.escapeBehavior + '\n' +
+    'Shift+Tab behaviour: ' + ev.shiftTabBehavior + '\n' +
+    'Total Tab presses: ' + ev.totalTabsPressed + '\n' +
+    'Unique selectors visited: ' + ev.uniqueSelectorsCount + '\n' +
+    'Total focusable elements on page: ' + ev.totalPageFocusable + '\n' +
+    '\nFocus sequence:\n' + sequenceSummary + '\n' +
+    '\nAssess whether this page has a keyboard trap per SC 2.1.2 and return your JSON verdict.'
+  );
+}
