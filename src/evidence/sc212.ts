@@ -6,7 +6,16 @@ export async function collectSC212Evidence(client: Client): Promise<EvidenceBund
     {
       sc: '2.1.2',
       element: { selector: 'body', outerHTML: '' },
-      evidence: {},
+      evidence: {
+        focusSequence: [],
+        trapDetected: false,
+        stuckSelector: null,
+        escapeBehavior: 'not_tested',
+        shiftTabBehavior: 'not_tested',
+        totalTabsPressed: 0,
+        uniqueSelectorsCount: 0,
+        totalPageFocusable: 0,
+      },
     },
   ];
 }
