@@ -2,7 +2,6 @@ import type { EvidenceBundle, SC312Evidence } from '../../types/finding';
 
 // System prompt
 export const SC312_SYSTEM_PROMPT =
-
 `You are an expert WCAG 2.2 accessibility auditor specialising in SC 3.1.2 Language of Parts.
 
 Your task is to assess whether the declared [lang] attribute on an HTML element correctly matches the human language of the element's text content.
