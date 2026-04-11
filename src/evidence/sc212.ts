@@ -1,9 +1,12 @@
 import type { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { evaluate, pressKey } from '../mcp/tools';
-import type { EvidenceBundle, FocusStep } from '../types/finding';
+import type { EvidenceBundle, FocusStep, SC212Evidence } from '../types/finding';
 import { parseEvalJson } from '../mcp/evalUtils';
 
 const MAX_TABS = 50;
+const TRAP_THRESHOLD = 3;
+const CYCLE_UNIQUE_MAX = 3;
+const CYCLE_MIN_TABS = 15;
 
 const FOCUS_FIRST_FOCUSABLE_SC212_JS = `() => {
   var selector = [
@@ -82,13 +85,17 @@ export async function collectSC212Evidence(client: Client): Promise<EvidenceBund
 
   const focusSequence: FocusStep[] = [];
   const uniqueSelectors = new Set<string>();
+  let trapDetected = false;
+  let stuckSelector: string | null = null;
+  let consecutiveCount = 0;
+  let lastSelector = '';
 
   for (let i = 0; i < MAX_TABS; i++) {
     await pressKey(client, 'Tab');
     const raw = await evaluate(client, GET_ACTIVE_ELEMENT_SC212_JS);
     const info = parseEvalJson<ActiveElementInfo | null>(raw);
 
-    if (info === null) break; // focus fell off to body
+    if (info === null) break;
 
     focusSequence.push({
       tabIndex: i + 1,
@@ -97,22 +104,50 @@ export async function collectSC212Evidence(client: Client): Promise<EvidenceBund
       id: info.id,
     });
     uniqueSelectors.add(info.selector);
+
+    // Consecutive trap
+    if (info.selector === lastSelector) {
+      consecutiveCount++;
+      if (consecutiveCount >= TRAP_THRESHOLD) {
+        trapDetected = true;
+        stuckSelector = info.selector;
+        break;
+      }
+    } else {
+      consecutiveCount = 1;
+      lastSelector = info.selector;
+    }
+
+    // Cycle trap
+    if (
+      i + 1 >= CYCLE_MIN_TABS &&
+      uniqueSelectors.size <= CYCLE_UNIQUE_MAX &&
+      totalPageFocusable > uniqueSelectors.size
+    ) {
+      trapDetected = true;
+      stuckSelector = info.selector;
+      break;
+    }
   }
+
+  const evidence: SC212Evidence = {
+    focusSequence,
+    trapDetected,
+    stuckSelector,
+    escapeBehavior: 'not_tested',    // TODO: implement Escape key testing
+    shiftTabBehavior: 'not_tested',  // TODO: implement Shift+Tab testing
+    totalTabsPressed: focusSequence.length,
+    uniqueSelectorsCount: uniqueSelectors.size,
+    totalPageFocusable,
+  };
+
+  const elementSelector = stuckSelector ?? 'body';
 
   return [
     {
       sc: '2.1.2',
-      element: { selector: 'body', outerHTML: '' },
-      evidence: {
-        focusSequence,
-        trapDetected: false,
-        stuckSelector: null,
-        escapeBehavior: 'not_tested',
-        shiftTabBehavior: 'not_tested',
-        totalTabsPressed: focusSequence.length,
-        uniqueSelectorsCount: uniqueSelectors.size,
-        totalPageFocusable,
-      } as unknown as Record<string, unknown>,
+      element: { selector: elementSelector, outerHTML: '' },
+      evidence: evidence as unknown as Record<string, unknown>,
     },
   ];
 }
