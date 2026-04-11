@@ -1,6 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 
-const MODEL = 'claude-sonnet-4-6';  // via ANTHROPIC_API_KEY env var
+const MODEL = 'claude-haiku-4-5';  // via ANTHROPIC_API_KEY env var
 const MAX_TOKENS = 512; // JSON is small...
 const TEMPERATURE = 0;  // Deterministic, reproducible output
 
