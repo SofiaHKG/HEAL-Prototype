@@ -78,11 +78,14 @@ interface ActiveElementInfo {
 }
 
 export async function collectSC212Evidence(client: Client): Promise<EvidenceBundle[]> {
+  // Count total focusable elements
   const countRaw = await evaluate(client, GET_FOCUSABLE_COUNT_SC212_JS);
   const totalPageFocusable = parseEvalJson<number>(countRaw);
 
+  // Focus first element
   await evaluate(client, FOCUS_FIRST_FOCUSABLE_SC212_JS);
 
+  // Tab traversal
   const focusSequence: FocusStep[] = [];
   const uniqueSelectors = new Set<string>();
   let trapDetected = false;
@@ -92,20 +95,25 @@ export async function collectSC212Evidence(client: Client): Promise<EvidenceBund
 
   for (let i = 0; i < MAX_TABS; i++) {
     await pressKey(client, 'Tab');
+
     const raw = await evaluate(client, GET_ACTIVE_ELEMENT_SC212_JS);
     const info = parseEvalJson<ActiveElementInfo | null>(raw);
 
-    if (info === null) break;
+    if (info === null) {
+      // Focus returned to body/root (natural end of tab order)
+      break;
+    }
 
-    focusSequence.push({
+    const step: FocusStep = {
       tabIndex: i + 1,
       selector: info.selector,
       tagName: info.tagName,
       id: info.id,
-    });
+    };
+    focusSequence.push(step);
     uniqueSelectors.add(info.selector);
 
-    // Consecutive trap
+    // Consecutive trap detection
     if (info.selector === lastSelector) {
       consecutiveCount++;
       if (consecutiveCount >= TRAP_THRESHOLD) {
@@ -118,15 +126,41 @@ export async function collectSC212Evidence(client: Client): Promise<EvidenceBund
       lastSelector = info.selector;
     }
 
-    // Cycle trap
+    // Only check after enough Tab presses to rule out a naturally small page
     if (
       i + 1 >= CYCLE_MIN_TABS &&
       uniqueSelectors.size <= CYCLE_UNIQUE_MAX &&
       totalPageFocusable > uniqueSelectors.size
     ) {
       trapDetected = true;
+      // The "stuck" element in a cycle trap is the most recently seen one
       stuckSelector = info.selector;
       break;
+    }
+  }
+
+  // Escape / Shift+Tab testing
+  let escapeBehavior: SC212Evidence['escapeBehavior'] = 'not_tested';
+  let shiftTabBehavior: SC212Evidence['shiftTabBehavior'] = 'not_tested';
+
+  if (trapDetected && stuckSelector !== null) {
+    // Test Escape
+    await pressKey(client, 'Escape');
+    const afterEscapeRaw = await evaluate(client, GET_ACTIVE_ELEMENT_SC212_JS);
+    const afterEscape = parseEvalJson<ActiveElementInfo | null>(afterEscapeRaw);
+
+    if (afterEscape !== null && afterEscape.selector !== stuckSelector) {
+      escapeBehavior = 'moved';
+    } else {
+      escapeBehavior = 'stuck';
+
+      // Escape didn't help, test Shift+Tab
+      await pressKey(client, 'Shift+Tab');
+      const afterShiftRaw = await evaluate(client, GET_ACTIVE_ELEMENT_SC212_JS);
+      const afterShift = parseEvalJson<ActiveElementInfo | null>(afterShiftRaw);
+
+      shiftTabBehavior =
+        afterShift !== null && afterShift.selector !== stuckSelector ? 'moved' : 'stuck';
     }
   }
 
@@ -134,8 +168,8 @@ export async function collectSC212Evidence(client: Client): Promise<EvidenceBund
     focusSequence,
     trapDetected,
     stuckSelector,
-    escapeBehavior: 'not_tested',    // TODO: implement Escape key testing
-    shiftTabBehavior: 'not_tested',  // TODO: implement Shift+Tab testing
+    escapeBehavior,
+    shiftTabBehavior,
     totalTabsPressed: focusSequence.length,
     uniqueSelectorsCount: uniqueSelectors.size,
     totalPageFocusable,
@@ -146,7 +180,10 @@ export async function collectSC212Evidence(client: Client): Promise<EvidenceBund
   return [
     {
       sc: '2.1.2',
-      element: { selector: elementSelector, outerHTML: '' },
+      element: {
+        selector: elementSelector,
+        outerHTML: '',  // page-level finding, no single element outerHTML
+      },
       evidence: evidence as unknown as Record<string, unknown>,
     },
   ];
