@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { chromium } from '@playwright/test';
 import { runAxe, getAxeFindingsForSC, SC_RULE_MAP } from '../axe/axeRunner';
 import type { AxeNodeFinding } from '../axe/axeRunner';
-import type { SCResult } from '../output/reporter';
+import { buildAggregateReport, printSummary, writeReport, type SCResult } from '../output/reporter';
 import { runSC111Assessment } from '../orchestrator/sc111orchestrator';
 import { runSC212Assessment } from '../orchestrator/sc212orchestrator';
 import { runSC244Assessment } from '../orchestrator/sc244orchestrator';
@@ -73,6 +73,11 @@ async function main(): Promise<void> {
   const sc312 = await runSC312Assessment(url);
   allResults.push(...sc312);
   console.log('  ' + sc312.length + ' element(s) assessed\n');
+
+  // Build & write report
+  const report = buildAggregateReport(url, axeGroups, allResults);
+  printSummary(report);
+  await writeReport(report, outPath);
 }
 
 main().catch((err: unknown) => {
