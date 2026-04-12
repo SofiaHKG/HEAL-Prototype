@@ -13,16 +13,33 @@ export interface HealFinding {
   uncertainty: 'low' | 'medium' | 'high';
 }
 
+/** One axe-core rule-based finding */
+export interface AxeFindingEntry {
+  ruleId: string;
+  sc: string;
+  verdict: 'fail' | 'incomplete';
+  selector: string;
+  html: string;
+  failureSummary: string | undefined;
+  helpUrl: string;
+}
+
 /** Top-level report document */
 export interface HealReport {
   schemaVersion: '1.0';
   timestamp: string;
   url: string;
+  axeFindings?: AxeFindingEntry[];
   findings: HealFinding[];
   summary: {
     total: number;
     pass: number;
     fail: number;
     needs_review: number;
+  };
+  axeSummary?: {
+    total: number;
+    fail: number;
+    incomplete: number;
   };
 }
