@@ -52,7 +52,9 @@ export interface FocusStep {
 export interface SC212Evidence {
   focusSequence: FocusStep[];
   trapDetected: boolean;
+  trapType: 'consecutive' | 'cycle' | null;
   stuckSelector: string | null;
+  cycleSelectors: string[] | null;
   escapeBehavior: 'moved' | 'stuck' | 'not_tested';
   shiftTabBehavior: 'moved' | 'stuck' | 'not_tested';
   totalTabsPressed: number;
