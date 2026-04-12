@@ -40,19 +40,95 @@ const GET_ACTIVE_ELEMENT_SC212_JS = `() => {
   function getSelector(el) {
     var tag = el.tagName.toLowerCase();
 
-    var id = el.id ? el.id.trim() : '';
-    if (id) return tag + '#' + id;
+    function escapeAttrLocal(v) {
+      return String(v).replace(/\\\\/g, '\\\\\\\\').replace(/"/g, '\\\\"');
+    }
+
+    function unique(candidate) {
+      try {
+        var matches = document.querySelectorAll(candidate);
+        if (matches.length === 1 && matches[0] === el) return candidate;
+      } catch (e) { /* invalid sellector */ }
+      return null;
+    }
+
+    function withLandmarkAncestor(candidate) {
+      var landmarks = ['header', 'footer', 'main', 'nav', 'aside',
+        '[role="banner"]', '[role="contentinfo"]', '[role="main"]',
+        '[role="navigation"]', '[role="complementary"]'];
+      var cur = el.parentElement;
+      while (cur) {
+        for (var i = 0; i < landmarks.length; i++) {
+          if (cur.matches && cur.matches(landmarks[i])) {
+            var u = unique(landmarks[i] + ' ' + candidate);
+            if (u) return u;
+          }
+        }
+        cur = cur.parentElement;
+      }
+      return null;
+    }
+
+    function structuralPath(node) {
+      var parts = [];
+      var cur = node;
+      while (cur && cur.nodeType === 1 && cur !== document.documentElement) {
+        var part = cur.tagName.toLowerCase();
+        if (cur.id) {
+          parts.unshift(part + '#' + CSS.escape(cur.id));
+          break;
+        }
+        var p = cur.parentElement;
+        if (p) {
+          var sameTag = Array.prototype.filter.call(
+            p.children,
+            function (s) { return s.tagName === cur.tagName; }
+          );
+          if (sameTag.length > 1) {
+            part += ':nth-of-type(' + (sameTag.indexOf(cur) + 1) + ')';
+          }
+        }
+        parts.unshift(part);
+        cur = cur.parentElement;
+      }
+      return parts.join(' > ');
+    }
+
+    var candidates = [];
+
+    if (el.id) candidates.push(tag + '#' + CSS.escape(el.id));
+
+    if (tag === 'a') {
+      var href = el.getAttribute('href');
+      if (href) candidates.push('a[href="' + escapeAttrLocal(href) + '"]');
+    }
+
+    var name = el.getAttribute('name');
+    if (name) candidates.push(tag + '[name="' + escapeAttrLocal(name) + '"]');
+
+    var ariaLabel = el.getAttribute('aria-label');
+    if (ariaLabel) candidates.push(tag + '[aria-label="' + escapeAttrLocal(ariaLabel) + '"]');
+
+    var typeAttr = el.getAttribute('type');
+    if (typeAttr) candidates.push(tag + '[type="' + escapeAttrLocal(typeAttr) + '"]');
 
     var className =
       typeof el.className === 'string' ? el.className.trim() : '';
+    var firstClass = className ? className.split(/\\s+/)[0] : '';
+    if (firstClass) candidates.push(tag + '.' + CSS.escape(firstClass));
 
-    var firstClass = className
-      ? className.split(/\\s+/)[0]
-      : null;
+    candidates.push(tag);
 
-    if (firstClass) return tag + '.' + firstClass;
-
-    return tag;
+    for (var i = 0; i < candidates.length; i++) {
+      var u = unique(candidates[i]);
+      if (u) return u;
+    }
+    for (var j = 0; j < candidates.length; j++) {
+      var u2 = withLandmarkAncestor(candidates[j]);
+      if (u2) return u2;
+    }
+    var path = structuralPath(el);
+    return unique(path) || path;
   }
 
   var el = document.activeElement;
@@ -167,7 +243,9 @@ export async function collectSC212Evidence(client: Client): Promise<EvidenceBund
   const evidence: SC212Evidence = {
     focusSequence,
     trapDetected,
+    //trapType,
     stuckSelector,
+    //cycleSelectors,
     escapeBehavior,
     shiftTabBehavior,
     totalTabsPressed: focusSequence.length,
