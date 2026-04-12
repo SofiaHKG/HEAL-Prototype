@@ -222,6 +222,14 @@ export async function collectSC212Evidence(client: Client): Promise<EvidenceBund
     }
   }
 
+  const movedOut = (newSelector: string | null): boolean => {
+    if (newSelector === null) return true; // body/root means escaped
+    if (trapType === 'cycle' && cycleSelectors !== null) {
+      return !cycleSelectors.includes(newSelector);
+    }
+    return newSelector !== stuckSelector;
+  };
+
   // Escape / Shift+Tab testing
   let escapeBehavior: SC212Evidence['escapeBehavior'] = 'not_tested';
   let shiftTabBehavior: SC212Evidence['shiftTabBehavior'] = 'not_tested';
@@ -232,7 +240,7 @@ export async function collectSC212Evidence(client: Client): Promise<EvidenceBund
     const afterEscapeRaw = await evaluate(client, GET_ACTIVE_ELEMENT_SC212_JS);
     const afterEscape = parseEvalJson<ActiveElementInfo | null>(afterEscapeRaw);
 
-    if (afterEscape !== null && afterEscape.selector !== stuckSelector) {
+    if (movedOut(afterEscape?.selector ?? null)) {
       escapeBehavior = 'moved';
     } else {
       escapeBehavior = 'stuck';
@@ -242,8 +250,7 @@ export async function collectSC212Evidence(client: Client): Promise<EvidenceBund
       const afterShiftRaw = await evaluate(client, GET_ACTIVE_ELEMENT_SC212_JS);
       const afterShift = parseEvalJson<ActiveElementInfo | null>(afterShiftRaw);
 
-      shiftTabBehavior =
-        afterShift !== null && afterShift.selector !== stuckSelector ? 'moved' : 'stuck';
+      shiftTabBehavior = movedOut(afterShift?.selector ?? null) ? 'moved' : 'stuck';
     }
   }
 
