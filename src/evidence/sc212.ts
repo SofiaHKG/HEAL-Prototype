@@ -5,7 +5,8 @@ import { parseEvalJson } from '../mcp/evalUtils';
 
 const MAX_TABS = 50;
 const TRAP_THRESHOLD = 3;
-const CYCLE_UNIQUE_MAX = 3;
+const CYCLE_RATIO_MAX = 0.1;
+const CYCLE_UNIQUE_MAX = 8;
 const CYCLE_MIN_TABS = 15;
 
 const FOCUS_FIRST_FOCUSABLE_SC212_JS = `() => {
@@ -209,7 +210,8 @@ export async function collectSC212Evidence(client: Client): Promise<EvidenceBund
     if (
       i + 1 >= CYCLE_MIN_TABS &&
       uniqueSelectors.size <= CYCLE_UNIQUE_MAX &&
-      totalPageFocusable > uniqueSelectors.size
+      totalPageFocusable > 0 &&
+      uniqueSelectors.size / totalPageFocusable <= CYCLE_RATIO_MAX
     ) {
       trapDetected = true;
       trapType = 'cycle';
