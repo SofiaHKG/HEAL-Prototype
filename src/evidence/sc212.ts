@@ -165,7 +165,9 @@ export async function collectSC212Evidence(client: Client): Promise<EvidenceBund
   const focusSequence: FocusStep[] = [];
   const uniqueSelectors = new Set<string>();
   let trapDetected = false;
+  let trapType: SC212Evidence['trapType'] = null;
   let stuckSelector: string | null = null;
+  let cycleSelectors: string[] | null = null;
   let consecutiveCount = 0;
   let lastSelector = '';
 
@@ -194,6 +196,7 @@ export async function collectSC212Evidence(client: Client): Promise<EvidenceBund
       consecutiveCount++;
       if (consecutiveCount >= TRAP_THRESHOLD) {
         trapDetected = true;
+        trapType = 'consecutive';
         stuckSelector = info.selector;
         break;
       }
@@ -209,8 +212,10 @@ export async function collectSC212Evidence(client: Client): Promise<EvidenceBund
       totalPageFocusable > uniqueSelectors.size
     ) {
       trapDetected = true;
+      trapType = 'cycle';
       // The "stuck" element in a cycle trap is the most recently seen one
       stuckSelector = info.selector;
+      cycleSelectors = Array.from(uniqueSelectors);
       break;
     }
   }
@@ -243,9 +248,9 @@ export async function collectSC212Evidence(client: Client): Promise<EvidenceBund
   const evidence: SC212Evidence = {
     focusSequence,
     trapDetected,
-    //trapType,
+    trapType,
     stuckSelector,
-    //cycleSelectors,
+    cycleSelectors,
     escapeBehavior,
     shiftTabBehavior,
     totalTabsPressed: focusSequence.length,
