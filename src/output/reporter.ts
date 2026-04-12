@@ -54,13 +54,36 @@ export function printSummary(report: HealReport): void {
   console.log('\n=== HEAL Report ===');
   console.log('URL:       ' + report.url);
   console.log('Timestamp: ' + report.timestamp);
+
+  // Axe summary (if present)
+  if (report.axeSummary && report.axeFindings) {
+    console.log('\n--- Axe-core (rule-based) ---');
+    console.log('Total:      ' + report.axeSummary.total);
+    console.log('Fail:       ' + report.axeSummary.fail);
+    console.log('Incomplete: ' + report.axeSummary.incomplete);
+
+    if (report.axeFindings.length > 0) {
+      console.log('\nAxe findings:');
+      for (const f of report.axeFindings) {
+        console.log(
+          '  [' + f.verdict + '] SC ' + f.sc +
+          ' | rule=' + f.ruleId +
+          '\n      ' + f.selector +
+          (f.failureSummary ? '\n      ' + f.failureSummary : '')
+        );
+      }
+    }
+  }
+
+  // LLM assessment summary
+  console.log('\n--- LLM Assessment ---');
   console.log('Total:     ' + report.summary.total);
   console.log('Pass:      ' + report.summary.pass);
   console.log('Fail:      ' + report.summary.fail);
   console.log('Review:    ' + report.summary.needs_review);
 
   if (report.findings.length === 0) {
-    console.log('\nNo findings.');
+    console.log('\nNo LLM findings.');
     return;
   }
 
