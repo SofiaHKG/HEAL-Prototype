@@ -11,6 +11,7 @@
     "eval:sc244": "ts-node --project tsconfig.json src/eval/runSC244.ts",
     "eval:sc312": "ts-node --project tsconfig.json src/eval/runSC312.ts",
     "eval:sc212": "ts-node --project tsconfig.json src/eval/runSC212.ts",
+    "eval": "ts-node --project tsconfig.json src/eval/run.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
