@@ -61,3 +61,39 @@ export interface SC212Evidence {
   uniqueSelectorsCount: number;
   totalPageFocusable: number;
 }
+
+// One key the LLM tried during SC 2.1.2 escalation, plus the observed effect
+export interface EscapeAttempt {
+  key: string;
+  movedFocus: boolean;
+  newSelector: string | null;
+}
+
+// Whether/how the trapped element is visually occluded by another element
+// (cookie banner, sticky overlay, etc.). Discovered by the LLM
+export interface OcclusionInfo {
+  isOccluded: boolean;
+  occludingSelector: string | null;
+  description: string;
+}
+
+// One transcript entry from the escalation tool-use loop, kept for auditability
+export interface EscalationToolCall {
+  tool: string;
+  input: Record<string, unknown>;
+  resultSummary: string;
+}
+
+// Enriched LLM verdict produced by SC 2.1.2 escalation
+export interface SC212EscalationResult {
+  verdict: 'pass' | 'fail' | 'needs_review';
+  rationale: string;
+  uncertainty: 'low' | 'medium' | 'high';
+  trapLocation: string | null;
+  escapeAttempts: EscapeAttempt[];
+  occlusion: OcclusionInfo | null;
+  rootCause: string;
+  suggestedFix: string;
+  toolCallCount: number;
+  transcript: EscalationToolCall[];
+}
