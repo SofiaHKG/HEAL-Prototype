@@ -5,8 +5,8 @@ import { parseEvalJson } from '../../mcp/evalUtils';
 import type { SC212Evidence, SC212EscalationResult, EscalationToolCall } from '../../types/finding';
 
 const MODEL = 'claude-haiku-4-5';
-const MAX_TOOL_CALLS = 12;
-const MAX_ITERATIONS = 16;
+const MAX_TOOL_CALLS = 14;
+const MAX_ITERATIONS = 18;
 const MAX_TOKENS = 2048;
 const TEMPERATURE = 0;
 
@@ -122,25 +122,104 @@ detector flagged a potential SC 2.1.2 keyboard trap. Your job is to investigate
 the live page using the provided tools and produce an enriched, developer-
 actionable finding.
 
-SC 2.1.2 applies per component: if keyboard focus can be moved to a component
-using the keyboard, focus must be movable away from that component using only
-the keyboard.
+CRITICAL — read this before deciding:
 
-Use the tools to inspect the focused element, walk the focus order, test
-Escape and Shift+Tab, inspect likely containers, and check whether fixed or
-sticky elements visually cover the trap. For cycle traps, verify the whole
-ring instead of assuming that one working button is enough.
+SC 2.1.2 applies PER COMPONENT. The exact W3C wording is: "If keyboard focus
+can be moved TO a component of the page using a keyboard interface, then
+focus can be moved AWAY from that component using only a keyboard interface."
+Every focusable element in the cycle is its own "component". Each one must
+have a working keyboard exit, in BOTH navigation directions (Tab AND
+Shift+Tab) OR via a documented activation that frees focus FROM THAT
+ELEMENT.
 
-Verdict logic:
-- fail: focus cannot leave a focused component using keyboard alone.
-- pass: focus restriction is legitimate and every focusable member has a
-  keyboard mechanism to move away or dismiss the region.
-- needs_review: evidence is incomplete, mixed, or ambiguous.
+Restricting focus to a subsection is allowed only if the user can untrap
+themselves from EVERY focusable element in that subsection via:
+  - pressing Escape, OR
+  - Tab / Shift+Tab moving focus to another element (inside or outside the
+    region), OR
+  - activating the focused element with Enter / Space and that activation
+    moves focus elsewhere or dismisses the region, OR
+  - a documented non-standard mechanism.
+
+It IS a violation when ANY of the following is true for ANY focusable ring
+member:
+  - Tab does not move focus AND Shift+Tab does not move focus AND the
+    element cannot be activated to free focus (Enter/Space is a no-op or
+    keeps focus on the same element).
+  - The element is non-interactive (e.g. a <div> with tabindex but no
+    keypress handler, no Enter/Space action) AND Shift+Tab from it has no
+    effect — even if a sibling button elsewhere in the ring has a working
+    exit. Per-component requirement is per-element.
+  - The user must use the mouse to exit.
+
+Two trap types you may see:
+  - "consecutive": focus stuck on ONE element for 3+ Tabs in a row. Almost
+    always a real bug. Likely fail.
+  - "cycle": focus loops through a small ring of elements (e.g. 3-5 button
+    cookie banner). NOT automatically a violation, but NOT automatically
+    OK either — you must verify EVERY ring member has a working
+    per-element exit.
+
+Investigation workflow for "cycle" traps (do all of these before deciding):
+  1. inspect_focused_element — identify what's currently focused.
+  2. Walk the ring once with Tab, inspect_focused_element after each press.
+     For any non-button ring member (e.g. a <div>, a scrollable region, a
+     tabindex=0 wrapper), TEST Shift+Tab from that element specifically:
+     does focus actually leave it? If focus stays on the same selector,
+     that element is a per-component trap → fail.
+  3. For at least one safe-looking button in the ring (Reject, Cancel,
+     Close — AVOID Accept on cookie banners; prefer Reject), press Enter
+     and inspect_focused_element to confirm it dismisses or moves focus
+     out.
+  4. Verdict logic:
+     - If a non-interactive ring member dead-ends Shift+Tab with no
+       per-element escape (Enter/Space does nothing, focus does not
+       move) → verdict=fail. Cite the offending selector. The fact that
+       a separate button elsewhere has an Enter exit does NOT cure the
+       per-component violation.
+     - If every ring member either has a working Tab/Shift+Tab move OR
+       a working activation exit → verdict=pass.
+     - Mixed / ambiguous → verdict=needs_review with explicit reason.
 
 You have at most ${MAX_TOOL_CALLS} tool calls. Plan a short investigation,
-then call "finalize" once.
+then call \`finalize\` once.
 
-Respond ONLY by calling tools. The investigation ends when you call "finalize".`;
+Investigation goals — answer ALL in your final \`finalize\` call:
+  1. Confirmed verdict: pass | fail | needs_review.
+  2. trapLocation: the actual trap CONTAINER (e.g. the modal/dialog or
+     cookie banner wrapper), not just the focusable wrapper.
+  3. escapeAttempts: which keys you tried (Escape, Tab, Shift+Tab, Enter on
+     specific buttons) and whether each one moved focus out / dismissed.
+  4. occlusion: is anything visually covering the trap? Use
+     find_overlapping_elements and screenshot_element to check.
+  5. rootCause: 1–2 sentences. For cycle-traps that pass: name the
+     legitimate restriction AND confirm every ring member has a
+     per-component exit (e.g. "Cookie banner restricts focus to 3
+     buttons; each is keyboard activatable; Enter on Reject dismisses
+     — compliant"). For real failures: name the offending selector and
+     why focus cannot leave THAT element via keyboard (e.g. "div#
+     onetrust-policy-text is tabindex=0 but non-interactive; Shift+Tab
+     does not move focus and Enter/Space have no effect — per-component
+     trap per SC 2.1.2").
+  6. suggestedFix: concrete developer action targeting the offending
+     element (e.g. "Remove tabindex=0 from div#onetrust-policy-text, or
+     ensure Shift+Tab moves focus to the previous focusable element").
+     For passes, this can be an enhancement note or empty.
+
+Constraints:
+- Do NOT navigate away or reload.
+- Do NOT invent findings you have not verified with a tool call.
+- Test the FULL ring before deciding pass. A single working button does
+  NOT cure a dead-end on a different ring member.
+- For repeated Shift+Tab tests, do at most 2 consecutive Shift+Tab
+  presses on the same element — some pages crash on long Shift+Tab
+  loops. Two presses with no focus change is sufficient evidence of a
+  dead-end.
+- If activation dismisses the banner, the page state changes — that is fine
+  and expected; record it. Do this LAST so you can still test other ring
+  members first.
+
+Respond ONLY by calling tools. The investigation ends when you call \`finalize\`.`;
 
 // In-page JS snippets
 
