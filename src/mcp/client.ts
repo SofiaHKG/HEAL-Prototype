@@ -5,8 +5,9 @@ export async function createMcpClient() {
   const transport = new StdioClientTransport({
     command: 'npx',
     args: [
-      '@playwright/mcp', 
-      '--headless'
+      '@playwright/mcp',
+      '--headless',
+      '--isolated',
     ],
   });
   const client = new Client({ name: 'HEAL MCP Client', version: '1.0.0' }, {});
