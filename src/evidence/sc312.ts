@@ -59,7 +59,7 @@ const COLLECT_SC312_JS = `() => {
   });
 
   // Pass 2: undeclared
-  var blockSelectors = 'p, li, h1, h2, h3, h4';
+  var blockSelectors = 'p, li, h1, h2, h3, h4, h5, h6, blockquote, figcaption, dt, dd, td, th';
   var seen = new Set();
   var undeclaredCount = 0;
   var nodes = document.querySelectorAll(blockSelectors);
