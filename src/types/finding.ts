@@ -33,8 +33,10 @@ export interface SC244Evidence {
   ariaSubtree: string;
 }
 
-// Evidence shape for SC 3.1.2 (Language of Parts)
+// Evidence shape for SC 3.1.2 (Language of Parts) 
 export interface SC312Evidence {
+  mode: 'declared' | 'undeclared';
+  pageLang: string;
   declaredLang: string;
   textContent: string;
   elementTag: string;
