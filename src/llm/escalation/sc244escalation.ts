@@ -1,4 +1,12 @@
 import Anthropic from '@anthropic-ai/sdk';
+import type { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { evaluate, screenshot } from '../../mcp/tools';
+import { parseEvalJson } from '../../mcp/evalUtils';
+import type {
+  EscalationToolCall,
+  SC244EscalationResult,
+  SC244Evidence,
+} from '../../types/finding';
 
 const MODEL = 'claude-haiku-4-5';
 const MAX_TOOL_CALLS = 10;
@@ -86,3 +94,181 @@ Constraints:
 - Keep tool usage concise; budget is ${MAX_TOOL_CALLS} calls.
 
 Respond only via tool calls. End by calling finalize exactly once.`;
+
+const INSPECT_ELEMENT_JS = (selector: string) => `() => {
+  function getSelector(node) {
+    if (!node) return null;
+    if (node.id) return node.tagName.toLowerCase() + '#' + CSS.escape(node.id);
+    var parts = [];
+    var cur = node;
+    while (cur && cur.nodeType === 1 && cur !== document.documentElement) {
+      var part = cur.tagName.toLowerCase();
+      var p = cur.parentElement;
+      if (p) {
+        var sameTag = Array.prototype.filter.call(p.children,
+          function (s) { return s.tagName === cur.tagName; });
+        if (sameTag.length > 1) part += ':nth-of-type(' + (sameTag.indexOf(cur) + 1) + ')';
+      }
+      parts.unshift(part);
+      cur = cur.parentElement;
+    }
+    return parts.join(' > ');
+  }
+
+  function textOf(el) {
+    return ((el && el.textContent) || '').replace(/\\s+/g, ' ').trim();
+  }
+
+  var sel = ${JSON.stringify(selector)};
+  var el = null;
+  try { el = document.querySelector(sel); } catch (_e) { el = null; }
+  if (!el) return { found: false, selectorTried: sel };
+
+  var heading = el.querySelector('h1,h2,h3,h4,h5,h6');
+  var rect = el.getBoundingClientRect();
+
+  return {
+    found: true,
+    selector: getSelector(el),
+    tag: el.tagName.toLowerCase(),
+    role: el.getAttribute('role') || null,
+    ariaLabel: el.getAttribute('aria-label') || null,
+    ariaLabelledby: el.getAttribute('aria-labelledby') || null,
+    text: textOf(el).slice(0, 700),
+    nearestHeading: heading ? textOf(heading).slice(0, 200) : null,
+    childLinks: el.querySelectorAll('a[href], area[href]').length,
+    rect: {
+      x: Math.round(rect.x),
+      y: Math.round(rect.y),
+      w: Math.round(rect.width),
+      h: Math.round(rect.height),
+    },
+  };
+}`;
+
+const INSPECT_LINK_CONTEXT_JS = (
+  selector: string,
+  href: string,
+  accessibleName: string,
+) => `() => {
+  function normalize(s) {
+    return String(s || '').replace(/\\s+/g, ' ').trim();
+  }
+
+  function resolveAriaLabelledby(el) {
+    var ids = (el.getAttribute('aria-labelledby') || '').trim();
+    if (!ids) return '';
+    return ids.split(/\\s+/)
+      .map(function(id) {
+        var ref = document.getElementById(id);
+        return ref ? normalize(ref.textContent || '') : '';
+      })
+      .filter(Boolean)
+      .join(' ');
+  }
+
+  function getAccessibleName(el) {
+    return normalize(
+      resolveAriaLabelledby(el) ||
+      el.getAttribute('aria-label') ||
+      el.textContent ||
+      el.getAttribute('title') ||
+      ''
+    );
+  }
+
+  function getSelector(node) {
+    if (node.id) return node.tagName.toLowerCase() + '#' + CSS.escape(node.id);
+    var parts = [];
+    var cur = node;
+    while (cur && cur.nodeType === 1 && cur !== document.documentElement) {
+      var part = cur.tagName.toLowerCase();
+      var p = cur.parentElement;
+      if (p) {
+        var sameTag = Array.prototype.filter.call(p.children,
+          function (s) { return s.tagName === cur.tagName; });
+        if (sameTag.length > 1) part += ':nth-of-type(' + (sameTag.indexOf(cur) + 1) + ')';
+      }
+      parts.unshift(part);
+      cur = cur.parentElement;
+    }
+    return parts.join(' > ');
+  }
+
+  function textOf(el, limit) {
+    return normalize((el.textContent || '')).slice(0, limit || 700);
+  }
+
+  var input = {
+    selector: ${JSON.stringify(selector)},
+    href: ${JSON.stringify(href)},
+    accessibleName: ${JSON.stringify(accessibleName)},
+  };
+
+  var link = null;
+  try {
+    link = document.querySelector(input.selector);
+  } catch (_e) {
+    link = null;
+  }
+
+  if (!link && input.href) {
+    var byHref = Array.prototype.filter.call(
+      document.querySelectorAll('a[href], area[href]'),
+      function (el) { return (el.getAttribute('href') || '') === input.href; }
+    );
+    if (byHref.length > 0) link = byHref[0];
+  }
+
+  if (!link && input.accessibleName) {
+    var nameNeedle = normalize(input.accessibleName).toLowerCase();
+    var byName = Array.prototype.filter.call(
+      document.querySelectorAll('a[href], area[href]'),
+      function (el) { return getAccessibleName(el).toLowerCase() === nameNeedle; }
+    );
+    if (byName.length > 0) link = byName[0];
+  }
+
+  if (!link) {
+    return {
+      found: false,
+      selectorTried: input.selector,
+      hrefTried: input.href,
+      accessibleNameTried: input.accessibleName,
+    };
+  }
+
+  var linkName = getAccessibleName(link);
+  var context =
+    link.closest('article, section, li, td, th, figure, figcaption, nav, main, aside, div') ||
+    link.parentElement;
+
+  var heading = null;
+  if (context) {
+    heading = context.querySelector('h1,h2,h3,h4,h5,h6');
+  }
+  if (!heading) {
+    heading = link.closest('section,article,main,aside')?.querySelector('h1,h2,h3,h4,h5,h6') || null;
+  }
+
+  return {
+    found: true,
+    link: {
+      selector: getSelector(link),
+      tag: link.tagName.toLowerCase(),
+      role: link.getAttribute('role') || link.tagName.toLowerCase(),
+      href: link.getAttribute('href') || '',
+      accessibleName: linkName,
+      text: textOf(link, 300),
+    },
+    context: context
+      ? {
+          selector: getSelector(context),
+          tag: context.tagName.toLowerCase(),
+          text: textOf(context, 1000),
+          childLinks: context.querySelectorAll('a[href], area[href]').length,
+        }
+      : null,
+    nearestHeading: heading ? textOf(heading, 220) : null,
+  };
+}`;
