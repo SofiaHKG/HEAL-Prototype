@@ -2,11 +2,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import type { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { evaluate, screenshot } from '../../mcp/tools';
 import { parseEvalJson } from '../../mcp/evalUtils';
-import type {
-  EscalationToolCall,
-  SC244EscalationResult,
-  SC244Evidence,
-} from '../../types/finding';
+import type { EscalationToolCall, SC244EscalationResult, SC244Evidence } from '../../types/finding';
 
 const MODEL = 'claude-haiku-4-5';
 const MAX_TOOL_CALLS = 10;
@@ -94,6 +90,11 @@ Constraints:
 - Keep tool usage concise; budget is ${MAX_TOOL_CALLS} calls.
 
 Respond only via tool calls. End by calling finalize exactly once.`;
+
+type ToolDispatchResult = {
+  text: string;
+  image?: { data: string; mime: string };
+};
 
 const INSPECT_ELEMENT_JS = (selector: string) => `() => {
   function getSelector(node) {
@@ -272,3 +273,219 @@ const INSPECT_LINK_CONTEXT_JS = (
     nearestHeading: heading ? textOf(heading, 220) : null,
   };
 }`;
+
+async function dispatchTool(
+  mcp: Client,
+  name: string,
+  input: Record<string, unknown>,
+): Promise<ToolDispatchResult> {
+  switch (name) {
+    case 'inspect_link_context': {
+      const selector = String(input['selector'] ?? '');
+      const href = String(input['href'] ?? '');
+      const accessibleName = String(input['accessibleName'] ?? '');
+      const raw = await evaluate(mcp, INSPECT_LINK_CONTEXT_JS(selector, href, accessibleName));
+      const parsed = parseEvalJson<unknown>(raw);
+      return { text: JSON.stringify(parsed) };
+    }
+    case 'inspect_element': {
+      const selector = String(input['selector'] ?? '');
+      const raw = await evaluate(mcp, INSPECT_ELEMENT_JS(selector));
+      const parsed = parseEvalJson<unknown>(raw);
+      return { text: JSON.stringify(parsed) };
+    }
+    case 'screenshot_element': {
+      const selector = String(input['selector'] ?? '');
+      const img = await screenshot(mcp, { element: selector, selector });
+      if (!img) return { text: JSON.stringify({ error: 'screenshot_failed' }) };
+      return {
+        text: 'screenshot of ' + selector,
+        image: { data: img.data, mime: img.mimeType },
+      };
+    }
+    default:
+      return { text: JSON.stringify({ error: 'unknown_tool', name }) };
+  }
+}
+
+function buildKickoffMessage(evidence: SC244Evidence, selector: string): string {
+  return (
+    'A potential SC 2.4.4 link-purpose issue was detected.\n\n' +
+    'Deterministic evidence summary:\n' +
+    '- selector: ' + selector + '\n' +
+    '- accessibleName: ' + JSON.stringify(evidence.accessibleName) + '\n' +
+    '- href: ' + JSON.stringify(evidence.linkHref) + '\n' +
+    '- surroundingContext: ' + JSON.stringify(evidence.surroundingContext) + '\n\n' +
+    'Investigate this specific link in live DOM context and then call `finalize`.'
+  );
+}
+
+function buildFallback(
+  reason: string,
+  transcript: EscalationToolCall[],
+  toolCallCount: number,
+): SC244EscalationResult {
+  return {
+    verdict: 'needs_review',
+    rationale: 'Escalation incomplete: ' + reason,
+    uncertainty: 'high',
+    resolvedPurpose: '',
+    contextContainer: null,
+    rootCause: 'unknown - escalation did not finalize',
+    suggestedFix: 'Manual review required',
+    toolCallCount,
+    transcript,
+  };
+}
+
+function parseFinalizeInput(
+  input: Record<string, unknown>,
+  transcript: EscalationToolCall[],
+  toolCallCount: number,
+): SC244EscalationResult {
+  const sanitize = (s: string): string => {
+    const m = s.match(/<\/?[a-zA-Z][\w:-]*[^>]*>/);
+    return (m ? s.slice(0, m.index) : s).trim();
+  };
+
+  const verdict = (input['verdict'] as SC244EscalationResult['verdict']) ?? 'needs_review';
+  const uncertainty =
+    (input['uncertainty'] as SC244EscalationResult['uncertainty']) ?? 'medium';
+
+  return {
+    verdict,
+    rationale: sanitize(String(input['rationale'] ?? '')),
+    uncertainty,
+    resolvedPurpose: sanitize(String(input['resolvedPurpose'] ?? '')),
+    contextContainer:
+      typeof input['contextContainer'] === 'string'
+        ? (input['contextContainer'] as string)
+        : null,
+    rootCause: sanitize(String(input['rootCause'] ?? '')),
+    suggestedFix: sanitize(String(input['suggestedFix'] ?? '')),
+    toolCallCount,
+    transcript,
+  };
+}
+
+let _client: Anthropic | undefined;
+function getClient(): Anthropic {
+  if (!_client) _client = new Anthropic();
+  return _client;
+}
+
+export async function escalateSC244Finding(
+  mcp: Client,
+  evidence: SC244Evidence,
+  selector: string,
+): Promise<SC244EscalationResult> {
+  const transcript: EscalationToolCall[] = [];
+  let toolCallCount = 0;
+
+  const messages: Anthropic.MessageParam[] = [
+    { role: 'user', content: buildKickoffMessage(evidence, selector) },
+  ];
+
+  for (let iter = 0; iter < MAX_ITERATIONS; iter++) {
+    const response = await getClient().messages.create({
+      model: MODEL,
+      max_tokens: MAX_TOKENS,
+      temperature: TEMPERATURE,
+      system: SYSTEM_PROMPT,
+      tools: TOOLS,
+      messages,
+    });
+
+    messages.push({ role: 'assistant', content: response.content });
+
+    const toolUses = response.content.filter(
+      (b): b is Anthropic.ToolUseBlock => b.type === 'tool_use',
+    );
+
+    if (toolUses.length === 0) {
+      return buildFallback(
+        'model returned text without calling finalize',
+        transcript,
+        toolCallCount,
+      );
+    }
+
+    const finalizeCall = toolUses.find(t => t.name === 'finalize');
+    if (finalizeCall) {
+      return parseFinalizeInput(
+        finalizeCall.input as Record<string, unknown>,
+        transcript,
+        toolCallCount,
+      );
+    }
+
+    const toolResults: Anthropic.ToolResultBlockParam[] = [];
+    for (const tu of toolUses) {
+      if (toolCallCount >= MAX_TOOL_CALLS) {
+        toolResults.push({
+          type: 'tool_result',
+          tool_use_id: tu.id,
+          content: 'Tool budget exhausted. Call `finalize` now with current evidence.',
+          is_error: true,
+        });
+        continue;
+      }
+
+      toolCallCount++;
+      try {
+        const input = (tu.input ?? {}) as Record<string, unknown>;
+        const r = await dispatchTool(mcp, tu.name, input);
+        transcript.push({
+          tool: tu.name,
+          input,
+          resultSummary: r.text.slice(0, 240),
+        });
+
+        if (r.image) {
+          toolResults.push({
+            type: 'tool_result',
+            tool_use_id: tu.id,
+            content: [
+              { type: 'text', text: r.text },
+              {
+                type: 'image',
+                source: {
+                  type: 'base64',
+                  media_type: r.image.mime as 'image/png',
+                  data: r.image.data,
+                },
+              },
+            ],
+          });
+        } else {
+          toolResults.push({
+            type: 'tool_result',
+            tool_use_id: tu.id,
+            content: r.text,
+          });
+        }
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        transcript.push({
+          tool: tu.name,
+          input: (tu.input ?? {}) as Record<string, unknown>,
+          resultSummary: 'ERROR: ' + msg,
+        });
+        toolResults.push({
+          type: 'tool_result',
+          tool_use_id: tu.id,
+          content: 'Error: ' + msg,
+          is_error: true,
+        });
+      }
+    }
+
+    messages.push({ role: 'user', content: toolResults });
+  }
+
+  return buildFallback(
+    'max iterations (' + MAX_ITERATIONS + ') reached without finalize',
+    transcript,
+    toolCallCount,
+  );
+}
