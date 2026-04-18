@@ -11,6 +11,7 @@ export interface HealFinding {
   verdict: 'pass' | 'fail' | 'needs_review';
   rationale: string;
   uncertainty: 'low' | 'medium' | 'high';
+  escalation?: unknown;
 }
 
 /** One axe-core rule-based finding */
