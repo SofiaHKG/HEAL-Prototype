@@ -9,6 +9,7 @@ import type { AxeNodeFinding } from '../axe/axeRunner';
 export interface SCResult {
   bundle: EvidenceBundle;
   assessment: Assessment;
+  escalation?: unknown;
 }
 
 // Builder to convert any SCResult[] into a HealReport
@@ -21,6 +22,7 @@ export function buildReport(url: string, results: SCResult[]): HealReport {
     verdict: r.assessment.verdict,
     rationale: r.assessment.rationale,
     uncertainty: r.assessment.uncertainty,
+    ...(r.escalation !== undefined ? { escalation: r.escalation } : {}),
   }));
 
   const summary = {
@@ -98,6 +100,21 @@ export function printSummary(report: HealReport): void {
       '\n      ' + f.selector +
       '\n      ' + f.rationale
     );
+
+    const esc =
+      f.escalation && typeof f.escalation === 'object'
+        ? (f.escalation as Record<string, unknown>)
+        : undefined;
+    if (esc !== undefined) {
+      const rootCause = typeof esc['rootCause'] === 'string' ? esc['rootCause'] : '';
+      const suggestedFix = typeof esc['suggestedFix'] === 'string' ? esc['suggestedFix'] : '';
+      if (rootCause) {
+        console.log('      Escalation root cause: ' + rootCause);
+      }
+      if (suggestedFix) {
+        console.log('      Escalation suggested fix: ' + suggestedFix);
+      }
+    }
   }
 }
 
@@ -139,6 +156,7 @@ export function buildAggregateReport(
     verdict: r.assessment.verdict,
     rationale: r.assessment.rationale,
     uncertainty: r.assessment.uncertainty,
+    ...(r.escalation !== undefined ? { escalation: r.escalation } : {}),
   }));
 
   const summary = {
