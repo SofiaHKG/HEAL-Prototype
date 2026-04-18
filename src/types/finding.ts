@@ -99,3 +99,16 @@ export interface SC212EscalationResult {
   toolCallCount: number;
   transcript: EscalationToolCall[];
 }
+
+// Enriched LLM verdict produced by SC 2.4.4 escalation
+export interface SC244EscalationResult {
+  verdict: 'pass' | 'fail' | 'needs_review';
+  rationale: string;
+  uncertainty: 'low' | 'medium' | 'high';
+  resolvedPurpose: string;
+  contextContainer: string | null;
+  rootCause: string;
+  suggestedFix: string;
+  toolCallCount: number;
+  transcript: EscalationToolCall[];
+}
