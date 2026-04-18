@@ -11,6 +11,8 @@ interface SC111Data {
   ariaLabelledbyText: string | null;
   role: string;
   surroundingText: string;
+  parentLinkHref: string | null;
+  parentButtonLabel: string | null;
   isVisible: boolean;
 }
 
@@ -78,6 +80,30 @@ const COLLECT_SC111_JS = `() => {
     return rect.width > 0 && rect.height > 0;
   }
 
+  function getButtonAccessibleName(btn) {
+    var labelledby = resolveAriaLabelledby(btn);
+    if (labelledby) return labelledby;
+    var ariaLabel = (btn.getAttribute('aria-label') || '').trim();
+    if (ariaLabel) return ariaLabel;
+    var text = (btn.textContent || '').replace(/\\s+/g, ' ').trim();
+    if (text) return text;
+    var title = (btn.getAttribute('title') || '').trim();
+    return title || null;
+  }
+
+  function getParentLinkHref(el) {
+    var link = el.closest('a[href], area[href]');
+    if (!link || link === el) return null;
+    var href = link.getAttribute('href');
+    return href || null;
+  }
+
+  function getParentButtonLabel(el) {
+    var btn = el.closest('button, [role="button"]');
+    if (!btn || btn === el) return null;
+    return getButtonAccessibleName(btn);
+  }
+
   function buildEntry(el, role) {
     return {
       selector: getSelector(el),
@@ -87,6 +113,8 @@ const COLLECT_SC111_JS = `() => {
       ariaLabelledbyText: resolveAriaLabelledby(el),
       role: role,
       surroundingText: getSurroundingText(el),
+      parentLinkHref: getParentLinkHref(el),
+      parentButtonLabel: getParentButtonLabel(el),
       isVisible: isVisible(el)
     };
   }
@@ -137,6 +165,8 @@ export async function collectSC111Evidence(client: Client): Promise<EvidenceBund
       ariaLabelledbyText: img.ariaLabelledbyText,
       role: img.role,
       surroundingText: img.surroundingText,
+      parentLinkHref: img.parentLinkHref,
+      parentButtonLabel: img.parentButtonLabel,
       screenshotBase64,
       screenshotMimeType,
     };

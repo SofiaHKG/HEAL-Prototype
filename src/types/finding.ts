@@ -21,6 +21,8 @@ export interface SC111Evidence {
   ariaLabelledbyText: string | null;
   role: string;
   surroundingText: string;
+  parentLinkHref: string | null;
+  parentButtonLabel: string | null;
   screenshotBase64: string | null;
   screenshotMimeType: string | null;
 }

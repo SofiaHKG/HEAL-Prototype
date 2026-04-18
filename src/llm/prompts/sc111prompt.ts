@@ -41,6 +41,9 @@ export function buildSC111AssessParams(bundle: EvidenceBundle): AssessParams {
     ev.role === 'presentation' ||
     ev.role === 'none';
 
+  const isFunctional =
+    ev.parentLinkHref !== null || ev.parentButtonLabel !== null;
+
   const userMessage =
     'Element role: ' + ev.role + '\n' +
     'Element HTML: ' + bundle.element.outerHTML + '\n' +
@@ -49,6 +52,9 @@ export function buildSC111AssessParams(bundle: EvidenceBundle): AssessParams {
     'aria-labelledby resolved text: ' + (ev.ariaLabelledbyText !== null ? JSON.stringify(ev.ariaLabelledbyText) : '(not present)') + '\n' +
     'Computed accessible name: ' + (accessibleName !== null ? JSON.stringify(accessibleName) : '(none)') + '\n' +
     'Marked as decorative: ' + isDecorative + '\n' +
+    'Functional context (image inside link/button): ' + isFunctional + '\n' +
+    'Parent link href: ' + (ev.parentLinkHref !== null ? JSON.stringify(ev.parentLinkHref) : '(none)') + '\n' +
+    'Parent button accessible name: ' + (ev.parentButtonLabel !== null ? JSON.stringify(ev.parentButtonLabel) : '(none)') + '\n' +
     'Surrounding context text: ' + JSON.stringify(ev.surroundingText) + '\n' +
     (ev.screenshotBase64 !== null
       ? 'A screenshot of the element is attached.'
