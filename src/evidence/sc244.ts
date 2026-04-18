@@ -43,11 +43,30 @@ const COLLECT_SC244_JS = `() => {
 
     if (textContent) return textContent;
 
+    // For image-only links, derive name from child img[alt] (WCAG acc-name algorithm)
+    var imgChild = el.querySelector('img[alt]');
+    if (imgChild) {
+      var imgAlt = (imgChild.getAttribute('alt') || '').trim();
+      if (imgAlt) return imgAlt;
+    }
+
     var title = (el.getAttribute('title') || '').trim();
     if (title) return title;
 
     var alt = (el.getAttribute('alt') || '').trim();
     return alt;
+  }
+
+  function getNearestHeadingText(el) {
+    var containers = ['section', 'article', 'nav', 'aside', 'main', 'form', 'fieldset', 'details'];
+    for (var i = 0; i < containers.length; i++) {
+      var container = el.closest(containers[i]);
+      if (container) {
+        var h = container.querySelector('h1,h2,h3,h4,h5,h6');
+        if (h) return (h.textContent || '').replace(/\\s+/g, ' ').trim().slice(0, 100);
+      }
+    }
+    return null;
   }
 
   function getSurroundingContext(el) {
@@ -66,9 +85,14 @@ const COLLECT_SC244_JS = `() => {
 
     var text = (parent.textContent || '')
       .replace(/\\s+/g, ' ')
-      .trim();
+      .trim()
+      .slice(0, 400);
 
-    return text.slice(0, 400);
+    var headingText = getNearestHeadingText(el);
+    if (headingText && text && !text.startsWith(headingText)) {
+      return headingText + ' > ' + text;
+    }
+    return text;
   }
 
   function getSelector(el) {
