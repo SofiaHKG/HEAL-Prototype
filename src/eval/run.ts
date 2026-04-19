@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { chromium } from '@playwright/test';
 import { runAxe, getAxeFindingsForSC, SC_RULE_MAP } from '../axe/axeRunner';
 import type { AxeNodeFinding } from '../axe/axeRunner';
+import { parseEvalCliArgs } from './cliArgs';
 import { buildAggregateReport, printSummary, writeReport, type SCResult } from '../output/reporter';
 import { runSC111Assessment } from '../orchestrator/sc111orchestrator';
 import { runSC212Assessment } from '../orchestrator/sc212orchestrator';
@@ -9,19 +10,12 @@ import { runSC244Assessment } from '../orchestrator/sc244orchestrator';
 import { runSC312Assessment } from '../orchestrator/sc312orchstrator';
 
 async function main(): Promise<void> {
-  const args = process.argv.slice(2);
-
-  const url = args[0];
-  if (!url || !/^https?:\/\//i.test(url)) {
-    console.error('Correct usage: npm run eval -- <url> [out-path]');
-    console.error('Example: npm run eval -- https://...');
-    process.exit(1);
-  }
+  const { url, outPath: providedOutPath } = parseEvalCliArgs(process.argv.slice(2), 'npm run eval');
 
   const hostname = new URL(url).hostname.replace(/[^a-z0-9.-]/gi, '-');
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const defaultOut = 'reports/' + hostname + '-full-' + timestamp + '.json';
-  const outPath = args[1] ?? defaultOut;
+  const outPath = providedOutPath ?? defaultOut;
 
   console.log('HEAL - Full Aggregate Assessment');
   console.log('URL:    ' + url);

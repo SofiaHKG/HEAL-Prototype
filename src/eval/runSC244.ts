@@ -1,22 +1,16 @@
 import 'dotenv/config';
+import { parseEvalCliArgs } from './cliArgs';
 import { runSC244Assessment } from '../orchestrator/sc244orchestrator';
 import { buildReport, writeReport, printSummary } from '../output/reporter';
 
 async function main(): Promise<void> {
-  const args = process.argv.slice(2);
-
-  const url = args[0];
-  if (!url || !/^https?:\/\//i.test(url)) {
-    console.error('Correct usage: npm run eval:sc244 -- <url> [out-path]');
-    console.error('Example: npm run eval:sc244 -- https://...');
-    process.exit(1);
-  }
+  const { url, outPath: providedOutPath } = parseEvalCliArgs(process.argv.slice(2), 'npm run eval:sc244');
 
   // Default output path: reports/<hostname>-sc244-<timestamp>.json
   const hostname = new URL(url).hostname.replace(/[^a-z0-9.-]/gi, '-');
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const defaultOut = 'reports/' + hostname + '-sc244-' + timestamp + '.json';
-  const outPath = args[1] ?? defaultOut;
+  const outPath = providedOutPath ?? defaultOut;
 
   console.log('HEAL - SC 2.4.4 Link Purpose (In Context)');
   console.log('URL:    ' + url);
