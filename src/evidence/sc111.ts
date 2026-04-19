@@ -1,7 +1,32 @@
 import type { Client } from '@modelcontextprotocol/sdk/client/index.js';
-import { evaluate, screenshot } from '../mcp/tools';
+import { evaluate, screenshot, snapshot } from '../mcp/tools';
 import type { EvidenceBundle, SC111Evidence } from '../types/finding';
 import { parseEvalJson } from '../mcp/evalUtils';
+
+function parseSnapshotImgRefs(snap: string): { ref: string; alt: string }[] {
+  const out: { ref: string; alt: string }[] = [];
+  // Match optional opening quote, "img", optional alt in quotes, then [ref=eN]
+  const re = /\bimg(?:\s+"((?:[^"\\]|\\.)*)")?[^[\n]*\[ref=(e\d+)\]/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(snap)) !== null) {
+    out.push({ ref: m[2]!, alt: (m[1] ?? '').replace(/\\(.)/g, '$1') });
+  }
+  return out;
+}
+
+function pickRefForImage(
+  pool: { ref: string; alt: string }[],
+  altText: string | null,
+): string | null {
+  const wanted = (altText ?? '').trim();
+  // Prefer same-alt match (handles repeated empty-alt decorative images by FIFO)
+  const idx = pool.findIndex((r) => r.alt.trim() === wanted);
+  if (idx >= 0) {
+    const [picked] = pool.splice(idx, 1);
+    return picked!.ref;
+  }
+  return null;
+}
 
 interface SC111Data {
   selector: string;
@@ -55,24 +80,25 @@ const COLLECT_SC111_JS = `() => {
   }
 
   function getSelector(el) {
-    var tag = el.tagName.toLowerCase();
-
-    var id = el.id;
-    if (id) return tag + '#' + id;
-
-    var ariaLabel = el.getAttribute('aria-label');
-    if (ariaLabel) return tag + '[aria-label]';
-
-    var className =
-      typeof el.className === 'string' ? el.className.trim() : '';
-
-    var firstClass = className
-      ? className.split(/\\s+/)[0]
-      : null;
-
-    if (firstClass) return tag + '.' + firstClass;
-
-    return tag;
+    if (el.id) {
+      return el.tagName.toLowerCase() + '#' + CSS.escape(el.id);
+    }
+    var parts = [];
+    var cur = el;
+    while (cur && cur.nodeType === 1 && cur !== document.documentElement) {
+      var part = cur.tagName.toLowerCase();
+      var p = cur.parentElement;
+      if (p) {
+        var sameTag = Array.prototype.filter.call(p.children,
+          function (s) { return s.tagName === cur.tagName; });
+        if (sameTag.length > 1) {
+          part += ':nth-of-type(' + (sameTag.indexOf(cur) + 1) + ')';
+        }
+      }
+      parts.unshift(part);
+      cur = cur.parentElement;
+    }
+    return parts.join(' > ');
   }
 
   function isVisible(el) {
@@ -143,19 +169,28 @@ const COLLECT_SC111_JS = `() => {
 export async function collectSC111Evidence(client: Client): Promise<EvidenceBundle[]> {
   const raw = await evaluate(client, COLLECT_SC111_JS);
   const images = parseEvalJson<SC111Data[]>(raw);
+  const snap = await snapshot(client);
+  const refPool = parseSnapshotImgRefs(snap);
 
   const bundles: EvidenceBundle[] = [];
 
   for (const img of images) {
-    // Take an element-scoped screenshot (only if the element is visible)
     let screenshotBase64: string | null = null;
     let screenshotMimeType: string | null = null;
 
     if (img.isVisible) {
-      const shot = await screenshot(client, { selector: img.selector });
-      if (shot !== null) {
-        screenshotBase64 = shot.data;
-        screenshotMimeType = shot.mimeType;
+      const ref = pickRefForImage(refPool, img.altText);
+      if (ref !== null) {
+        const elementDesc =
+          img.altText?.trim() ||
+          img.ariaLabel?.trim() ||
+          img.ariaLabelledbyText?.trim() ||
+          'image';
+        const shot = await screenshot(client, { element: elementDesc, ref });
+        if (shot !== null) {
+          screenshotBase64 = shot.data;
+          screenshotMimeType = shot.mimeType;
+        }
       }
     }
 
