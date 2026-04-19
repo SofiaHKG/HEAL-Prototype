@@ -54,12 +54,16 @@ export async function assess(params: AssessParams): Promise<string> {
     max_tokens: MAX_TOKENS,
     temperature: TEMPERATURE,
     system: params.systemPrompt,
-    messages: [{ role: 'user', content: userContent as any }],
+    messages: [
+      { role: 'user', content: userContent as any },
+      { role: 'assistant', content: '{' },
+    ],
   });
 
   for (const block of response.content) {
     if (block.type === 'text') {
-      return block.text;
+      // The assistant prefill msg contains '{', so it will force Claude to continue conmpleting the JSON object (fixing bug where it instead starts with prose)
+      return '{' + block.text;
     }
   }
 
