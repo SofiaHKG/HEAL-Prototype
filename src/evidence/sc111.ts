@@ -277,6 +277,12 @@ const FALLBACK_FETCH_TIMEOUT_MS = 25000;
 const MAX_IMAGE_EDGE_PX = 1600;
 const MAX_ENCODED_BYTES = 4 * 1024 * 1024; // safe under the 5 MB API limit
 
+/**
+ * Resize an image buffer down to MAX_IMAGE_EDGE_PX on its longest side and
+ * re-encode as JPEG (quality 82). Returns the original buffer unchanged if
+ * it's already small enough on both axes. Falls back to the original buffer
+ * if sharp fails to decode (e.g. animated webp edge cases).
+ */
 async function downscaleImage(
   buf: Buffer,
   mime: string,
@@ -302,6 +308,14 @@ async function downscaleImage(
   }
 }
 
+/**
+ * Re-download an image's bytes from Node where CORS does not apply, then
+ * base64-encode. Used to recover pixel evidence for cross-origin CDN images
+ * which the in-page canvas/fetch path cannot capture.
+ *
+ * Returns null for non-http(s) URLs, network/HTTP errors, MIME
+ * types that are not allowed (SVG) or payloads exceeding MAX_FALLBACK_BYTES.
+ */
 async function fetchImageFromNode(
   src: string,
   pageUrl: string,
