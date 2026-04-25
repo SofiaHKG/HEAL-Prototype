@@ -18,7 +18,9 @@ Step 1 — Visual sanity check (only if a screenshot is attached):
      accessible name in step 3.
 
 Step 2 — Categorise the element:
-   - DECORATIVE: alt="" or role="presentation"/"none" AND no parent link/button.
+   - DECORATIVE: (alt="" OR role="presentation"/"none" OR aria-hidden="true") AND no parent link/button that itself lacks an accessible name.
+     Note: aria-hidden="true" alone (even without alt="") is a valid decorative pattern; the image is completely removed from the accessibility tree. However, if a descriptive alt text is also present alongside aria-hidden="true", that is a coding inconsistency — the alt text suggests informative intent but is suppressed, which warrants a fail.
+     Exception: if the image is the sole content of a link/button that has no other accessible name source, aria-hidden="true" alone does NOT make it decorative — the link would be unlabelled.
    - FUNCTIONAL: image is inside a link or button (parent link href / button label provided).
    - INFORMATIVE: anything else that conveys information.
 
@@ -81,22 +83,26 @@ export function buildSC111AssessParams(bundle: EvidenceBundle): AssessParams {
   const isDecorative =
     ev.altText === '' ||
     ev.role === 'presentation' ||
-    ev.role === 'none';
+    ev.role === 'none' ||
+    ev.ariaHidden;
 
   const isFunctional =
     ev.parentLinkHref !== null || ev.parentButtonLabel !== null;
+
+  const parentLabel = ev.parentLinkLabel ?? ev.parentButtonLabel ?? null;
 
   const userMessage =
     'Element role: ' + ev.role + '\n' +
     'Element HTML: ' + bundle.element.outerHTML + '\n' +
     'alt attribute: ' + (ev.altText !== null ? JSON.stringify(ev.altText) : '(not present)') + '\n' +
+    'aria-hidden: ' + ev.ariaHidden + '\n' +
     'aria-label: ' + (ev.ariaLabel !== null ? JSON.stringify(ev.ariaLabel) : '(not present)') + '\n' +
     'aria-labelledby resolved text: ' + (ev.ariaLabelledbyText !== null ? JSON.stringify(ev.ariaLabelledbyText) : '(not present)') + '\n' +
     'Computed accessible name: ' + (accessibleName !== null ? JSON.stringify(accessibleName) : '(none)') + '\n' +
     'Marked as decorative: ' + isDecorative + '\n' +
     'Functional context (image inside link/button): ' + isFunctional + '\n' +
     'Parent link href: ' + (ev.parentLinkHref !== null ? JSON.stringify(ev.parentLinkHref) : '(none)') + '\n' +
-    'Parent button accessible name: ' + (ev.parentButtonLabel !== null ? JSON.stringify(ev.parentButtonLabel) : '(none)') + '\n' +
+    'Parent link/button accessible name: ' + (parentLabel !== null ? JSON.stringify(parentLabel) : '(none)') + '\n' +
     'Surrounding context text: ' + JSON.stringify(ev.surroundingText) + '\n' +
     (ev.screenshotBase64 !== null
       ? 'A screenshot of the element is attached. Examine it FIRST to confirm whether a real image is rendered (vs. a broken/placeholder image showing only fallback alt text).'
@@ -110,7 +116,6 @@ export function buildSC111AssessParams(bundle: EvidenceBundle): AssessParams {
   };
 
   if (ev.screenshotBase64 !== null && ev.screenshotMimeType !== null) {
-    params.imageBase64 = ev.screenshotBase64;
     const mime = ev.screenshotMimeType;
     if (
       mime === 'image/png' ||
@@ -118,6 +123,7 @@ export function buildSC111AssessParams(bundle: EvidenceBundle): AssessParams {
       mime === 'image/gif' ||
       mime === 'image/webp'
     ) {
+      params.imageBase64 = ev.screenshotBase64;
       params.imageMimeType = mime;
     }
   }
