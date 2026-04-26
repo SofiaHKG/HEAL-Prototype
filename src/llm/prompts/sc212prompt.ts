@@ -11,15 +11,22 @@ You will receive evidence from an automated keyboard traversal of the page, incl
 - Whether a potential trap was detected algorithmically
 - Which element appears to trap focus (if any)
 - Whether Escape or Shift+Tab successfully moved focus away from the stuck element
+- Whether a cookie/consent banner was detected and dismissed via the keyboard, and what happened next
+
+Cookie banner handling:
+- A cookie/consent banner that initially captures focus is NOT a keyboard trap as long as the user can dismiss it from the keyboard (e.g. by pressing Enter on a Decline/Accept button). The dismissal was attempted automatically; check 'cookieBanner.dismissalSucceeded' and 'cookieBanner.postDismissalFocusGained'.
+- If the banner was dismissed AND Tab subsequently moved focus to elements OUTSIDE the original banner cycle → the banner is NOT a trap; judge the post-dismissal traversal.
+- If the banner reports as dismissed BUT pressing Tab afterwards either lands nowhere OR keeps cycling through the same banner buttons (trapType = "focus_lost_after_dismiss"), this IS a real SC 2.1.2 violation — keyboard users cannot reach any other page content.
 
 Verdict rules:
-- "pass": No trap was detected, OR a trap was detected but Escape or Shift+Tab successfully moved focus away (an alternate mechanism exists).
-- "fail": A trap was detected AND neither Escape nor Shift+Tab freed the user (no standard escape mechanism works).
-- "needs_review": Evidence is inconclusive (e.g. the page has very few focusable elements, the traversal was too short to tell, or the stuck element may be a legitimate modal with an undiscovered dismiss mechanism).
+- "pass": No trap was detected, OR a trap was detected but Escape or Shift+Tab successfully moved focus away, OR the only "trap" was a cookie banner that closed cleanly and keyboard navigation works afterwards.
+- "fail": A trap was detected AND no standard escape mechanism works. This includes the "focus_lost_after_dismiss" case (focus is stranded after closing a banner).
+- "needs_review": Evidence is inconclusive (very few focusable elements, traversal too short, banner dismissal could not be attempted, etc.).
 
 Consider:
-- trapDetected flag and stuckSelector
+- trapDetected, trapType, and stuckSelector
 - escapeBehavior and shiftTabBehavior results
+- cookieBanner.detected / dismissalAttempted / dismissalSucceeded / postDismissalFocusGained
 - Ratio of uniqueSelectorsCount to totalPageFocusable (a very small ratio after many tabs suggests cycling)
 - totalTabsPressed vs totalPageFocusable (did traversal cover enough of the page?)
 
@@ -46,14 +53,25 @@ export function buildSC212UserMessage(bundle: EvidenceBundle): string {
       tail.map(s => `  ${s.tabIndex}. ${s.selector}`).join('\n');
   }
 
+  const cb = ev.cookieBanner;
+  const cookieBannerSummary =
+    'Cookie banner detected: ' + String(cb.detected) + '\n' +
+    '  dismissal attempted: ' + String(cb.dismissalAttempted) + '\n' +
+    '  dismissal selector: ' + (cb.dismissalSelector ?? '(none)') + '\n' +
+    '  dismissal role: ' + (cb.dismissalRole ?? '(none)') + '\n' +
+    '  dismissal succeeded: ' + (cb.dismissalSucceeded === null ? 'n/a' : String(cb.dismissalSucceeded)) + '\n' +
+    '  post-dismissal focus gained: ' + (cb.postDismissalFocusGained === null ? 'n/a' : String(cb.postDismissalFocusGained));
+
   return (
     'Stuck element selector: ' + (ev.stuckSelector ?? '(none)') + '\n' +
     'Trap detected: ' + String(ev.trapDetected) + '\n' +
+    'Trap type: ' + (ev.trapType ?? '(none)') + '\n' +
     'Escape behaviour: ' + ev.escapeBehavior + '\n' +
     'Shift+Tab behaviour: ' + ev.shiftTabBehavior + '\n' +
     'Total Tab presses: ' + ev.totalTabsPressed + '\n' +
     'Unique selectors visited: ' + ev.uniqueSelectorsCount + '\n' +
     'Total focusable elements on page: ' + ev.totalPageFocusable + '\n' +
+    '\n' + cookieBannerSummary + '\n' +
     '\nFocus sequence:\n' + sequenceSummary + '\n' +
     '\nAssess whether this page has a keyboard trap per SC 2.1.2 and return your JSON verdict.'
   );
