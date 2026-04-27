@@ -1,4 +1,5 @@
 import type { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { parseEvalJson } from './evalUtils';
 
 // --------- Response helpers ---------
 
@@ -37,6 +38,69 @@ async function callTool(client: Client, name: string, args: Record<string, unkno
 export async function navigate(client: Client, url: string): Promise<string> {
   const content = await callTool(client, 'browser_navigate', { url });
   return extractText(content);
+}
+
+export async function navigateAndSettle(
+  client: Client,
+  url: string,
+  timeoutMs = 60_000,
+): Promise<string> {
+  const result = await navigate(client, url);
+
+  const readinessJs = `() => {
+    function isVisible(el) {
+      var s = window.getComputedStyle(el);
+      var r = el.getBoundingClientRect();
+      return s.display !== 'none' && s.visibility !== 'hidden' && r.width > 1 && r.height > 1;
+    }
+    var loadingSelector =
+      '[aria-busy="true"], [role="progressbar"], .loading, .loader, .spinner, ' +
+      '[class*="loading" i], [id*="loading" i], [class*="spinner" i], [id*="spinner" i]';
+    var hasLoader = Array.prototype.some.call(
+      document.querySelectorAll(loadingSelector),
+      function(el) { return isVisible(el); }
+    );
+    var bodyTextLength = (document.body.textContent || '').replace(/\\s+/g, ' ').trim().length;
+    return {
+      complete: document.readyState === 'complete',
+      hasLoader: hasLoader,
+      bodyTextLength: bodyTextLength,
+    };
+  }`;
+
+  const MIN_BODY_TEXT = 2000;
+  const STABLE_POLLS_REQUIRED = 3;
+  const POLL_INTERVAL_S = 1;
+
+  const start = Date.now();
+  let lastBodyLen = -1;
+  let stableCount = 0;
+
+  while (Date.now() - start < timeoutMs) {
+    await waitFor(client, { time: POLL_INTERVAL_S });
+    try {
+      const raw = await evaluate(client, readinessJs);
+      const state = parseEvalJson<{ complete: boolean; hasLoader: boolean; bodyTextLength: number }>(raw);
+
+      const baseReady =
+        state.complete && !state.hasLoader && state.bodyTextLength >= MIN_BODY_TEXT;
+
+      if (baseReady && state.bodyTextLength === lastBodyLen) {
+        stableCount += 1;
+        if (stableCount >= STABLE_POLLS_REQUIRED) {
+          return result;
+        }
+      } else {
+        stableCount = 0;
+      }
+      lastBodyLen = state.bodyTextLength;
+    } catch {
+      // ignore parse errors and keep polling
+    }
+  }
+
+  // Best-effort: proceed even if page never reaches a fully settled state
+  return result;
 }
 
 /** Get the accessibility (ARIA) tree snapshot. */
