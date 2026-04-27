@@ -55,13 +55,13 @@ const TOOLS: Anthropic.Tool[] = [
       properties: {
         verdict: { type: 'string', enum: ['pass', 'fail', 'needs_review'] },
         rationale: { type: 'string' },
-        uncertainty: { type: 'string', enum: ['low', 'medium', 'high'] },
+        confidence: { type: 'string', enum: ['low', 'medium', 'high'] },
         resolvedPurpose: { type: 'string' },
         contextContainer: { type: 'string' },
         rootCause: { type: 'string' },
         suggestedFix: { type: 'string' },
       },
-      required: ['verdict', 'rationale', 'uncertainty', 'rootCause', 'suggestedFix'],
+      required: ['verdict', 'rationale', 'confidence', 'rootCause', 'suggestedFix'],
     },
   },
 ];
@@ -328,7 +328,7 @@ function buildFallback(
   return {
     verdict: 'needs_review',
     rationale: 'Escalation incomplete: ' + reason,
-    uncertainty: 'high',
+    confidence: 'low',
     resolvedPurpose: '',
     contextContainer: null,
     rootCause: 'unknown - escalation did not finalize',
@@ -349,13 +349,13 @@ function parseFinalizeInput(
   };
 
   const verdict = (input['verdict'] as SC244EscalationResult['verdict']) ?? 'needs_review';
-  const uncertainty =
-    (input['uncertainty'] as SC244EscalationResult['uncertainty']) ?? 'medium';
+  const confidence =
+    (input['confidence'] as SC244EscalationResult['confidence']) ?? 'medium';
 
   return {
     verdict,
     rationale: sanitize(String(input['rationale'] ?? '')),
-    uncertainty,
+    confidence,
     resolvedPurpose: sanitize(String(input['resolvedPurpose'] ?? '')),
     contextContainer:
       typeof input['contextContainer'] === 'string'

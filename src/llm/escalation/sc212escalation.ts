@@ -78,7 +78,7 @@ const TOOLS: Anthropic.Tool[] = [
       properties: {
         verdict: { type: 'string', enum: ['pass', 'fail', 'needs_review'] },
         rationale: { type: 'string' },
-        uncertainty: { type: 'string', enum: ['low', 'medium', 'high'] },
+        confidence: { type: 'string', enum: ['low', 'medium', 'high'] },
         trapLocation: {
           type: 'string',
           description:
@@ -109,7 +109,7 @@ const TOOLS: Anthropic.Tool[] = [
         rootCause: { type: 'string' },
         suggestedFix: { type: 'string' },
       },
-      required: ['verdict', 'rationale', 'uncertainty', 'rootCause', 'suggestedFix'],
+      required: ['verdict', 'rationale', 'confidence', 'rootCause', 'suggestedFix'],
     },
   },
 ];
@@ -427,7 +427,7 @@ function buildFallback(
   return {
     verdict: 'needs_review',
     rationale: 'Escalation incomplete: ' + reason,
-    uncertainty: 'high',
+    confidence: 'low',
     trapLocation: null,
     escapeAttempts: [],
     occlusion: null,
@@ -450,8 +450,8 @@ function parseFinalizeInput(
   };
 
   const verdict = (input['verdict'] as SC212EscalationResult['verdict']) ?? 'needs_review';
-  const uncertainty =
-    (input['uncertainty'] as SC212EscalationResult['uncertainty']) ?? 'medium';
+  const confidence =
+    (input['confidence'] as SC212EscalationResult['confidence']) ?? 'medium';
 
   const occlIn = input['occlusion'] as Record<string, unknown> | undefined;
   const occlusion = occlIn
@@ -478,7 +478,7 @@ function parseFinalizeInput(
   return {
     verdict,
     rationale: sanitize(String(input['rationale'] ?? '')),
-    uncertainty,
+    confidence,
     trapLocation:
       typeof input['trapLocation'] === 'string'
         ? (input['trapLocation'] as string)
