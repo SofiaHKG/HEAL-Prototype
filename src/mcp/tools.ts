@@ -40,6 +40,7 @@ export async function navigate(client: Client, url: string): Promise<string> {
   return extractText(content);
 }
 
+/** Navigate to a URL, then wait up to timeoutMs until the page is settled */
 export async function navigateAndSettle(
   client: Client,
   url: string,
