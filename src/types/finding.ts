@@ -17,11 +17,13 @@ export interface EvidenceBundle {
 // Evidence shape for SC 1.1.1 (Non-text Content)
 export interface SC111Evidence {
   altText: string | null;
+  ariaHidden: boolean;
   ariaLabel: string | null;
   ariaLabelledbyText: string | null;
   role: string;
   surroundingText: string;
   parentLinkHref: string | null;
+  parentLinkLabel: string | null;
   parentButtonLabel: string | null;
   screenshotBase64: string | null;
   screenshotMimeType: string | null;
@@ -52,11 +54,24 @@ export interface FocusStep {
   id: string | null;
 }
 
+// Records an attempt to dismiss a cookie/consent banner via the keyboard
+export interface CookieBannerHandling {
+  detected: boolean;
+  dismissalAttempted: boolean;
+  dismissalSelector: string | null;
+  dismissalRole: 'deny' | 'accept' | null;
+  dismissalSucceeded: boolean | null;   // banner element removed/hidden
+  postDismissalFocusGained: boolean | null; // Tab from body produced a focus
+  // Debug screenshots written to disk for visual verification of dismissal
+  beforeScreenshotPath: string | null;
+  afterScreenshotPath: string | null;
+}
+
 // Evidence for SC 2.1.2 (No Keyboard Trap)
 export interface SC212Evidence {
   focusSequence: FocusStep[];
   trapDetected: boolean;
-  trapType: 'consecutive' | 'cycle' | null;
+  trapType: 'consecutive' | 'cycle' | 'focus_lost_after_dismiss' | null;
   stuckSelector: string | null;
   cycleSelectors: string[] | null;
   escapeBehavior: 'moved' | 'stuck' | 'not_tested';
@@ -64,6 +79,13 @@ export interface SC212Evidence {
   totalTabsPressed: number;
   uniqueSelectorsCount: number;
   totalPageFocusable: number;
+  cookieBanner: CookieBannerHandling;
+  // Focus traversal AFTER a cookie banner was dismissed
+  postDismissalFocusSequence: FocusStep[] | null;
+  // Where focus actually went during the post-Escape Tab probe
+  escapeProbeSequence: FocusStep[] | null;
+  shiftTabProbeSequence: FocusStep[] | null;
+  escapeScreenshotPath: string | null;
 }
 
 // One key the LLM tried during SC 2.1.2 escalation, plus the observed effect
@@ -92,7 +114,7 @@ export interface EscalationToolCall {
 export interface SC212EscalationResult {
   verdict: 'pass' | 'fail' | 'needs_review';
   rationale: string;
-  uncertainty: 'low' | 'medium' | 'high';
+  confidence: 'low' | 'medium' | 'high';
   trapLocation: string | null;
   escapeAttempts: EscapeAttempt[];
   occlusion: OcclusionInfo | null;
@@ -106,7 +128,7 @@ export interface SC212EscalationResult {
 export interface SC244EscalationResult {
   verdict: 'pass' | 'fail' | 'needs_review';
   rationale: string;
-  uncertainty: 'low' | 'medium' | 'high';
+  confidence: 'low' | 'medium' | 'high';
   resolvedPurpose: string;
   contextContainer: string | null;
   rootCause: string;
