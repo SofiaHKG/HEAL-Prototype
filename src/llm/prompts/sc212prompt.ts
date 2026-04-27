@@ -31,7 +31,7 @@ Consider:
 - totalTabsPressed vs totalPageFocusable (did traversal cover enough of the page?)
 
 Respond with ONLY a JSON object in this exact shape - no prose, no markdown fences:
-{"verdict":"pass"|"fail"|"needs_review","rationale":"<one or two sentences>","uncertainty":"low"|"medium"|"high"}`;
+{"verdict":"pass"|"fail"|"needs_review","rationale":"<one or two sentences>","confidence":"low"|"medium"|"high"}`;
 
 
 // Build the user message from one SC 2.1.2 evidence bundle

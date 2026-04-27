@@ -69,7 +69,7 @@ surrounding context alone — default to "needs_review" for INFORMATIVE elements
 cannot be determined with confidence.
 
 Respond with ONLY a JSON object in this exact shape — no prose, no markdown fences:
-{"verdict":"pass"|"fail"|"needs_review","rationale":"<one or two sentences>","uncertainty":"low"|"medium"|"high"}`;
+{"verdict":"pass"|"fail"|"needs_review","rationale":"<one or two sentences>","confidence":"low"|"medium"|"high"}`;
 
 
 // Build full AssessParams for one SC 1.1.1 evidence bundle

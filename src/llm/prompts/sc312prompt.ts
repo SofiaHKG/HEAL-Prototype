@@ -136,7 +136,7 @@ Output rules (strict):
     newline characters inside the rationale.
 
 Respond with ONLY a JSON object in this exact shape - no prose, no markdown fences:
-{"verdict":"pass"|"fail"|"needs_review","rationale":"<one or two sentences>","uncertainty":"low"|"medium"|"high"}`;
+{"verdict":"pass"|"fail"|"needs_review","rationale":"<one or two sentences>","confidence":"low"|"medium"|"high"}`;
 
 // Build the user message from one SC 3.1.2 evidence bundle
 export function buildSC312UserMessage(bundle: EvidenceBundle): string {
