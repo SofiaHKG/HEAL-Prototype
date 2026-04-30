@@ -19,6 +19,7 @@ export type AxeVerdict = 'fail' | 'incomplete' | 'pass' | 'none';
 export interface AxeNodeFinding {
   ruleId: string;
   verdict: Exclude<AxeVerdict, 'none'>;
+  help: string;
   selector: string;
   html: string;
   failureSummary: string | undefined;
@@ -60,6 +61,7 @@ function extractFromResults(
     out.push({
       ruleId,
       verdict,
+      help: match.help,
       selector: resolveSelector(node),
       html: node.html,
       failureSummary: node.failureSummary,
