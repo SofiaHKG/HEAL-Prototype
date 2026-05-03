@@ -3,49 +3,45 @@ import type { EvidenceBundle } from '../types/finding';
 import type { Assessment } from '../llm/parser';
 import { createMcpClient } from '../mcp/client';
 import { navigateAndSettle } from '../mcp/tools';
-import { collectSC111Evidence } from '../evidence/sc111';
+import { collectSC312Evidence } from '../evidence/sc312';
 import { assess } from '../llm/claudeClient';
 import { parseAssessment } from '../llm/parser';
-import { buildSC111AssessParams } from '../llm/prompts/sc111prompt';
+import { SC312_SYSTEM_PROMPT, buildSC312UserMessage } from '../llm/prompts/sc312prompt';
 import { sampleItems, describeSampleMode, type SampleMode } from './sampling';
 
 // Result shape
-export interface SC111Result {
+export interface SC312Result {
   bundle: EvidenceBundle;
   assessment: Assessment;
 }
 
-// Orchestrator variant that reuses an existing MCP client
-export async function runSC111AssessmentOnClient(
+export async function runSC312AssessmentOnClient(
   client: Client,
-  url: string,
   mode: SampleMode = 'full',
-): Promise<SC111Result[]> {
-  const allBundles = await collectSC111Evidence(client, url);
+): Promise<SC312Result[]> {
+  const allBundles = await collectSC312Evidence(client);
   if (allBundles.length === 0) return [];
 
   const bundles = sampleItems(allBundles, mode);
   if (bundles.length !== allBundles.length) {
-    console.log('  SC 1.1.1: ' + describeSampleMode(mode, allBundles.length, bundles.length));
+    console.log('  SC 3.1.2: ' + describeSampleMode(mode, allBundles.length, bundles.length));
   }
 
-  const results: SC111Result[] = [];
+  const results: SC312Result[] = [];
   for (const bundle of bundles) {
-    const assessParams = buildSC111AssessParams(bundle);
-    const rawReply = await assess(assessParams);
+    const userMessage = buildSC312UserMessage(bundle);
+    const rawReply = await assess({ systemPrompt: SC312_SYSTEM_PROMPT, userMessage });
     const assessment = parseAssessment(rawReply);
     results.push({ bundle, assessment });
   }
   return results;
 }
 
-// Standalone wrapper: creates its own MCP client + navigates
-// (used by per-SC CLIs that don't share state with other SCs)
-export async function runSC111Assessment(url: string, mode: SampleMode = 'full'): Promise<SC111Result[]> {
+export async function runSC312Assessment(url: string, mode: SampleMode = 'full'): Promise<SC312Result[]> {
   const client = await createMcpClient();
   try {
     await navigateAndSettle(client, url);
-    return await runSC111AssessmentOnClient(client, url, mode);
+    return await runSC312AssessmentOnClient(client, mode);
   } finally {
     await client.close();
   }
