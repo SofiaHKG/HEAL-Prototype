@@ -10,7 +10,7 @@ export interface HealFinding {
   evidence: Record<string, unknown>;
   verdict: 'pass' | 'fail' | 'needs_review';
   rationale: string;
-  uncertainty: 'low' | 'medium' | 'high';
+  confidence: 'low' | 'medium' | 'high';
   escalation?: unknown;
 }
 
@@ -19,6 +19,7 @@ export interface AxeFindingEntry {
   ruleId: string;
   sc: string;
   verdict: 'fail' | 'incomplete';
+  help?: string;
   selector: string;
   html: string;
   failureSummary: string | undefined;
