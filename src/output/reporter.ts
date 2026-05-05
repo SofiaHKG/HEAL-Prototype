@@ -1,5 +1,5 @@
-import * as fs from 'fs';
 import * as path from 'path';
+import * as fs from 'fs';
 import type { HealReport, HealFinding, AxeFindingEntry } from './schema';
 import type { EvidenceBundle } from '../types/finding';
 import type { Assessment } from '../llm/parser';
@@ -12,32 +12,86 @@ export interface SCResult {
   escalation?: unknown;
 }
 
-// Builder to convert any SCResult[] into a HealReport
-export function buildReport(url: string, results: SCResult[]): HealReport {
-  const findings: HealFinding[] = results.map((r) => ({
+interface Summary {
+  total: number;
+  pass: number;
+  fail: number;
+  needs_review: number;
+}
+
+function mapResultsToFindings(results: SCResult[]): HealFinding[] {
+  return results.map((r) => ({
     sc: r.bundle.sc,
     selector: r.bundle.element.selector,
     outerHTML: r.bundle.element.outerHTML,
     evidence: r.bundle.evidence,
     verdict: r.assessment.verdict,
     rationale: r.assessment.rationale,
-    uncertainty: r.assessment.uncertainty,
+    confidence: r.assessment.confidence,
     ...(r.escalation !== undefined ? { escalation: r.escalation } : {}),
   }));
+}
 
-  const summary = {
+function summarize(findings: HealFinding[]): Summary {
+  return {
     total: findings.length,
     pass: findings.filter((f) => f.verdict === 'pass').length,
     fail: findings.filter((f) => f.verdict === 'fail').length,
     needs_review: findings.filter((f) => f.verdict === 'needs_review').length,
   };
+}
 
+// Builder to convert any SCResult[] into a HealReport
+export function buildReport(url: string, results: SCResult[]): HealReport {
+  const findings = mapResultsToFindings(results);
   return {
     schemaVersion: '1.0',
     timestamp: new Date().toISOString(),
     url,
     findings,
-    summary,
+    summary: summarize(findings),
+  };
+}
+
+// Build aggregate report combining axe findings + LLM results from all SCs
+export function buildAggregateReport(
+  url: string,
+  axeNodeFindings: { sc: string; findings: AxeNodeFinding[] }[],
+  scResults: SCResult[],
+): HealReport {
+  const axeFindings: AxeFindingEntry[] = [];
+  for (const group of axeNodeFindings) {
+    for (const f of group.findings) {
+      if (f.verdict !== 'fail' && f.verdict !== 'incomplete') continue;
+      axeFindings.push({
+        ruleId: f.ruleId,
+        sc: group.sc,
+        verdict: f.verdict,
+        help: f.help,
+        selector: f.selector,
+        html: f.html,
+        failureSummary: f.failureSummary,
+        helpUrl: f.helpUrl,
+      });
+    }
+  }
+
+  const axeSummary = {
+    total: axeFindings.length,
+    fail: axeFindings.filter(f => f.verdict === 'fail').length,
+    incomplete: axeFindings.filter(f => f.verdict === 'incomplete').length,
+  };
+
+  const findings = mapResultsToFindings(scResults);
+
+  return {
+    schemaVersion: '1.0',
+    timestamp: new Date().toISOString(),
+    url,
+    axeFindings,
+    findings,
+    summary: summarize(findings),
+    axeSummary,
   };
 }
 
@@ -64,18 +118,6 @@ export function printSummary(report: HealReport): void {
     console.log('Total:      ' + report.axeSummary.total);
     console.log('Fail:       ' + report.axeSummary.fail);
     console.log('Incomplete: ' + report.axeSummary.incomplete);
-
-    if (report.axeFindings.length > 0) {
-      console.log('\nAxe findings:');
-      for (const f of report.axeFindings) {
-        console.log(
-          '  [' + f.verdict + '] SC ' + f.sc +
-          ' | rule=' + f.ruleId +
-          '\n      ' + f.selector +
-          (f.failureSummary ? '\n      ' + f.failureSummary : '')
-        );
-      }
-    }
   }
 
   // LLM assessment summary
@@ -84,95 +126,4 @@ export function printSummary(report: HealReport): void {
   console.log('Pass:      ' + report.summary.pass);
   console.log('Fail:      ' + report.summary.fail);
   console.log('Review:    ' + report.summary.needs_review);
-
-  if (report.findings.length === 0) {
-    console.log('\nNo LLM findings.');
-    return;
-  }
-
-  console.log('\nFindings:');
-  for (const f of report.findings) {
-    const flag = f.verdict === 'pass' ? '[pass]' : f.verdict === 'fail' ? '[fail]' : '[needs review]';
-    console.log(
-      '  [' + flag + '] SC ' + f.sc +
-      ' | ' + f.verdict.toUpperCase() +
-      ' (' + f.uncertainty + ')' +
-      '\n      ' + f.selector +
-      '\n      ' + f.rationale
-    );
-
-    const esc =
-      f.escalation && typeof f.escalation === 'object'
-        ? (f.escalation as Record<string, unknown>)
-        : undefined;
-    if (esc !== undefined) {
-      const rootCause = typeof esc['rootCause'] === 'string' ? esc['rootCause'] : '';
-      const suggestedFix = typeof esc['suggestedFix'] === 'string' ? esc['suggestedFix'] : '';
-      if (rootCause) {
-        console.log('      Escalation root cause: ' + rootCause);
-      }
-      if (suggestedFix) {
-        console.log('      Escalation suggested fix: ' + suggestedFix);
-      }
-    }
-  }
-}
-
-// Build aggregate report combining axe findings + LLM results from all SCs
-export function buildAggregateReport(
-  url: string,
-  axeNodeFindings: { sc: string; findings: AxeNodeFinding[] }[],
-  scResults: SCResult[],
-): HealReport {
-  // Convert axe findings (only fail/incomplete come from getAxeFindingsForSC)
-  const axeFindings: AxeFindingEntry[] = [];
-  for (const group of axeNodeFindings) {
-    for (const f of group.findings) {
-      if (f.verdict !== 'fail' && f.verdict !== 'incomplete') continue;
-      axeFindings.push({
-        ruleId: f.ruleId,
-        sc: group.sc,
-        verdict: f.verdict,
-        selector: f.selector,
-        html: f.html,
-        failureSummary: f.failureSummary,
-        helpUrl: f.helpUrl,
-      });
-    }
-  }
-
-  const axeSummary = {
-    total: axeFindings.length,
-    fail: axeFindings.filter(f => f.verdict === 'fail').length,
-    incomplete: axeFindings.filter(f => f.verdict === 'incomplete').length,
-  };
-
-  // Convert LLM results (same as buildReport)
-  const findings: HealFinding[] = scResults.map((r) => ({
-    sc: r.bundle.sc,
-    selector: r.bundle.element.selector,
-    outerHTML: r.bundle.element.outerHTML,
-    evidence: r.bundle.evidence,
-    verdict: r.assessment.verdict,
-    rationale: r.assessment.rationale,
-    uncertainty: r.assessment.uncertainty,
-    ...(r.escalation !== undefined ? { escalation: r.escalation } : {}),
-  }));
-
-  const summary = {
-    total: findings.length,
-    pass: findings.filter(f => f.verdict === 'pass').length,
-    fail: findings.filter(f => f.verdict === 'fail').length,
-    needs_review: findings.filter(f => f.verdict === 'needs_review').length,
-  };
-
-  return {
-    schemaVersion: '1.0',
-    timestamp: new Date().toISOString(),
-    url,
-    axeFindings,
-    findings,
-    summary,
-    axeSummary,
-  };
 }
