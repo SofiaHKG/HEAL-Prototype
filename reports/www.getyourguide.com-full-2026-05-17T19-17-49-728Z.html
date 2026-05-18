@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+            .card-header .btn-link { color: #2557a7; }
+            .violationCard, .healCard { width: 100%; margin-bottom: 1rem; }
+            .violationCardLine, .healCardLine {
+                display: flex; justify-content: space-between; align-items: start;
+                font-weight: 500; line-height: 1.2;
+            }
+            .card-title { font-size: 1.25rem; }
+            .violationCardTitleItem, .healCardTitleItem { font-size: 1rem; font-weight: 500; }
+            .card-text { font-size: 0.95rem; font-weight: 300; }
+            .learnMore { margin-bottom: 0.75rem; white-space: nowrap; color: #2557a7; }
+            .card-link { color: #2557a7; }
+            .violationNode, .healNode { font-size: 0.85rem; }
+            .wrapBreakWord { word-break: break-word; }
+            .summary { font-size: 1rem; }
+            .summarySection { margin: 0.5rem 0; }
+            .hljs { white-space: pre-wrap; width: 100%; background: #f0f0f0; }
+            p { margin-top: 0.3rem; }
+            li { line-height: 1.618; }
+            .badge-success { background-color: #28a745; color: #fff; }
+            .badge-warning { background-color: #ffc107; color: #212529; }
+            .badge-danger { background-color: #dc3545; color: #fff; }
+            .badge-info { background-color: #17a2b8; color: #fff; }
+            .badge-secondary { background-color: #6c757d; color: #fff; }
+            .badge { display: inline-block; padding: .25em .4em; font-size: 75%; font-weight: 700;
+                     line-height: 1; text-align: center; white-space: nowrap; vertical-align: baseline;
+                     border-radius: .25rem; }
+            .verdict-pass { border-left: 4px solid #28a745; }
+            .verdict-fail { border-left: 4px solid #dc3545; }
+            .verdict-needs_review { border-left: 4px solid #ffc107; }
+            .section-divider { border-top: 2px solid #dee2e6; margin: 2rem 0; }
+            .heal-summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; margin: 1rem 0; }
+            .heal-summary-card { text-align: center; padding: 1rem; border-radius: .5rem; }
+            .heal-summary-card .count { font-size: 2rem; font-weight: 700; }
+            .heal-summary-card .label { font-size: 0.85rem; color: #666; }
+            .bg-pass { background: #d4edda; }
+            .bg-fail { background: #f8d7da; }
+            .bg-review { background: #fff3cd; }
+            .bg-total { background: #e2e3e5; }
+            .finding-thumb { width: 120px; height: 80px; object-fit: cover; border: 1px solid #dee2e6; border-radius: .25rem; background: #f8f9fa; }
+            .thumb-cell { min-width: 140px; }
+            /* Respect the per-column widths set via <th style="width: ..."> so a
+               long selector/outerHTML can't blow out the table. */
+            .table { table-layout: fixed; width: 100%; }
+            /* Long unbroken strings (URLs, CSS selectors, full outerHTML) must
+               wrap inside their cell instead of forcing the column to grow. */
+            .table td, .table th { word-break: break-word; overflow-wrap: anywhere; }
+            .table pre { white-space: pre-wrap; word-break: break-word;
+                          overflow-wrap: anywhere; margin-bottom: .5rem; max-width: 100%; }
+            .table code { white-space: pre-wrap; word-break: break-word;
+                           overflow-wrap: anywhere; }
+        </style>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+              integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+                integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+                integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+                integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/stackoverflow-light.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+        <title>HEAL Accessibility Report</title>
+    </head>
+    <main role="main">
+        <div style="padding: 2rem">
+            <h1>HEAL Accessibility Report</h1>
+            <div class="summarySection">
+                <div class="summary">
+                    Page URL: <a href="https:&#x2F;&#x2F;www.getyourguide.com" target="_blank" class="card-link">https:&#x2F;&#x2F;www.getyourguide.com</a><br />
+                </div>
+                <div class="summary">
+                    Generated: 2026-05-17T19:20:06.265Z
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════ -->
+            <!--  SECTION 1: Axe-core Rule-Based Findings  -->
+            <!-- ══════════════════════════════════════════ -->
+            <div class="section-divider"></div>
+            <h2>Layer 1: axe-core Rule-Based Scan</h2>
+            <h3>axe-core found <span class="badge badge-success">0</span> violations</h3>
+
+
+
+            <!-- ════════════════════════════════════════ -->
+            <!--  SECTION 2: HEAL LLM Assessment         -->
+            <!-- ════════════════════════════════════════ -->
+            <div class="section-divider"></div>
+            <h2>Layer 2: HEAL LLM Semantic Assessment</h2>
+            <p class="text-muted">Evidence-based assessment using Claude — three-valued verdicts (pass / fail / needs_review)</p>
+
+            <div class="heal-summary-grid">
+                <div class="heal-summary-card bg-total">
+                    <div class="count">18</div>
+                    <div class="label">Total</div>
+                </div>
+                <div class="heal-summary-card bg-pass">
+                    <div class="count">15</div>
+                    <div class="label">Pass</div>
+                </div>
+                <div class="heal-summary-card bg-fail">
+                    <div class="count">1</div>
+                    <div class="label">Fail</div>
+                </div>
+                <div class="heal-summary-card bg-review">
+                    <div class="count">2</div>
+                    <div class="label">Needs Review</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 1.5rem">SC 1.1.1 &mdash; Non-text Content</h3>
+            <p class="text-muted">No elements found to assess for this criterion.</p>
+            <h3 style="margin-top: 1.5rem">SC 2.1.2 &mdash; No Keyboard Trap</h3>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 4%">#</th>
+                        <th style="width: 9%">Verdict</th>
+                        <th style="width: 9%">Confidence</th>
+                        <th style="width: 38%">Element</th>
+                        <th style="width: 40%">Rationale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="verdict-pass">
+                        <th scope="row">1</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">(page-level — no single trap selector identified)</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">Tabs pressed: 46 &#x2F; 9 focusable on page, 9 unique selector(s) visited</code></pre>
+                        </td>
+                        <td>No trap was detected by the automated traversal. Although 46 Tab presses were made and only 9 unique selectors were visited (suggesting cycling through focusable elements), this is expected behavior for a page with exactly 9 focusable elements. The focus sequence shows the traversal cycling back to the first element after reaching the last, which is normal keyboard navigation. No cookie banner was present, and no element trapped focus.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3 style="margin-top: 1.5rem">SC 2.4.4 &mdash; Link Purpose (In Context)</h3>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 4%">#</th>
+                        <th style="width: 9%">Verdict</th>
+                        <th style="width: 9%">Confidence</th>
+                        <th style="width: 38%">Element</th>
+                        <th style="width: 40%">Rationale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="verdict-pass">
+                        <th scope="row">1</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;tel:+1-855-957-1272&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;tel:+1-855-957-1272&quot;&gt; +1 855 957 1272 &lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link&#39;s accessible name &#39;+1 855 957 1272&#39; clearly identifies it as a US phone number. The surrounding context explicitly labels it as &#39;USA&#39; and indicates it is a customer service hotline (gebührenfrei &#x3D; toll-free), making the purpose unambiguous: to call the US support line.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">2</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;tel:+44-114-697-1778&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;tel:+44-114-697-1778&quot;&gt; +44 114 697 1778 &lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link&#39;s accessible name is a phone number (+44 114 697 1778) and the surrounding context clearly identifies it as the UK customer service hotline, with the country label &#39;Großbritannien&#39; (Great Britain) immediately preceding it in a list of international contact numbers. The purpose is unambiguous.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">3</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;tel:+49-30-837-91488&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;tel:+49-30-837-91488&quot;&gt; +49 30 837 91488 &lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link purpose is clear from the accessible name combined with surrounding context. The accessible name &#39;+49 30 837 91488&#39; is a phone number, and the surrounding context explicitly labels it as &#39;Deutschland&#39; (Germany), making it unambiguous that this is a clickable phone number link for customer service contact in Germany.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">4</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;tel:+41-91-239-18-603&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;tel:+41-91-239-18-603&quot;&gt; +41 91 239 18 60 &lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link purpose is clear from the accessible name combined with surrounding context. The accessible name &#39;+41 91 239 18 60&#39; is a phone number, and the surrounding context explicitly labels it as &#39;Schweiz&#39; (Switzerland), making it unambiguous that this is a clickable phone number link for Swiss customer support. The tel: href confirms the action (initiating a phone call).</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">5</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;tel:+61-3-6413-0103&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;tel:+61-3-6413-0103&quot;&gt; +61 3 6413 0103 &lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link purpose is clear from the accessible name combined with surrounding context. The accessible name &#39;+61 3 6413 0103&#39; is a phone number, and the surrounding context explicitly labels it as &#39;Australia&#39; with a country flag emoji, making it unambiguous that this is a contact number for Australian customer service. The tel: protocol further confirms the action is to initiate a phone call.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">6</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;tel:+39-06-9674-1658&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;tel:+39-06-9674-1658&quot;&gt; +39 06 9674 1658 &lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link purpose is clear from the accessible name combined with surrounding context. The accessible name &#39;+39 06 9674 1658&#39; is a phone number, and the surrounding context explicitly labels it as &#39;Italien&#39; (Italy), making it unambiguous that this is a telephone link to contact customer service in Italy.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">7</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;tel:+34-93-034-26-72&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;tel:+34-93-034-26-72&quot;&gt; +34 93 034 26 72 &lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link purpose is clear from the accessible name combined with surrounding context. The accessible name is a phone number (+34 93 034 26 72), and the surrounding context explicitly labels it as &#39;Spanien&#39; (Spain), making the purpose unambiguous: to call the Spanish customer service hotline. The href attribute (tel: protocol) further confirms this is a telephone link.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">8</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;tel:+33-3-67-21-01-19&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;tel:+33-3-67-21-01-19&quot;&gt; +33 3 67 21 01 19 &lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link purpose is clear from the accessible name combined with surrounding context. The accessible name is a phone number (+33 3 67 21 01 19), and the immediately preceding context identifies this as the &#39;Frankreich&#39; (France) customer service hotline. The href confirms this is a telephone link (tel: protocol), making the purpose unambiguous: to call the French customer support line.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">9</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;tel:+49-30-837-91488&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;tel:+49-30-837-91488&quot;&gt; +49 30 837 91488 &lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link purpose is clear from the accessible name combined with surrounding context. The accessible name &#39;+49 30 837 91488&#39; is a phone number, and the surrounding context explicitly labels it as &#39;International&#39; (from the list item structure showing &#39;strong: International&#39; immediately preceding the link). This makes it unambiguous that the link is for calling the international customer service hotline.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3 style="margin-top: 1.5rem">SC 3.1.2 &mdash; Language of Parts</h3>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 4%">#</th>
+                        <th style="width: 9%">Verdict</th>
+                        <th style="width: 9%">Confidence</th>
+                        <th style="width: 38%">Element</th>
+                        <th style="width: 40%">Rationale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="verdict-fail">
+                        <th scope="row">1</th>
+                        <td>
+                            
+                            <span class="badge badge-danger">FAIL</span>
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">p</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;p&gt;&lt;script&gt;document.write(dictionary[&#39;message&#39;]);&lt;&#x2F;script&gt;Bei Fragen können Sie sich gerne an unsere Mitarbeiter im Kundenservice wenden.&lt;&#x2F;p&gt;</code></pre>
+                        </td>
+                        <td>The text is a complete German sentence (&#39;Bei Fragen können Sie sich gerne an unsere Mitarbeiter im Kundenservice wenden.&#39;) containing substantive content and meaningful phrases. The page has no declared primary language, so the absence of a [lang] attribute on this German-language paragraph is a failure of SC 3.1.2. This is not a proper name, loanword, technical term, or single word; it is a full clause conveying customer service contact instructions.</td>
+                    </tr>
+                    <tr class="verdict-needs_review">
+                        <th scope="row">2</th>
+                        <td>
+                            
+                            
+                            <span class="badge badge-warning">REVIEW</span>
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">p</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;p&gt;
+					&lt;strong&gt;&lt;script&gt;document.write(dictionary[&#39;title&#39;]);&lt;&#x2F;script&gt;Hier ist leider ein Fehler aufgetreten. Wir sind in Kürze wieder für Sie da.&lt;&#x2F;strong&gt;
+				&lt;&#x2F;p&gt;</code></pre>
+                        </td>
+                        <td>The page has no declared primary language (&lt;html lang&gt; is absent), making it impossible to definitively determine whether this German text represents a &#39;different language&#39; from the page&#39;s primary language. The text itself is clearly German (&#39;Hier ist leider ein Fehler aufgetreten. Wir sind in Kürze wieder für Sie da.&#39; &#x3D; &#39;An error has unfortunately occurred. We will be back for you shortly.&#39;), and it is substantive content (a complete sentence conveying meaning). However, without a declared pageLang, the comparison required by MODE B cannot be reliably performed. If the page&#39;s intended primary language is German, this would be a pass; if it is any other language, this would be a fail.</td>
+                    </tr>
+                    <tr class="verdict-needs_review">
+                        <th scope="row">3</th>
+                        <td>
+                            
+                            
+                            <span class="badge badge-warning">REVIEW</span>
+                        </td>
+                        <td><span class="badge badge-secondary">medium</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">li.us</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;li class&#x3D;&quot;us&quot;&gt;&lt;script&gt;document.write(dictionary[&#39;hotline-us&#39;]);&lt;&#x2F;script&gt;&lt;strong&gt;USA&lt;&#x2F;strong&gt; &lt;a href&#x3D;&quot;tel:+1-855-957-1272&quot;&gt; +1 855 957 1272 &lt;&#x2F;a&gt; (gebührenfrei)&lt;&#x2F;li&gt;</code></pre>
+                        </td>
+                        <td>The element contains &#39;USA&#39; (a proper name&#x2F;acronym), a phone number (language-neutral), and the German word &#39;gebührenfrei&#39; (meaning &#39;toll-free&#39;). Since the page has no declared primary language, it is unclear whether German is the expected language context. If the page is primarily German, &#39;gebührenfrei&#39; is a loanword&#x2F;common term in German contexts and would pass. If the page is primarily English or another language, &#39;gebührenfrei&#39; would be a substantive German word requiring annotation. The ambiguity about page language intent prevents a confident pass or fail verdict.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">4</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">li.gb</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;li class&#x3D;&quot;gb&quot;&gt;&lt;script&gt;document.write(dictionary[&#39;hotline-gb&#39;]);&lt;&#x2F;script&gt;&lt;strong&gt;Großbritannien&lt;&#x2F;strong&gt; &lt;a href&#x3D;&quot;tel:+44-114-697-1778&quot;&gt; +44 114 697 1778 &lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</code></pre>
+                        </td>
+                        <td>The text contains &#39;Großbritannien&#39; (a German proper noun for the place name &#39;Great Britain&#39;), a phone number (+44 114 697 1778), and a country code. Place names are explicitly exempted from SC 3.1.2 annotation requirements per the normative exceptions. The phone number is language-neutral technical content. No substantive foreign-language phrase or sentence is present.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">5</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">li.intl</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;li class&#x3D;&quot;intl&quot;&gt;&lt;script&gt;document.write(dictionary[&#39;hotline-intl&#39;]);&lt;&#x2F;script&gt;&lt;strong&gt;International&lt;&#x2F;strong&gt; &lt;a href&#x3D;&quot;tel:+49-30-837-91488&quot;&gt; +49 30 837 91488 &lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</code></pre>
+                        </td>
+                        <td>The text &#39;International +49 30 837 91488&#39; contains a label (&#39;International&#39;), a country code (+49 for Germany), and a phone number. These are language-neutral elements: the word &#39;International&#39; is a loanword&#x2F;common English term that has entered many languages&#39; vernacular, and phone numbers with country codes are not substantive foreign-language content. No [lang] annotation is required.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">6</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">li.de</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;li class&#x3D;&quot;de&quot;&gt;&lt;script&gt;document.write(dictionary[&#39;hotline-de&#39;]);&lt;&#x2F;script&gt;&lt;strong&gt;Deutschland&lt;&#x2F;strong&gt; &lt;a href&#x3D;&quot;tel:+49-30-837-91488&quot;&gt; +49 30 837 91488 &lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</code></pre>
+                        </td>
+                        <td>The text &#39;Deutschland +49 30 837 91488&#39; contains a proper name (Deutschland, the German name for Germany) and a phone number with country code. A place name is explicitly exempt under SC 3.1.2 normative exceptions, and a phone number is language-neutral technical content. No substantive foreign-language phrase or sentence is present.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">7</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">li.fr</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;li class&#x3D;&quot;fr&quot;&gt;&lt;script&gt;document.write(dictionary[&#39;hotline-fr&#39;]);&lt;&#x2F;script&gt;&lt;strong&gt;Frankreich&lt;&#x2F;strong&gt; &lt;a href&#x3D;&quot;tel:+33-3-67-21-01-19&quot;&gt; +33 3 67 21 01 19 &lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</code></pre>
+                        </td>
+                        <td>The text &#39;Frankreich +33 3 67 21 01 19&#39; contains a proper name (Frankreich, the German&#x2F;Dutch name for France) and a phone number. Proper names are explicitly exempted from SC 3.1.2 requirements. The phone number is language-neutral technical content. No substantive foreign-language phrase or sentence is present.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">8</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">li.au</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;li class&#x3D;&quot;au&quot;&gt;&lt;script&gt;document.write(dictionary[&#39;hotline-au&#39;]);&lt;&#x2F;script&gt;&lt;strong&gt;Australia&lt;&#x2F;strong&gt; &lt;a href&#x3D;&quot;tel:+61-3-6413-0103&quot;&gt; +61 3 6413 0103 &lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</code></pre>
+                        </td>
+                        <td>The text &#39;Australia +61 3 6413 0103&#39; consists of a proper place name (&#39;Australia&#39;) and a telephone number with country code. Proper names are explicitly exempted from SC 3.1.2 requirements. The phone number is language-neutral technical content. No substantive foreign-language phrase or sentence is present.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <script>hljs.initHighlightingOnLoad();</script>
+    </main>
+</html>

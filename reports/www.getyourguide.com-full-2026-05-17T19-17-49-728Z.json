@@ -1,0 +1,576 @@
+{
+  "schemaVersion": "1.0",
+  "timestamp": "2026-05-17T19:20:06.265Z",
+  "url": "https://www.getyourguide.com",
+  "axeFindings": [],
+  "findings": [
+    {
+      "sc": "2.1.2",
+      "selector": "body",
+      "outerHTML": "",
+      "evidence": {
+        "focusSequence": [
+          {
+            "tabIndex": 1,
+            "selector": "a[href=\"tel:+44-114-697-1778\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 2,
+            "selector": "body > section > div > ul > li:nth-of-type(3) > a",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 3,
+            "selector": "a[href=\"tel:+41-91-239-18-603\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 4,
+            "selector": "a[href=\"tel:+61-3-6413-0103\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 5,
+            "selector": "a[href=\"tel:+39-06-9674-1658\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 6,
+            "selector": "a[href=\"tel:+34-93-034-26-72\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 7,
+            "selector": "a[href=\"tel:+33-3-67-21-01-19\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 8,
+            "selector": "body > section > div > ul > li:nth-of-type(9) > a",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 10,
+            "selector": "a[href=\"tel:+1-855-957-1272\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 11,
+            "selector": "a[href=\"tel:+44-114-697-1778\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 12,
+            "selector": "body > section > div > ul > li:nth-of-type(3) > a",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 13,
+            "selector": "a[href=\"tel:+41-91-239-18-603\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 14,
+            "selector": "a[href=\"tel:+61-3-6413-0103\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 15,
+            "selector": "a[href=\"tel:+39-06-9674-1658\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 16,
+            "selector": "a[href=\"tel:+34-93-034-26-72\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 17,
+            "selector": "a[href=\"tel:+33-3-67-21-01-19\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 18,
+            "selector": "body > section > div > ul > li:nth-of-type(9) > a",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 20,
+            "selector": "a[href=\"tel:+1-855-957-1272\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 21,
+            "selector": "a[href=\"tel:+44-114-697-1778\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 22,
+            "selector": "body > section > div > ul > li:nth-of-type(3) > a",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 23,
+            "selector": "a[href=\"tel:+41-91-239-18-603\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 24,
+            "selector": "a[href=\"tel:+61-3-6413-0103\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 25,
+            "selector": "a[href=\"tel:+39-06-9674-1658\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 26,
+            "selector": "a[href=\"tel:+34-93-034-26-72\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 27,
+            "selector": "a[href=\"tel:+33-3-67-21-01-19\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 28,
+            "selector": "body > section > div > ul > li:nth-of-type(9) > a",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 30,
+            "selector": "a[href=\"tel:+1-855-957-1272\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 31,
+            "selector": "a[href=\"tel:+44-114-697-1778\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 32,
+            "selector": "body > section > div > ul > li:nth-of-type(3) > a",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 33,
+            "selector": "a[href=\"tel:+41-91-239-18-603\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 34,
+            "selector": "a[href=\"tel:+61-3-6413-0103\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 35,
+            "selector": "a[href=\"tel:+39-06-9674-1658\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 36,
+            "selector": "a[href=\"tel:+34-93-034-26-72\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 37,
+            "selector": "a[href=\"tel:+33-3-67-21-01-19\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 38,
+            "selector": "body > section > div > ul > li:nth-of-type(9) > a",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 39,
+            "selector": "a[href=\"tel:+1-855-957-1272\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 40,
+            "selector": "a[href=\"tel:+44-114-697-1778\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 41,
+            "selector": "body > section > div > ul > li:nth-of-type(3) > a",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 42,
+            "selector": "a[href=\"tel:+41-91-239-18-603\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 43,
+            "selector": "a[href=\"tel:+61-3-6413-0103\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 44,
+            "selector": "a[href=\"tel:+39-06-9674-1658\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 45,
+            "selector": "a[href=\"tel:+34-93-034-26-72\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 46,
+            "selector": "a[href=\"tel:+33-3-67-21-01-19\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 47,
+            "selector": "body > section > div > ul > li:nth-of-type(9) > a",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 49,
+            "selector": "a[href=\"tel:+1-855-957-1272\"]",
+            "tagName": "a",
+            "id": null
+          },
+          {
+            "tabIndex": 50,
+            "selector": "a[href=\"tel:+44-114-697-1778\"]",
+            "tagName": "a",
+            "id": null
+          }
+        ],
+        "trapDetected": false,
+        "trapType": null,
+        "stuckSelector": null,
+        "cycleSelectors": null,
+        "escapeBehavior": "not_tested",
+        "shiftTabBehavior": "not_tested",
+        "totalTabsPressed": 46,
+        "uniqueSelectorsCount": 9,
+        "totalPageFocusable": 9,
+        "cookieBanner": {
+          "detected": false,
+          "dismissalAttempted": false,
+          "dismissalSelector": null,
+          "dismissalRole": null,
+          "dismissalSucceeded": null,
+          "postDismissalFocusGained": null,
+          "beforeScreenshotPath": null,
+          "afterScreenshotPath": null
+        },
+        "postDismissalFocusSequence": null,
+        "escapeProbeSequence": null,
+        "shiftTabProbeSequence": null,
+        "escapeScreenshotPath": null
+      },
+      "verdict": "pass",
+      "rationale": "No trap was detected by the automated traversal. Although 46 Tab presses were made and only 9 unique selectors were visited (suggesting cycling through focusable elements), this is expected behavior for a page with exactly 9 focusable elements. The focus sequence shows the traversal cycling back to the first element after reaching the last, which is normal keyboard navigation. No cookie banner was present, and no element trapped focus.",
+      "confidence": "high"
+    },
+    {
+      "sc": "2.4.4",
+      "selector": "a[href=\"tel:+1-855-957-1272\"]",
+      "outerHTML": "<a href=\"tel:+1-855-957-1272\"> +1 855 957 1272 </a>",
+      "evidence": {
+        "accessibleName": "+1 855 957 1272",
+        "linkHref": "tel:+1-855-957-1272",
+        "surroundingContext": "document.write(dictionary['hotline-us']);USA +1 855 957 1272 (gebührenfrei)",
+        "ariaSubtree": "### Page\n- Page URL: https://www.getyourguide.com/\n- Page Title: GetYourGuide – Error\n- Console: 2 errors, 0 warnings\n### Snapshot\n```yaml\n- generic [ref=e1]:\n  - banner [ref=e2]:\n    - img [ref=e3]\n  - generic [ref=e6]:\n    - generic [ref=e7]:\n      - paragraph [ref=e8]:\n        - strong [ref=e9]: Hier ist leider ein Fehler aufgetreten. Wir sind in Kürze wieder für Sie da.\n      - paragraph [ref=e10]: Bei Fragen können Sie sich gerne an unsere Mitarbeiter im Kundenservice wenden.\n      - paragraph [ref=e11]: \"IP: 212.103.60.197\"\n      - paragraph [ref=e12]: \"Ray ID: 9fd4f7534d4898db\"\n    - list [ref=e13]:\n      - listitem [ref=e14]:\n        - strong [ref=e15]: USA\n        - link \"+1 855 957 1272\" [ref=e16] [cursor=pointer]:\n          - /url: tel:+1-855-957-1272\n        - text: (gebührenfrei)\n      - listitem [ref=e17]:\n        - strong [ref=e18]: Großbritannien\n        - link \"+44 114 697 1778\" [active] [ref=e19] [cursor=pointer]:\n          - /url: tel:+44-114-697-1778\n      - listitem [ref=e20]:\n        - strong [ref=e21]: Deutschland\n        - link \"+49 30 837 91488\" [ref=e22] [cursor=pointer]:\n          - /url: tel:+49-30-837-91488\n      - listitem [ref=e23]:\n        - strong [ref=e24]: Schweiz\n        - link \"+41 91 239 18 60\" [ref=e25] [cursor=pointer]:\n          - /url: tel:+41-91-239-18-603\n      - listitem [ref=e26]:\n        - text: 🇦🇺\n        - strong [ref=e27]: Australia\n        - link \"+61 3 6413 0103\" [ref=e28] [cursor=pointer]:\n          - /url: tel:+61-3-6413-0103\n      - listitem [ref=e29]:\n        - strong [ref=e30]: Italien\n        - link \"+39 06 9674 1658\" [ref=e31] [cursor=pointer]:\n          - /url: tel:+39-06-9674-1658\n      - listitem [ref=e32]:\n        - strong [ref=e33]: Spanien\n        - link \"+34 93 034 26 72\" [ref=e34] [cursor=pointer]:\n          - /url: tel:+34-93-034-26-72\n      - listitem [ref=e35]:\n        - strong [ref=e36]: Frankreich\n        - link \"+33 3 67 21 01 19\" [ref=e37] [cursor=pointer]:\n          - /url: tel:+33-3-67-21-01-19\n      - listitem [ref=e38]:\n        - text: 🌎\n        - strong [ref=e39]: International\n        - link \"+49 30 837 91488\" [ref=e40] [cursor=pointer]:\n          - /url: tel:+49-30-837-91488\n```"
+      },
+      "verdict": "pass",
+      "rationale": "The link's accessible name '+1 855 957 1272' clearly identifies it as a US phone number. The surrounding context explicitly labels it as 'USA' and indicates it is a customer service hotline (gebührenfrei = toll-free), making the purpose unambiguous: to call the US support line.",
+      "confidence": "high"
+    },
+    {
+      "sc": "2.4.4",
+      "selector": "a[href=\"tel:+44-114-697-1778\"]",
+      "outerHTML": "<a href=\"tel:+44-114-697-1778\"> +44 114 697 1778 </a>",
+      "evidence": {
+        "accessibleName": "+44 114 697 1778",
+        "linkHref": "tel:+44-114-697-1778",
+        "surroundingContext": "document.write(dictionary['hotline-gb']);Großbritannien +44 114 697 1778",
+        "ariaSubtree": "### Page\n- Page URL: https://www.getyourguide.com/\n- Page Title: GetYourGuide – Error\n- Console: 2 errors, 0 warnings\n### Snapshot\n```yaml\n- generic [ref=e1]:\n  - banner [ref=e2]:\n    - img [ref=e3]\n  - generic [ref=e6]:\n    - generic [ref=e7]:\n      - paragraph [ref=e8]:\n        - strong [ref=e9]: Hier ist leider ein Fehler aufgetreten. Wir sind in Kürze wieder für Sie da.\n      - paragraph [ref=e10]: Bei Fragen können Sie sich gerne an unsere Mitarbeiter im Kundenservice wenden.\n      - paragraph [ref=e11]: \"IP: 212.103.60.197\"\n      - paragraph [ref=e12]: \"Ray ID: 9fd4f7534d4898db\"\n    - list [ref=e13]:\n      - listitem [ref=e14]:\n        - strong [ref=e15]: USA\n        - link \"+1 855 957 1272\" [ref=e16] [cursor=pointer]:\n          - /url: tel:+1-855-957-1272\n        - text: (gebührenfrei)\n      - listitem [ref=e17]:\n        - strong [ref=e18]: Großbritannien\n        - link \"+44 114 697 1778\" [active] [ref=e19] [cursor=pointer]:\n          - /url: tel:+44-114-697-1778\n      - listitem [ref=e20]:\n        - strong [ref=e21]: Deutschland\n        - link \"+49 30 837 91488\" [ref=e22] [cursor=pointer]:\n          - /url: tel:+49-30-837-91488\n      - listitem [ref=e23]:\n        - strong [ref=e24]: Schweiz\n        - link \"+41 91 239 18 60\" [ref=e25] [cursor=pointer]:\n          - /url: tel:+41-91-239-18-603\n      - listitem [ref=e26]:\n        - text: 🇦🇺\n        - strong [ref=e27]: Australia\n        - link \"+61 3 6413 0103\" [ref=e28] [cursor=pointer]:\n          - /url: tel:+61-3-6413-0103\n      - listitem [ref=e29]:\n        - strong [ref=e30]: Italien\n        - link \"+39 06 9674 1658\" [ref=e31] [cursor=pointer]:\n          - /url: tel:+39-06-9674-1658\n      - listitem [ref=e32]:\n        - strong [ref=e33]: Spanien\n        - link \"+34 93 034 26 72\" [ref=e34] [cursor=pointer]:\n          - /url: tel:+34-93-034-26-72\n      - listitem [ref=e35]:\n        - strong [ref=e36]: Frankreich\n        - link \"+33 3 67 21 01 19\" [ref=e37] [cursor=pointer]:\n          - /url: tel:+33-3-67-21-01-19\n      - listitem [ref=e38]:\n        - text: 🌎\n        - strong [ref=e39]: International\n        - link \"+49 30 837 91488\" [ref=e40] [cursor=pointer]:\n          - /url: tel:+49-30-837-91488\n```"
+      },
+      "verdict": "pass",
+      "rationale": "The link's accessible name is a phone number (+44 114 697 1778) and the surrounding context clearly identifies it as the UK customer service hotline, with the country label 'Großbritannien' (Great Britain) immediately preceding it in a list of international contact numbers. The purpose is unambiguous.",
+      "confidence": "high"
+    },
+    {
+      "sc": "2.4.4",
+      "selector": "a[href=\"tel:+49-30-837-91488\"]",
+      "outerHTML": "<a href=\"tel:+49-30-837-91488\"> +49 30 837 91488 </a>",
+      "evidence": {
+        "accessibleName": "+49 30 837 91488",
+        "linkHref": "tel:+49-30-837-91488",
+        "surroundingContext": "document.write(dictionary['hotline-de']);Deutschland +49 30 837 91488",
+        "ariaSubtree": "### Page\n- Page URL: https://www.getyourguide.com/\n- Page Title: GetYourGuide – Error\n- Console: 2 errors, 0 warnings\n### Snapshot\n```yaml\n- generic [ref=e1]:\n  - banner [ref=e2]:\n    - img [ref=e3]\n  - generic [ref=e6]:\n    - generic [ref=e7]:\n      - paragraph [ref=e8]:\n        - strong [ref=e9]: Hier ist leider ein Fehler aufgetreten. Wir sind in Kürze wieder für Sie da.\n      - paragraph [ref=e10]: Bei Fragen können Sie sich gerne an unsere Mitarbeiter im Kundenservice wenden.\n      - paragraph [ref=e11]: \"IP: 212.103.60.197\"\n      - paragraph [ref=e12]: \"Ray ID: 9fd4f7534d4898db\"\n    - list [ref=e13]:\n      - listitem [ref=e14]:\n        - strong [ref=e15]: USA\n        - link \"+1 855 957 1272\" [ref=e16] [cursor=pointer]:\n          - /url: tel:+1-855-957-1272\n        - text: (gebührenfrei)\n      - listitem [ref=e17]:\n        - strong [ref=e18]: Großbritannien\n        - link \"+44 114 697 1778\" [active] [ref=e19] [cursor=pointer]:\n          - /url: tel:+44-114-697-1778\n      - listitem [ref=e20]:\n        - strong [ref=e21]: Deutschland\n        - link \"+49 30 837 91488\" [ref=e22] [cursor=pointer]:\n          - /url: tel:+49-30-837-91488\n      - listitem [ref=e23]:\n        - strong [ref=e24]: Schweiz\n        - link \"+41 91 239 18 60\" [ref=e25] [cursor=pointer]:\n          - /url: tel:+41-91-239-18-603\n      - listitem [ref=e26]:\n        - text: 🇦🇺\n        - strong [ref=e27]: Australia\n        - link \"+61 3 6413 0103\" [ref=e28] [cursor=pointer]:\n          - /url: tel:+61-3-6413-0103\n      - listitem [ref=e29]:\n        - strong [ref=e30]: Italien\n        - link \"+39 06 9674 1658\" [ref=e31] [cursor=pointer]:\n          - /url: tel:+39-06-9674-1658\n      - listitem [ref=e32]:\n        - strong [ref=e33]: Spanien\n        - link \"+34 93 034 26 72\" [ref=e34] [cursor=pointer]:\n          - /url: tel:+34-93-034-26-72\n      - listitem [ref=e35]:\n        - strong [ref=e36]: Frankreich\n        - link \"+33 3 67 21 01 19\" [ref=e37] [cursor=pointer]:\n          - /url: tel:+33-3-67-21-01-19\n      - listitem [ref=e38]:\n        - text: 🌎\n        - strong [ref=e39]: International\n        - link \"+49 30 837 91488\" [ref=e40] [cursor=pointer]:\n          - /url: tel:+49-30-837-91488\n```"
+      },
+      "verdict": "pass",
+      "rationale": "The link purpose is clear from the accessible name combined with surrounding context. The accessible name '+49 30 837 91488' is a phone number, and the surrounding context explicitly labels it as 'Deutschland' (Germany), making it unambiguous that this is a clickable phone number link for customer service contact in Germany.",
+      "confidence": "high"
+    },
+    {
+      "sc": "2.4.4",
+      "selector": "a[href=\"tel:+41-91-239-18-603\"]",
+      "outerHTML": "<a href=\"tel:+41-91-239-18-603\"> +41 91 239 18 60 </a>",
+      "evidence": {
+        "accessibleName": "+41 91 239 18 60",
+        "linkHref": "tel:+41-91-239-18-603",
+        "surroundingContext": "document.write(dictionary['hotline-ch']);Schweiz +41 91 239 18 60",
+        "ariaSubtree": "### Page\n- Page URL: https://www.getyourguide.com/\n- Page Title: GetYourGuide – Error\n- Console: 2 errors, 0 warnings\n### Snapshot\n```yaml\n- generic [ref=e1]:\n  - banner [ref=e2]:\n    - img [ref=e3]\n  - generic [ref=e6]:\n    - generic [ref=e7]:\n      - paragraph [ref=e8]:\n        - strong [ref=e9]: Hier ist leider ein Fehler aufgetreten. Wir sind in Kürze wieder für Sie da.\n      - paragraph [ref=e10]: Bei Fragen können Sie sich gerne an unsere Mitarbeiter im Kundenservice wenden.\n      - paragraph [ref=e11]: \"IP: 212.103.60.197\"\n      - paragraph [ref=e12]: \"Ray ID: 9fd4f7534d4898db\"\n    - list [ref=e13]:\n      - listitem [ref=e14]:\n        - strong [ref=e15]: USA\n        - link \"+1 855 957 1272\" [ref=e16] [cursor=pointer]:\n          - /url: tel:+1-855-957-1272\n        - text: (gebührenfrei)\n      - listitem [ref=e17]:\n        - strong [ref=e18]: Großbritannien\n        - link \"+44 114 697 1778\" [active] [ref=e19] [cursor=pointer]:\n          - /url: tel:+44-114-697-1778\n      - listitem [ref=e20]:\n        - strong [ref=e21]: Deutschland\n        - link \"+49 30 837 91488\" [ref=e22] [cursor=pointer]:\n          - /url: tel:+49-30-837-91488\n      - listitem [ref=e23]:\n        - strong [ref=e24]: Schweiz\n        - link \"+41 91 239 18 60\" [ref=e25] [cursor=pointer]:\n          - /url: tel:+41-91-239-18-603\n      - listitem [ref=e26]:\n        - text: 🇦🇺\n        - strong [ref=e27]: Australia\n        - link \"+61 3 6413 0103\" [ref=e28] [cursor=pointer]:\n          - /url: tel:+61-3-6413-0103\n      - listitem [ref=e29]:\n        - strong [ref=e30]: Italien\n        - link \"+39 06 9674 1658\" [ref=e31] [cursor=pointer]:\n          - /url: tel:+39-06-9674-1658\n      - listitem [ref=e32]:\n        - strong [ref=e33]: Spanien\n        - link \"+34 93 034 26 72\" [ref=e34] [cursor=pointer]:\n          - /url: tel:+34-93-034-26-72\n      - listitem [ref=e35]:\n        - strong [ref=e36]: Frankreich\n        - link \"+33 3 67 21 01 19\" [ref=e37] [cursor=pointer]:\n          - /url: tel:+33-3-67-21-01-19\n      - listitem [ref=e38]:\n        - text: 🌎\n        - strong [ref=e39]: International\n        - link \"+49 30 837 91488\" [ref=e40] [cursor=pointer]:\n          - /url: tel:+49-30-837-91488\n```"
+      },
+      "verdict": "pass",
+      "rationale": "The link purpose is clear from the accessible name combined with surrounding context. The accessible name '+41 91 239 18 60' is a phone number, and the surrounding context explicitly labels it as 'Schweiz' (Switzerland), making it unambiguous that this is a clickable phone number link for Swiss customer support. The tel: href confirms the action (initiating a phone call).",
+      "confidence": "high"
+    },
+    {
+      "sc": "2.4.4",
+      "selector": "a[href=\"tel:+61-3-6413-0103\"]",
+      "outerHTML": "<a href=\"tel:+61-3-6413-0103\"> +61 3 6413 0103 </a>",
+      "evidence": {
+        "accessibleName": "+61 3 6413 0103",
+        "linkHref": "tel:+61-3-6413-0103",
+        "surroundingContext": "document.write(dictionary['hotline-au']);Australia +61 3 6413 0103",
+        "ariaSubtree": "### Page\n- Page URL: https://www.getyourguide.com/\n- Page Title: GetYourGuide – Error\n- Console: 2 errors, 0 warnings\n### Snapshot\n```yaml\n- generic [ref=e1]:\n  - banner [ref=e2]:\n    - img [ref=e3]\n  - generic [ref=e6]:\n    - generic [ref=e7]:\n      - paragraph [ref=e8]:\n        - strong [ref=e9]: Hier ist leider ein Fehler aufgetreten. Wir sind in Kürze wieder für Sie da.\n      - paragraph [ref=e10]: Bei Fragen können Sie sich gerne an unsere Mitarbeiter im Kundenservice wenden.\n      - paragraph [ref=e11]: \"IP: 212.103.60.197\"\n      - paragraph [ref=e12]: \"Ray ID: 9fd4f7534d4898db\"\n    - list [ref=e13]:\n      - listitem [ref=e14]:\n        - strong [ref=e15]: USA\n        - link \"+1 855 957 1272\" [ref=e16] [cursor=pointer]:\n          - /url: tel:+1-855-957-1272\n        - text: (gebührenfrei)\n      - listitem [ref=e17]:\n        - strong [ref=e18]: Großbritannien\n        - link \"+44 114 697 1778\" [active] [ref=e19] [cursor=pointer]:\n          - /url: tel:+44-114-697-1778\n      - listitem [ref=e20]:\n        - strong [ref=e21]: Deutschland\n        - link \"+49 30 837 91488\" [ref=e22] [cursor=pointer]:\n          - /url: tel:+49-30-837-91488\n      - listitem [ref=e23]:\n        - strong [ref=e24]: Schweiz\n        - link \"+41 91 239 18 60\" [ref=e25] [cursor=pointer]:\n          - /url: tel:+41-91-239-18-603\n      - listitem [ref=e26]:\n        - text: 🇦🇺\n        - strong [ref=e27]: Australia\n        - link \"+61 3 6413 0103\" [ref=e28] [cursor=pointer]:\n          - /url: tel:+61-3-6413-0103\n      - listitem [ref=e29]:\n        - strong [ref=e30]: Italien\n        - link \"+39 06 9674 1658\" [ref=e31] [cursor=pointer]:\n          - /url: tel:+39-06-9674-1658\n      - listitem [ref=e32]:\n        - strong [ref=e33]: Spanien\n        - link \"+34 93 034 26 72\" [ref=e34] [cursor=pointer]:\n          - /url: tel:+34-93-034-26-72\n      - listitem [ref=e35]:\n        - strong [ref=e36]: Frankreich\n        - link \"+33 3 67 21 01 19\" [ref=e37] [cursor=pointer]:\n          - /url: tel:+33-3-67-21-01-19\n      - listitem [ref=e38]:\n        - text: 🌎\n        - strong [ref=e39]: International\n        - link \"+49 30 837 91488\" [ref=e40] [cursor=pointer]:\n          - /url: tel:+49-30-837-91488\n```"
+      },
+      "verdict": "pass",
+      "rationale": "The link purpose is clear from the accessible name combined with surrounding context. The accessible name '+61 3 6413 0103' is a phone number, and the surrounding context explicitly labels it as 'Australia' with a country flag emoji, making it unambiguous that this is a contact number for Australian customer service. The tel: protocol further confirms the action is to initiate a phone call.",
+      "confidence": "high"
+    },
+    {
+      "sc": "2.4.4",
+      "selector": "a[href=\"tel:+39-06-9674-1658\"]",
+      "outerHTML": "<a href=\"tel:+39-06-9674-1658\"> +39 06 9674 1658 </a>",
+      "evidence": {
+        "accessibleName": "+39 06 9674 1658",
+        "linkHref": "tel:+39-06-9674-1658",
+        "surroundingContext": "document.write(dictionary['hotline-it']);Italien +39 06 9674 1658",
+        "ariaSubtree": "### Page\n- Page URL: https://www.getyourguide.com/\n- Page Title: GetYourGuide – Error\n- Console: 2 errors, 0 warnings\n### Snapshot\n```yaml\n- generic [ref=e1]:\n  - banner [ref=e2]:\n    - img [ref=e3]\n  - generic [ref=e6]:\n    - generic [ref=e7]:\n      - paragraph [ref=e8]:\n        - strong [ref=e9]: Hier ist leider ein Fehler aufgetreten. Wir sind in Kürze wieder für Sie da.\n      - paragraph [ref=e10]: Bei Fragen können Sie sich gerne an unsere Mitarbeiter im Kundenservice wenden.\n      - paragraph [ref=e11]: \"IP: 212.103.60.197\"\n      - paragraph [ref=e12]: \"Ray ID: 9fd4f7534d4898db\"\n    - list [ref=e13]:\n      - listitem [ref=e14]:\n        - strong [ref=e15]: USA\n        - link \"+1 855 957 1272\" [ref=e16] [cursor=pointer]:\n          - /url: tel:+1-855-957-1272\n        - text: (gebührenfrei)\n      - listitem [ref=e17]:\n        - strong [ref=e18]: Großbritannien\n        - link \"+44 114 697 1778\" [active] [ref=e19] [cursor=pointer]:\n          - /url: tel:+44-114-697-1778\n      - listitem [ref=e20]:\n        - strong [ref=e21]: Deutschland\n        - link \"+49 30 837 91488\" [ref=e22] [cursor=pointer]:\n          - /url: tel:+49-30-837-91488\n      - listitem [ref=e23]:\n        - strong [ref=e24]: Schweiz\n        - link \"+41 91 239 18 60\" [ref=e25] [cursor=pointer]:\n          - /url: tel:+41-91-239-18-603\n      - listitem [ref=e26]:\n        - text: 🇦🇺\n        - strong [ref=e27]: Australia\n        - link \"+61 3 6413 0103\" [ref=e28] [cursor=pointer]:\n          - /url: tel:+61-3-6413-0103\n      - listitem [ref=e29]:\n        - strong [ref=e30]: Italien\n        - link \"+39 06 9674 1658\" [ref=e31] [cursor=pointer]:\n          - /url: tel:+39-06-9674-1658\n      - listitem [ref=e32]:\n        - strong [ref=e33]: Spanien\n        - link \"+34 93 034 26 72\" [ref=e34] [cursor=pointer]:\n          - /url: tel:+34-93-034-26-72\n      - listitem [ref=e35]:\n        - strong [ref=e36]: Frankreich\n        - link \"+33 3 67 21 01 19\" [ref=e37] [cursor=pointer]:\n          - /url: tel:+33-3-67-21-01-19\n      - listitem [ref=e38]:\n        - text: 🌎\n        - strong [ref=e39]: International\n        - link \"+49 30 837 91488\" [ref=e40] [cursor=pointer]:\n          - /url: tel:+49-30-837-91488\n```"
+      },
+      "verdict": "pass",
+      "rationale": "The link purpose is clear from the accessible name combined with surrounding context. The accessible name '+39 06 9674 1658' is a phone number, and the surrounding context explicitly labels it as 'Italien' (Italy), making it unambiguous that this is a telephone link to contact customer service in Italy.",
+      "confidence": "high"
+    },
+    {
+      "sc": "2.4.4",
+      "selector": "a[href=\"tel:+34-93-034-26-72\"]",
+      "outerHTML": "<a href=\"tel:+34-93-034-26-72\"> +34 93 034 26 72 </a>",
+      "evidence": {
+        "accessibleName": "+34 93 034 26 72",
+        "linkHref": "tel:+34-93-034-26-72",
+        "surroundingContext": "document.write(dictionary['hotline-es']);Spanien +34 93 034 26 72",
+        "ariaSubtree": "### Page\n- Page URL: https://www.getyourguide.com/\n- Page Title: GetYourGuide – Error\n- Console: 2 errors, 0 warnings\n### Snapshot\n```yaml\n- generic [ref=e1]:\n  - banner [ref=e2]:\n    - img [ref=e3]\n  - generic [ref=e6]:\n    - generic [ref=e7]:\n      - paragraph [ref=e8]:\n        - strong [ref=e9]: Hier ist leider ein Fehler aufgetreten. Wir sind in Kürze wieder für Sie da.\n      - paragraph [ref=e10]: Bei Fragen können Sie sich gerne an unsere Mitarbeiter im Kundenservice wenden.\n      - paragraph [ref=e11]: \"IP: 212.103.60.197\"\n      - paragraph [ref=e12]: \"Ray ID: 9fd4f7534d4898db\"\n    - list [ref=e13]:\n      - listitem [ref=e14]:\n        - strong [ref=e15]: USA\n        - link \"+1 855 957 1272\" [ref=e16] [cursor=pointer]:\n          - /url: tel:+1-855-957-1272\n        - text: (gebührenfrei)\n      - listitem [ref=e17]:\n        - strong [ref=e18]: Großbritannien\n        - link \"+44 114 697 1778\" [active] [ref=e19] [cursor=pointer]:\n          - /url: tel:+44-114-697-1778\n      - listitem [ref=e20]:\n        - strong [ref=e21]: Deutschland\n        - link \"+49 30 837 91488\" [ref=e22] [cursor=pointer]:\n          - /url: tel:+49-30-837-91488\n      - listitem [ref=e23]:\n        - strong [ref=e24]: Schweiz\n        - link \"+41 91 239 18 60\" [ref=e25] [cursor=pointer]:\n          - /url: tel:+41-91-239-18-603\n      - listitem [ref=e26]:\n        - text: 🇦🇺\n        - strong [ref=e27]: Australia\n        - link \"+61 3 6413 0103\" [ref=e28] [cursor=pointer]:\n          - /url: tel:+61-3-6413-0103\n      - listitem [ref=e29]:\n        - strong [ref=e30]: Italien\n        - link \"+39 06 9674 1658\" [ref=e31] [cursor=pointer]:\n          - /url: tel:+39-06-9674-1658\n      - listitem [ref=e32]:\n        - strong [ref=e33]: Spanien\n        - link \"+34 93 034 26 72\" [ref=e34] [cursor=pointer]:\n          - /url: tel:+34-93-034-26-72\n      - listitem [ref=e35]:\n        - strong [ref=e36]: Frankreich\n        - link \"+33 3 67 21 01 19\" [ref=e37] [cursor=pointer]:\n          - /url: tel:+33-3-67-21-01-19\n      - listitem [ref=e38]:\n        - text: 🌎\n        - strong [ref=e39]: International\n        - link \"+49 30 837 91488\" [ref=e40] [cursor=pointer]:\n          - /url: tel:+49-30-837-91488\n```"
+      },
+      "verdict": "pass",
+      "rationale": "The link purpose is clear from the accessible name combined with surrounding context. The accessible name is a phone number (+34 93 034 26 72), and the surrounding context explicitly labels it as 'Spanien' (Spain), making the purpose unambiguous: to call the Spanish customer service hotline. The href attribute (tel: protocol) further confirms this is a telephone link.",
+      "confidence": "high"
+    },
+    {
+      "sc": "2.4.4",
+      "selector": "a[href=\"tel:+33-3-67-21-01-19\"]",
+      "outerHTML": "<a href=\"tel:+33-3-67-21-01-19\"> +33 3 67 21 01 19 </a>",
+      "evidence": {
+        "accessibleName": "+33 3 67 21 01 19",
+        "linkHref": "tel:+33-3-67-21-01-19",
+        "surroundingContext": "document.write(dictionary['hotline-fr']);Frankreich +33 3 67 21 01 19",
+        "ariaSubtree": "### Page\n- Page URL: https://www.getyourguide.com/\n- Page Title: GetYourGuide – Error\n- Console: 2 errors, 0 warnings\n### Snapshot\n```yaml\n- generic [ref=e1]:\n  - banner [ref=e2]:\n    - img [ref=e3]\n  - generic [ref=e6]:\n    - generic [ref=e7]:\n      - paragraph [ref=e8]:\n        - strong [ref=e9]: Hier ist leider ein Fehler aufgetreten. Wir sind in Kürze wieder für Sie da.\n      - paragraph [ref=e10]: Bei Fragen können Sie sich gerne an unsere Mitarbeiter im Kundenservice wenden.\n      - paragraph [ref=e11]: \"IP: 212.103.60.197\"\n      - paragraph [ref=e12]: \"Ray ID: 9fd4f7534d4898db\"\n    - list [ref=e13]:\n      - listitem [ref=e14]:\n        - strong [ref=e15]: USA\n        - link \"+1 855 957 1272\" [ref=e16] [cursor=pointer]:\n          - /url: tel:+1-855-957-1272\n        - text: (gebührenfrei)\n      - listitem [ref=e17]:\n        - strong [ref=e18]: Großbritannien\n        - link \"+44 114 697 1778\" [active] [ref=e19] [cursor=pointer]:\n          - /url: tel:+44-114-697-1778\n      - listitem [ref=e20]:\n        - strong [ref=e21]: Deutschland\n        - link \"+49 30 837 91488\" [ref=e22] [cursor=pointer]:\n          - /url: tel:+49-30-837-91488\n      - listitem [ref=e23]:\n        - strong [ref=e24]: Schweiz\n        - link \"+41 91 239 18 60\" [ref=e25] [cursor=pointer]:\n          - /url: tel:+41-91-239-18-603\n      - listitem [ref=e26]:\n        - text: 🇦🇺\n        - strong [ref=e27]: Australia\n        - link \"+61 3 6413 0103\" [ref=e28] [cursor=pointer]:\n          - /url: tel:+61-3-6413-0103\n      - listitem [ref=e29]:\n        - strong [ref=e30]: Italien\n        - link \"+39 06 9674 1658\" [ref=e31] [cursor=pointer]:\n          - /url: tel:+39-06-9674-1658\n      - listitem [ref=e32]:\n        - strong [ref=e33]: Spanien\n        - link \"+34 93 034 26 72\" [ref=e34] [cursor=pointer]:\n          - /url: tel:+34-93-034-26-72\n      - listitem [ref=e35]:\n        - strong [ref=e36]: Frankreich\n        - link \"+33 3 67 21 01 19\" [ref=e37] [cursor=pointer]:\n          - /url: tel:+33-3-67-21-01-19\n      - listitem [ref=e38]:\n        - text: 🌎\n        - strong [ref=e39]: International\n        - link \"+49 30 837 91488\" [ref=e40] [cursor=pointer]:\n          - /url: tel:+49-30-837-91488\n```"
+      },
+      "verdict": "pass",
+      "rationale": "The link purpose is clear from the accessible name combined with surrounding context. The accessible name is a phone number (+33 3 67 21 01 19), and the immediately preceding context identifies this as the 'Frankreich' (France) customer service hotline. The href confirms this is a telephone link (tel: protocol), making the purpose unambiguous: to call the French customer support line.",
+      "confidence": "high"
+    },
+    {
+      "sc": "2.4.4",
+      "selector": "a[href=\"tel:+49-30-837-91488\"]",
+      "outerHTML": "<a href=\"tel:+49-30-837-91488\"> +49 30 837 91488 </a>",
+      "evidence": {
+        "accessibleName": "+49 30 837 91488",
+        "linkHref": "tel:+49-30-837-91488",
+        "surroundingContext": "document.write(dictionary['hotline-intl']);International +49 30 837 91488",
+        "ariaSubtree": "### Page\n- Page URL: https://www.getyourguide.com/\n- Page Title: GetYourGuide – Error\n- Console: 2 errors, 0 warnings\n### Snapshot\n```yaml\n- generic [ref=e1]:\n  - banner [ref=e2]:\n    - img [ref=e3]\n  - generic [ref=e6]:\n    - generic [ref=e7]:\n      - paragraph [ref=e8]:\n        - strong [ref=e9]: Hier ist leider ein Fehler aufgetreten. Wir sind in Kürze wieder für Sie da.\n      - paragraph [ref=e10]: Bei Fragen können Sie sich gerne an unsere Mitarbeiter im Kundenservice wenden.\n      - paragraph [ref=e11]: \"IP: 212.103.60.197\"\n      - paragraph [ref=e12]: \"Ray ID: 9fd4f7534d4898db\"\n    - list [ref=e13]:\n      - listitem [ref=e14]:\n        - strong [ref=e15]: USA\n        - link \"+1 855 957 1272\" [ref=e16] [cursor=pointer]:\n          - /url: tel:+1-855-957-1272\n        - text: (gebührenfrei)\n      - listitem [ref=e17]:\n        - strong [ref=e18]: Großbritannien\n        - link \"+44 114 697 1778\" [active] [ref=e19] [cursor=pointer]:\n          - /url: tel:+44-114-697-1778\n      - listitem [ref=e20]:\n        - strong [ref=e21]: Deutschland\n        - link \"+49 30 837 91488\" [ref=e22] [cursor=pointer]:\n          - /url: tel:+49-30-837-91488\n      - listitem [ref=e23]:\n        - strong [ref=e24]: Schweiz\n        - link \"+41 91 239 18 60\" [ref=e25] [cursor=pointer]:\n          - /url: tel:+41-91-239-18-603\n      - listitem [ref=e26]:\n        - text: 🇦🇺\n        - strong [ref=e27]: Australia\n        - link \"+61 3 6413 0103\" [ref=e28] [cursor=pointer]:\n          - /url: tel:+61-3-6413-0103\n      - listitem [ref=e29]:\n        - strong [ref=e30]: Italien\n        - link \"+39 06 9674 1658\" [ref=e31] [cursor=pointer]:\n          - /url: tel:+39-06-9674-1658\n      - listitem [ref=e32]:\n        - strong [ref=e33]: Spanien\n        - link \"+34 93 034 26 72\" [ref=e34] [cursor=pointer]:\n          - /url: tel:+34-93-034-26-72\n      - listitem [ref=e35]:\n        - strong [ref=e36]: Frankreich\n        - link \"+33 3 67 21 01 19\" [ref=e37] [cursor=pointer]:\n          - /url: tel:+33-3-67-21-01-19\n      - listitem [ref=e38]:\n        - text: 🌎\n        - strong [ref=e39]: International\n        - link \"+49 30 837 91488\" [ref=e40] [cursor=pointer]:\n          - /url: tel:+49-30-837-91488\n```"
+      },
+      "verdict": "pass",
+      "rationale": "The link purpose is clear from the accessible name combined with surrounding context. The accessible name '+49 30 837 91488' is a phone number, and the surrounding context explicitly labels it as 'International' (from the list item structure showing 'strong: International' immediately preceding the link). This makes it unambiguous that the link is for calling the international customer service hotline.",
+      "confidence": "high"
+    },
+    {
+      "sc": "3.1.2",
+      "selector": "p",
+      "outerHTML": "<p><script>document.write(dictionary['message']);</script>Bei Fragen können Sie sich gerne an unsere Mitarbeiter im Kundenservice wenden.</p>",
+      "evidence": {
+        "mode": "undeclared",
+        "pageLang": "",
+        "declaredLang": "",
+        "textContent": "Bei Fragen können Sie sich gerne an unsere Mitarbeiter im Kundenservice wenden.",
+        "elementTag": "p"
+      },
+      "verdict": "fail",
+      "rationale": "The text is a complete German sentence ('Bei Fragen können Sie sich gerne an unsere Mitarbeiter im Kundenservice wenden.') containing substantive content and meaningful phrases. The page has no declared primary language, so the absence of a [lang] attribute on this German-language paragraph is a failure of SC 3.1.2. This is not a proper name, loanword, technical term, or single word; it is a full clause conveying customer service contact instructions.",
+      "confidence": "high"
+    },
+    {
+      "sc": "3.1.2",
+      "selector": "p",
+      "outerHTML": "<p>\n\t\t\t\t\t<strong><script>document.write(dictionary['title']);</script>Hier ist leider ein Fehler aufgetreten. Wir sind in Kürze wieder für Sie da.</strong>\n\t\t\t\t</p>",
+      "evidence": {
+        "mode": "undeclared",
+        "pageLang": "",
+        "declaredLang": "",
+        "textContent": "Hier ist leider ein Fehler aufgetreten. Wir sind in Kürze wieder für Sie da.",
+        "elementTag": "p"
+      },
+      "verdict": "needs_review",
+      "rationale": "The page has no declared primary language (<html lang> is absent), making it impossible to definitively determine whether this German text represents a 'different language' from the page's primary language. The text itself is clearly German ('Hier ist leider ein Fehler aufgetreten. Wir sind in Kürze wieder für Sie da.' = 'An error has unfortunately occurred. We will be back for you shortly.'), and it is substantive content (a complete sentence conveying meaning). However, without a declared pageLang, the comparison required by MODE B cannot be reliably performed. If the page's intended primary language is German, this would be a pass; if it is any other language, this would be a fail.",
+      "confidence": "high"
+    },
+    {
+      "sc": "3.1.2",
+      "selector": "li.us",
+      "outerHTML": "<li class=\"us\"><script>document.write(dictionary['hotline-us']);</script><strong>USA</strong> <a href=\"tel:+1-855-957-1272\"> +1 855 957 1272 </a> (gebührenfrei)</li>",
+      "evidence": {
+        "mode": "undeclared",
+        "pageLang": "",
+        "declaredLang": "",
+        "textContent": "USA +1 855 957 1272 (gebührenfrei)",
+        "elementTag": "li"
+      },
+      "verdict": "needs_review",
+      "rationale": "The element contains 'USA' (a proper name/acronym), a phone number (language-neutral), and the German word 'gebührenfrei' (meaning 'toll-free'). Since the page has no declared primary language, it is unclear whether German is the expected language context. If the page is primarily German, 'gebührenfrei' is a loanword/common term in German contexts and would pass. If the page is primarily English or another language, 'gebührenfrei' would be a substantive German word requiring annotation. The ambiguity about page language intent prevents a confident pass or fail verdict.",
+      "confidence": "medium"
+    },
+    {
+      "sc": "3.1.2",
+      "selector": "li.gb",
+      "outerHTML": "<li class=\"gb\"><script>document.write(dictionary['hotline-gb']);</script><strong>Großbritannien</strong> <a href=\"tel:+44-114-697-1778\"> +44 114 697 1778 </a></li>",
+      "evidence": {
+        "mode": "undeclared",
+        "pageLang": "",
+        "declaredLang": "",
+        "textContent": "Großbritannien +44 114 697 1778",
+        "elementTag": "li"
+      },
+      "verdict": "pass",
+      "rationale": "The text contains 'Großbritannien' (a German proper noun for the place name 'Great Britain'), a phone number (+44 114 697 1778), and a country code. Place names are explicitly exempted from SC 3.1.2 annotation requirements per the normative exceptions. The phone number is language-neutral technical content. No substantive foreign-language phrase or sentence is present.",
+      "confidence": "high"
+    },
+    {
+      "sc": "3.1.2",
+      "selector": "li.intl",
+      "outerHTML": "<li class=\"intl\"><script>document.write(dictionary['hotline-intl']);</script><strong>International</strong> <a href=\"tel:+49-30-837-91488\"> +49 30 837 91488 </a></li>",
+      "evidence": {
+        "mode": "undeclared",
+        "pageLang": "",
+        "declaredLang": "",
+        "textContent": "International +49 30 837 91488",
+        "elementTag": "li"
+      },
+      "verdict": "pass",
+      "rationale": "The text 'International +49 30 837 91488' contains a label ('International'), a country code (+49 for Germany), and a phone number. These are language-neutral elements: the word 'International' is a loanword/common English term that has entered many languages' vernacular, and phone numbers with country codes are not substantive foreign-language content. No [lang] annotation is required.",
+      "confidence": "high"
+    },
+    {
+      "sc": "3.1.2",
+      "selector": "li.de",
+      "outerHTML": "<li class=\"de\"><script>document.write(dictionary['hotline-de']);</script><strong>Deutschland</strong> <a href=\"tel:+49-30-837-91488\"> +49 30 837 91488 </a></li>",
+      "evidence": {
+        "mode": "undeclared",
+        "pageLang": "",
+        "declaredLang": "",
+        "textContent": "Deutschland +49 30 837 91488",
+        "elementTag": "li"
+      },
+      "verdict": "pass",
+      "rationale": "The text 'Deutschland +49 30 837 91488' contains a proper name (Deutschland, the German name for Germany) and a phone number with country code. A place name is explicitly exempt under SC 3.1.2 normative exceptions, and a phone number is language-neutral technical content. No substantive foreign-language phrase or sentence is present.",
+      "confidence": "high"
+    },
+    {
+      "sc": "3.1.2",
+      "selector": "li.fr",
+      "outerHTML": "<li class=\"fr\"><script>document.write(dictionary['hotline-fr']);</script><strong>Frankreich</strong> <a href=\"tel:+33-3-67-21-01-19\"> +33 3 67 21 01 19 </a></li>",
+      "evidence": {
+        "mode": "undeclared",
+        "pageLang": "",
+        "declaredLang": "",
+        "textContent": "Frankreich +33 3 67 21 01 19",
+        "elementTag": "li"
+      },
+      "verdict": "pass",
+      "rationale": "The text 'Frankreich +33 3 67 21 01 19' contains a proper name (Frankreich, the German/Dutch name for France) and a phone number. Proper names are explicitly exempted from SC 3.1.2 requirements. The phone number is language-neutral technical content. No substantive foreign-language phrase or sentence is present.",
+      "confidence": "high"
+    },
+    {
+      "sc": "3.1.2",
+      "selector": "li.au",
+      "outerHTML": "<li class=\"au\"><script>document.write(dictionary['hotline-au']);</script><strong>Australia</strong> <a href=\"tel:+61-3-6413-0103\"> +61 3 6413 0103 </a></li>",
+      "evidence": {
+        "mode": "undeclared",
+        "pageLang": "",
+        "declaredLang": "",
+        "textContent": "Australia +61 3 6413 0103",
+        "elementTag": "li"
+      },
+      "verdict": "pass",
+      "rationale": "The text 'Australia +61 3 6413 0103' consists of a proper place name ('Australia') and a telephone number with country code. Proper names are explicitly exempted from SC 3.1.2 requirements. The phone number is language-neutral technical content. No substantive foreign-language phrase or sentence is present.",
+      "confidence": "high"
+    }
+  ],
+  "summary": {
+    "total": 18,
+    "pass": 15,
+    "fail": 1,
+    "needs_review": 2
+  },
+  "axeSummary": {
+    "total": 0,
+    "fail": 0,
+    "incomplete": 0
+  }
+}

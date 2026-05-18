@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+            .card-header .btn-link { color: #2557a7; }
+            .violationCard, .healCard { width: 100%; margin-bottom: 1rem; }
+            .violationCardLine, .healCardLine {
+                display: flex; justify-content: space-between; align-items: start;
+                font-weight: 500; line-height: 1.2;
+            }
+            .card-title { font-size: 1.25rem; }
+            .violationCardTitleItem, .healCardTitleItem { font-size: 1rem; font-weight: 500; }
+            .card-text { font-size: 0.95rem; font-weight: 300; }
+            .learnMore { margin-bottom: 0.75rem; white-space: nowrap; color: #2557a7; }
+            .card-link { color: #2557a7; }
+            .violationNode, .healNode { font-size: 0.85rem; }
+            .wrapBreakWord { word-break: break-word; }
+            .summary { font-size: 1rem; }
+            .summarySection { margin: 0.5rem 0; }
+            .hljs { white-space: pre-wrap; width: 100%; background: #f0f0f0; }
+            p { margin-top: 0.3rem; }
+            li { line-height: 1.618; }
+            .badge-success { background-color: #28a745; color: #fff; }
+            .badge-warning { background-color: #ffc107; color: #212529; }
+            .badge-danger { background-color: #dc3545; color: #fff; }
+            .badge-info { background-color: #17a2b8; color: #fff; }
+            .badge-secondary { background-color: #6c757d; color: #fff; }
+            .badge { display: inline-block; padding: .25em .4em; font-size: 75%; font-weight: 700;
+                     line-height: 1; text-align: center; white-space: nowrap; vertical-align: baseline;
+                     border-radius: .25rem; }
+            .verdict-pass { border-left: 4px solid #28a745; }
+            .verdict-fail { border-left: 4px solid #dc3545; }
+            .verdict-needs_review { border-left: 4px solid #ffc107; }
+            .section-divider { border-top: 2px solid #dee2e6; margin: 2rem 0; }
+            .heal-summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; margin: 1rem 0; }
+            .heal-summary-card { text-align: center; padding: 1rem; border-radius: .5rem; }
+            .heal-summary-card .count { font-size: 2rem; font-weight: 700; }
+            .heal-summary-card .label { font-size: 0.85rem; color: #666; }
+            .bg-pass { background: #d4edda; }
+            .bg-fail { background: #f8d7da; }
+            .bg-review { background: #fff3cd; }
+            .bg-total { background: #e2e3e5; }
+            .finding-thumb { width: 120px; height: 80px; object-fit: cover; border: 1px solid #dee2e6; border-radius: .25rem; background: #f8f9fa; }
+            .thumb-cell { min-width: 140px; }
+            /* Respect the per-column widths set via <th style="width: ..."> so a
+               long selector/outerHTML can't blow out the table. */
+            .table { table-layout: fixed; width: 100%; }
+            /* Long unbroken strings (URLs, CSS selectors, full outerHTML) must
+               wrap inside their cell instead of forcing the column to grow. */
+            .table td, .table th { word-break: break-word; overflow-wrap: anywhere; }
+            .table pre { white-space: pre-wrap; word-break: break-word;
+                          overflow-wrap: anywhere; margin-bottom: .5rem; max-width: 100%; }
+            .table code { white-space: pre-wrap; word-break: break-word;
+                           overflow-wrap: anywhere; }
+        </style>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+              integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+                integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+                integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+                integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/stackoverflow-light.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+        <title>HEAL Accessibility Report</title>
+    </head>
+    <main role="main">
+        <div style="padding: 2rem">
+            <h1>HEAL Accessibility Report</h1>
+            <div class="summarySection">
+                <div class="summary">
+                    Page URL: <a href="https:&#x2F;&#x2F;ufind.univie.ac.at&#x2F;de&#x2F;course.html?lv&#x3D;052600&amp;semester&#x3D;2026S" target="_blank" class="card-link">https:&#x2F;&#x2F;ufind.univie.ac.at&#x2F;de&#x2F;course.html?lv&#x3D;052600&amp;semester&#x3D;2026S</a><br />
+                </div>
+                <div class="summary">
+                    Generated: 2026-05-17T19:10:11.307Z
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════ -->
+            <!--  SECTION 1: Axe-core Rule-Based Findings  -->
+            <!-- ══════════════════════════════════════════ -->
+            <div class="section-divider"></div>
+            <h2>Layer 1: axe-core Rule-Based Scan</h2>
+            <h3>axe-core found <span class="badge badge-success">0</span> violations</h3>
+
+
+
+            <!-- ════════════════════════════════════════ -->
+            <!--  SECTION 2: HEAL LLM Assessment         -->
+            <!-- ════════════════════════════════════════ -->
+            <div class="section-divider"></div>
+            <h2>Layer 2: HEAL LLM Semantic Assessment</h2>
+            <p class="text-muted">Evidence-based assessment using Claude — three-valued verdicts (pass / fail / needs_review)</p>
+
+            <div class="heal-summary-grid">
+                <div class="heal-summary-card bg-total">
+                    <div class="count">83</div>
+                    <div class="label">Total</div>
+                </div>
+                <div class="heal-summary-card bg-pass">
+                    <div class="count">78</div>
+                    <div class="label">Pass</div>
+                </div>
+                <div class="heal-summary-card bg-fail">
+                    <div class="count">5</div>
+                    <div class="label">Fail</div>
+                </div>
+                <div class="heal-summary-card bg-review">
+                    <div class="count">0</div>
+                    <div class="label">Needs Review</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 1.5rem">SC 1.1.1 &mdash; Non-text Content</h3>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 4%">#</th>
+                        <th style="width: 9%">Verdict</th>
+                        <th style="width: 9%">Confidence</th>
+                        <th style="width: 28%">Element</th>
+                        <th style="width: 14%">Thumbnail</th>
+                        <th style="width: 36%">Rationale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="verdict-pass">
+                        <th scope="row">1</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">body &gt; header:nth-of-type(1) &gt; div &gt; span:nth-of-type(3) &gt; a</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;link uspaceOutlineSupressInner&quot; href&#x3D;&quot;&#x2F;de&#x2F;index.html&quot; aria-label&#x3D;&quot;u:find&quot; role&#x3D;&quot;img&quot;&gt;&lt;span class&#x3D;&quot;u hidden&quot; aria-hidden&#x3D;&quot;true&quot;&gt;U:&lt;&#x2F;span&gt;&lt;span class&#x3D;&quot;find&quot; aria-hidden&#x3D;&quot;true&quot;&gt;FIND&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td class="thumb-cell">
+                            <span class="text-muted">No image</span>
+                        </td>
+                        <td>This is a functional element (a link with role&#x3D;&#39;img&#39; and href&#x3D;&#39;&#x2F;de&#x2F;index.html&#39;) with an accessible name &#39;u:find&#39; provided via aria-label. The name identifies the link&#39;s destination&#x2F;action (the homepage or main site entry point for the &#39;u:find&#39; brand&#x2F;site) and is concise and appropriate as a link label. The element is not marked decorative, and the aria-label provides a meaningful accessible name that serves the equivalent purpose of identifying where the link leads.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3 style="margin-top: 1.5rem">SC 2.1.2 &mdash; No Keyboard Trap</h3>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 4%">#</th>
+                        <th style="width: 9%">Verdict</th>
+                        <th style="width: 9%">Confidence</th>
+                        <th style="width: 38%">Element</th>
+                        <th style="width: 40%">Rationale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="verdict-pass">
+                        <th scope="row">1</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">(page-level — no single trap selector identified)</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">Tabs pressed: 50 &#x2F; 57 focusable on page, 50 unique selector(s) visited</code></pre>
+                        </td>
+                        <td>No keyboard trap was detected. The traversal visited 50 unique selectors out of 57 total focusable elements, indicating comprehensive keyboard navigation coverage. No element was reported as stuck, and the focus sequence progressed linearly through various links without cycling or becoming trapped.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3 style="margin-top: 1.5rem">SC 2.4.4 &mdash; Link Purpose (In Context)</h3>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 4%">#</th>
+                        <th style="width: 9%">Verdict</th>
+                        <th style="width: 9%">Confidence</th>
+                        <th style="width: 38%">Element</th>
+                        <th style="width: 40%">Rationale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="verdict-pass">
+                        <th scope="row">1</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;https:&#x2F;&#x2F;univie.ac.at&#x2F;&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;https:&#x2F;&#x2F;univie.ac.at&#x2F;&quot;&gt;Universität Wien&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Universität Wien&#39; (University of Vienna) clearly identifies the destination and purpose of the link. The accessible name alone is sufficiently descriptive—it names the institution being linked to, making the link purpose unambiguous.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">2</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;&#x2F;de&#x2F;index.html&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;link uspaceOutlineSupressInner&quot; href&#x3D;&quot;&#x2F;de&#x2F;index.html&quot; aria-label&#x3D;&quot;u:find&quot; role&#x3D;&quot;img&quot;&gt;&lt;span class&#x3D;&quot;u hidden&quot; aria-hidden&#x3D;&quot;true&quot;&gt;U:&lt;&#x2F;span&gt;&lt;span class&#x3D;&quot;find&quot; aria-hidden&#x3D;&quot;true&quot;&gt;FIND&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link has an accessible name &#39;u:find&#39; which clearly identifies the purpose—it navigates to the u:find homepage&#x2F;index. The surrounding context (&#39;Universität Wien | U:FIND | Menu&#39;) and the ARIA snapshot showing this is a navigation link to &#39;index.html&#39; within the u:find application further confirm the link&#39;s purpose is unambiguous.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">3</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;#ufind-navigation&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;#ufind-navigation&quot;&gt;Menu&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link has the accessible name &#39;Menu&#39; which, combined with its href pointing to &#39;#ufind-navigation&#39; (a navigation landmark), clearly indicates its purpose is to open or toggle the main navigation menu. The context confirms this is a navigation control for the u:find interface.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">4</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;index.html&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;index.html&quot;&gt;u:find&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;u:find&#39; is the name of the application&#x2F;system itself, which is clearly identifiable as a link to the home page or main section. The surrounding context &#39;Sie sind hier: u:find &gt; Lehrveranstaltung&#39; (breadcrumb navigation showing &#39;You are here: u:find &gt; Course&#39;) further confirms this is a breadcrumb home link. The purpose is clear from both the accessible name and context.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">5</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;vvz_sub.html?from&#x3D;1&amp;to&#x3D;2&amp;path&#x3D;S8505&amp;semester&#x3D;2026S&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;vvz_sub.html?from&#x3D;1&amp;amp;to&#x3D;2&amp;amp;path&#x3D;S8505&amp;amp;semester&#x3D;2026S&quot; class&#x3D;&quot;spl&quot;&gt;SPL 5 - Informatik und Wirtschaftsinformatik&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;SPL 5 - Informatik und Wirtschaftsinformatik&#39; clearly identifies the study program&#x2F;curriculum it links to. Combined with the surrounding context showing this is part of a course details page (052600 VU Signal and Image Processing), the purpose is unambiguous: navigating to the curriculum&#x2F;study program details for Computer Science and Business Informatics.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">6</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;https:&#x2F;&#x2F;moodle.univie.ac.at&#x2F;course&#x2F;view.php?id&#x3D;464411&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;https:&#x2F;&#x2F;moodle.univie.ac.at&#x2F;course&#x2F;view.php?id&#x3D;464411&quot; class&#x3D;&quot;platform link nicon-usse-slink&quot;&gt;Moodle&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Moodle&#39; clearly identifies the platform&#x2F;service it leads to. Combined with the surrounding context showing this is a course page (052600 VU Signal and Image Processing), the purpose is unambiguous: to access the Moodle learning management system for this specific course. The href confirms this leads to a Moodle course instance.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">7</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;https:&#x2F;&#x2F;uspace.univie.ac.at&#x2F;web&#x2F;gast&#x2F;rauminfo&#x2F;raumdetails&#x2F;-&#x2F;&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;link&quot; href&#x3D;&quot;https:&#x2F;&#x2F;uspace.univie.ac.at&#x2F;web&#x2F;gast&#x2F;rauminfo&#x2F;raumdetails&#x2F;-&#x2F;raumdetails&#x2F;3181&quot; target&#x3D;&quot;_blank&quot;&gt;&lt;span class&#x3D;&quot;nicon-usse-info&quot;&gt;&lt;&#x2F;span&gt;Hörsaal 16  Hauptgebäude, Hochparterre, Stiege 5&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link&#39;s accessible name &#39;Hörsaal 16 Hauptgebäude, Hochparterre, Stiege 5&#39; clearly identifies a specific lecture hall with its location details. Combined with the surrounding context showing this is a room location for the course &#39;Signal and Image Processing&#39;, the purpose is unambiguous: to view details about this specific lecture hall venue.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">8</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;person.html?id&#x3D;107192&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;name&quot; href&#x3D;&quot;person.html?id&#x3D;107192&quot;&gt;Moritz Grosse-Wentrup&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Moritz Grosse-Wentrup&#39; clearly identifies a person&#39;s name. Combined with the surrounding context showing this is under a &#39;Lehrende&#39; (Instructors) heading within a course page, the purpose is unambiguous: to view details about this instructor. The accessible name alone is sufficient to determine the link&#39;s purpose.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">9</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;person.html?id&#x3D;1004205&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;name&quot; href&#x3D;&quot;person.html?id&#x3D;1004205&quot;&gt;Manuel Eder&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Manuel Eder&#39; clearly identifies a person, and the surrounding context (&#39;052600 VU Signal and Image Processing (2026S) &gt; Manuel Eder&#39;) indicates this is an instructor or teaching staff member for the course. The purpose is to view details about this person in relation to the course.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">10</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;person.html?id&#x3D;1000956&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;name&quot; href&#x3D;&quot;person.html?id&#x3D;1000956&quot;&gt;Michal Robert Žák&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Michal Robert Žák&#39; clearly identifies a person&#39;s name, and the surrounding context (&#39;Lehrende&#39; &#x2F; Instructors section) makes it evident this is a link to an instructor&#39;s profile page. The purpose is unambiguous.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">11</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;https:&#x2F;&#x2F;m1-ufind.univie.ac.at&#x2F;courses&#x2F;052600&#x2F;2026S&#x2F;1&#x2F;ww.ics&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;https:&#x2F;&#x2F;m1-ufind.univie.ac.at&#x2F;courses&#x2F;052600&#x2F;2026S&#x2F;1&#x2F;ww.ics&quot; class&#x3D;&quot;group calendar link&quot;&gt;iCal&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;iCal&#39; clearly indicates the purpose: to download or access calendar data in iCalendar format. This is reinforced by the surrounding context which explicitly states &#39;Termine (iCal)&#39; (Dates&#x2F;Schedule in iCal format), making the link&#39;s purpose unambiguous. The href also confirms this is an .ics file download.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">12</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;vvz.html&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;vvz.html&quot;&gt;Vorlesungsverzeichnis&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Vorlesungsverzeichnis&#39; (Course Catalogue) clearly indicates the link&#39;s purpose—to access the course directory&#x2F;catalogue. This is a standard institutional term that is self-explanatory and unambiguous, requiring no additional context to understand the destination.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">13</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;vvz_sub.html?path&#x3D;333535&amp;semester&#x3D;2026S&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;link&quot; href&#x3D;&quot;vvz_sub.html?path&#x3D;333535&amp;amp;semester&#x3D;2026S&quot;&gt;Foundations&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Foundations&#39; is contextually clear within the breadcrumb navigation showing &#39;Foundations Master Data Science (645 [1]) ➡ Specialisation in Areas of Data Science&#39;. The surrounding context establishes that this is a specialisation pathway within a Master&#39;s program, making the link purpose understandable as navigating to foundational master&#39;s data science information.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">14</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;vvz_sub.html?path&#x3D;333521&amp;semester&#x3D;2026S&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;vvz_sub.html?path&#x3D;333521&amp;amp;semester&#x3D;2026S&quot; class&#x3D;&quot;category&quot;&gt;Master Data Science (645 [1])&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Master Data Science (645 [1])&#39; clearly identifies a specific academic program&#x2F;specialization. Combined with the surrounding context showing this is a breadcrumb navigation path within a course structure (&#39;Foundations Master Data Science (645 [1]) ➡ Specialisation in Areas of Data Science&#39;), the purpose is unambiguous: to navigate to details about the Master Data Science program.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">15</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;vvz_sub.html?path&#x3D;333524&amp;semester&#x3D;2026S&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;vvz_sub.html?path&#x3D;333524&amp;amp;semester&#x3D;2026S&quot; class&#x3D;&quot;subcategory&quot;&gt;Specialisation in Areas of Data Science (34 ECTS)&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link&#39;s accessible name &#39;Specialisation in Areas of Data Science (34 ECTS)&#39; clearly describes the destination and purpose. The surrounding context (breadcrumb trail showing it as a specialisation option within the Data Science Master program) further reinforces the link&#39;s purpose. The link text is specific and meaningful, not generic.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">16</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;vvz_sub.html?path&#x3D;333541&amp;semester&#x3D;2026S&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;link&quot; href&#x3D;&quot;vvz_sub.html?path&#x3D;333541&amp;amp;semester&#x3D;2026S&quot;&gt;Informatik Vertiefung (Cluster)&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The accessible name &#39;Informatik Vertiefung (Cluster)&#39; clearly identifies a specific academic program&#x2F;specialization cluster. The surrounding context confirms this is a link to a particular study program option within the course structure, making the link purpose unambiguous.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">17</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;vvz_sub.html?path&#x3D;333447&amp;semester&#x3D;2026S&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;vvz_sub.html?path&#x3D;333447&amp;amp;semester&#x3D;2026S&quot; class&#x3D;&quot;category&quot;&gt;Bachelor Wirtschaftsinformatik (526 [3] - Version 2016)&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link&#39;s accessible name &#39;Bachelor Wirtschaftsinformatik (526 [3] - Version 2016)&#39; clearly identifies a specific degree program. Combined with the surrounding context showing this is a curriculum&#x2F;program selection link within a course details page, the purpose is unambiguous: to navigate to or view details about this particular Bachelor program variant.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">18</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;vvz_sub.html?path&#x3D;333453&amp;semester&#x3D;2026S&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;vvz_sub.html?path&#x3D;333453&amp;amp;semester&#x3D;2026S&quot; class&#x3D;&quot;subcategory&quot;&gt;Wahlfach (15 ECTS)&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Wahlfach (15 ECTS)&#39; clearly indicates an elective course with credit value. Combined with the surrounding context showing the course code &#39;052600 VU Signal and Image Processing (2026S)&#39; and the degree program &#39;Bachelor Wirtschaftsinformatik&#39;, the purpose is unambiguous: navigating to details about this specific elective course option.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">19</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;vvz_sub.html?path&#x3D;333579&amp;semester&#x3D;2026S&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;link&quot; href&#x3D;&quot;vvz_sub.html?path&#x3D;333579&amp;amp;semester&#x3D;2026S&quot;&gt;Cluster Digital Media Technologies&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Cluster Digital Media Technologies&#39; is a specific, descriptive label that clearly identifies the destination. Combined with the surrounding context showing this is a course cluster within a Bachelor Informatik program, the purpose is unambiguous—to navigate to details about this specific digital media technologies cluster.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">20</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;vvz_sub.html?path&#x3D;333544&amp;semester&#x3D;2026S&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;vvz_sub.html?path&#x3D;333544&amp;amp;semester&#x3D;2026S&quot; class&#x3D;&quot;category&quot;&gt;Bachelor Informatik (521 [5] - Version 2022)&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Bachelor Informatik (521 [5] - Version 2022)&#39; clearly identifies a specific degree program. Combined with the surrounding context showing this is a curriculum&#x2F;cluster selection within a course page, the purpose is unambiguous: navigating to details about this particular Bachelor program variant.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">21</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;vvz_sub.html?path&#x3D;333550&amp;semester&#x3D;2026S&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;vvz_sub.html?path&#x3D;333550&amp;amp;semester&#x3D;2026S&quot; class&#x3D;&quot;subcategory&quot;&gt;Wahlfach (45 ECTS)&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Wahlfach (45 ECTS)&#39; clearly indicates an elective course option with credit value. Combined with the surrounding breadcrumb context showing this is within &#39;Cluster Digital Media Technologies Bachelor Informatik&#39;, the purpose is unambiguous: navigating to a subcategory page displaying elective courses worth 45 ECTS credits.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">22</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;vvz_sub.html?path&#x3D;333615&amp;semester&#x3D;2026S&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;link&quot; href&#x3D;&quot;vvz_sub.html?path&#x3D;333615&amp;amp;semester&#x3D;2026S&quot;&gt;Digital Media Technologies&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Digital Media Technologies&#39; is a specific, descriptive label that clearly identifies the destination. Combined with the surrounding context showing it is a specialization option (Ausprägungsfächer) within a Master&#39;s program in Computer Science, the purpose is unambiguous—to navigate to details about this specific specialization.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">23</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;vvz_sub.html?path&#x3D;333587&amp;semester&#x3D;2026S&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;vvz_sub.html?path&#x3D;333587&amp;amp;semester&#x3D;2026S&quot; class&#x3D;&quot;category&quot;&gt;Master Informatik (921 [2] - Version 2022)&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Master Informatik (921 [2] - Version 2022)&#39; clearly identifies a specific academic program. Combined with the surrounding context showing this is part of a breadcrumb navigation path (&#39;Ausprägungsfächer&#39; &#x2F; specialization courses), the purpose is unambiguous: to navigate to the Master Informatik program details or course listing for that program.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">24</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;vvz_sub.html?path&#x3D;333591&amp;semester&#x3D;2026S&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;vvz_sub.html?path&#x3D;333591&amp;amp;semester&#x3D;2026S&quot; class&#x3D;&quot;subcategory&quot;&gt;Ausprägungsfächer (54 ECTS)&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Ausprägungsfächer (54 ECTS)&#39; clearly indicates a specialization&#x2F;elective subject area with credit points. The surrounding context confirms this is a category within a Master&#39;s program (Digital Media Technologies Master Informatik), making the link&#39;s purpose unambiguous—to navigate to a subcategory of courses.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">25</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;vvz_sub.html?path&#x3D;333640&amp;semester&#x3D;2026S&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;link&quot; href&#x3D;&quot;vvz_sub.html?path&#x3D;333640&amp;amp;semester&#x3D;2026S&quot;&gt;DMT1 Digital Media Technologies 1 (6 ECTS)&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link&#39;s accessible name &#39;DMT1 Digital Media Technologies 1 (6 ECTS)&#39; clearly identifies a specific course with its code, full title, and credit value. The surrounding context confirms this is a course link within a curriculum pathway, making the purpose unambiguous.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">26</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;vvz_sub.html?path&#x3D;333630&amp;semester&#x3D;2026S&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;vvz_sub.html?path&#x3D;333630&amp;amp;semester&#x3D;2026S&quot; class&#x3D;&quot;category&quot;&gt;Master Medieninformatik (935 [3] - Version 2022)&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Master Medieninformatik (935 [3] - Version 2022)&#39; clearly identifies a specific academic program&#x2F;degree path. Combined with the surrounding context showing this is part of a course curriculum structure (DMT1 Digital Media Technologies 1 leading to Digital Media Technologies), the purpose is unambiguous: navigating to details about this specific Master&#39;s program version.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">27</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;vvz_sub.html?path&#x3D;333633&amp;semester&#x3D;2026S&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;vvz_sub.html?path&#x3D;333633&amp;amp;semester&#x3D;2026S&quot; class&#x3D;&quot;subcategory&quot;&gt;Digital Media Technologies (24 ECTS)&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Digital Media Technologies (24 ECTS)&#39; clearly identifies the destination as a specific academic program with its credit value. The surrounding context reinforces this by showing it as part of a breadcrumb navigation path within a course catalog, making the purpose unambiguous.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">28</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;&#x2F;de&#x2F;course.html?lv&#x3D;052600&amp;semester&#x3D;2026S&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;&#x2F;de&#x2F;course.html?lv&#x3D;052600&amp;amp;semester&#x3D;2026S&quot;&gt;Deutsch&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Deutsch&#39; clearly indicates a language selection function within the context of a university course page (u:find). The surrounding context &#39;Globale Navigation &amp; Eigenschaften: &gt; Deutsch&#39; confirms this is a language switcher in the global navigation, making the purpose unambiguous.</td>
+                    </tr>
+                    <tr class="verdict-fail">
+                        <th scope="row">29</th>
+                        <td>
+                            
+                            <span class="badge badge-danger">FAIL</span>
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;&#x2F;en&#x2F;course.html?lv&#x3D;052600&amp;semester&#x3D;2026S&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;&#x2F;en&#x2F;course.html?lv&#x3D;052600&amp;amp;semester&#x3D;2026S&quot;&gt;English&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;English&#39; is ambiguous and does not clearly indicate its purpose. While the surrounding context shows &#39;Globale Navigation &amp; Eigenschaften: &gt; English&#39;, this appears to be a language selector or navigation element, but the link&#39;s actual destination (a course page with specific parameters) is not discernible from the accessible name alone or the minimal context provided. The generic label &#39;English&#39; could refer to a language selection, a course language indicator, or navigation, making the link purpose unclear.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">30</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;https:&#x2F;&#x2F;studieren.univie.ac.at&#x2F;&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;icon-uni-studienpoint&quot; href&#x3D;&quot;https:&#x2F;&#x2F;studieren.univie.ac.at&#x2F;&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener&quot;&gt;Studieren an der Universität Wien&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The accessible name &#39;Studieren an der Universität Wien&#39; (Study at the University of Vienna) clearly describes the link&#39;s purpose. The text is descriptive and specific, indicating the link leads to information about studying at the University of Vienna. The surrounding context in the global navigation reinforces this purpose.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">31</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;https:&#x2F;&#x2F;uspace.univie.ac.at&#x2F;de&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;icon-uni-uspace&quot; href&#x3D;&quot;https:&#x2F;&#x2F;uspace.univie.ac.at&#x2F;de&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener&quot;&gt;U:SPACE - das Portal für Studierende&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link has a clear and descriptive accessible name &#39;U:SPACE - das Portal für Studierende&#39; (U:SPACE - the portal for students) that explicitly states both the name of the service and its purpose. The purpose is unambiguous from the accessible name alone, requiring no reliance on surrounding context.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">32</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;https:&#x2F;&#x2F;bibliothek.univie.ac.at&#x2F;&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;icon-uni-biblio&quot; href&#x3D;&quot;https:&#x2F;&#x2F;bibliothek.univie.ac.at&#x2F;&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener&quot;&gt;Bibliotheksservices&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The accessible name &#39;Bibliotheksservices&#39; (Library Services) clearly indicates the link&#39;s purpose—to access library services at the University of Vienna. The surrounding context confirms this is part of global navigation, and the href to the university library domain further supports the clear purpose.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">33</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;https:&#x2F;&#x2F;moodle.univie.ac.at&#x2F;&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;icon-uni-lesung&quot; href&#x3D;&quot;https:&#x2F;&#x2F;moodle.univie.ac.at&#x2F;&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener&quot;&gt;Moodle (E-Learning)&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link has a clear accessible name &#39;Moodle (E-Learning)&#39; that explicitly identifies the destination and purpose. The surrounding context confirms this is a navigation link to the university&#39;s e-learning platform. The purpose is unambiguous from the accessible name alone.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">34</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;https:&#x2F;&#x2F;www.univie.ac.at&#x2F;ueber-uns&#x2F;leitung-organisation&#x2F;faku&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;icon-uni-fakultaeten&quot; href&#x3D;&quot;https:&#x2F;&#x2F;www.univie.ac.at&#x2F;ueber-uns&#x2F;leitung-organisation&#x2F;fakultaeten-zentren&#x2F;&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener&quot;&gt;Fakultäten &amp;amp; Zentren&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Fakultäten &amp; Zentren&#39; (Faculties &amp; Centers) clearly describes the destination and purpose of the link. The accessible name is specific and meaningful, indicating navigation to a page about the university&#39;s faculties and centers. The surrounding context confirms this is part of global navigation, further supporting clarity of purpose.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">35</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;https:&#x2F;&#x2F;www.univie.ac.at&#x2F;ZID&#x2F;webmail&#x2F;&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;icon-uni-webmail&quot; href&#x3D;&quot;https:&#x2F;&#x2F;www.univie.ac.at&#x2F;ZID&#x2F;webmail&#x2F;&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener&quot;&gt;Webmail&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Webmail&#39; clearly indicates the purpose—it leads to the university&#39;s webmail service. The accessible name is sufficiently descriptive on its own, and the surrounding context (&#39;Globale Navigation &amp; Eigenschaften: &gt; Webmail&#39;) reinforces this purpose. The href to the university&#39;s ZID webmail system further confirms the destination.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">36</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;https:&#x2F;&#x2F;intra.univie.ac.at&#x2F;&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;icon-uni-intranet&quot; href&#x3D;&quot;https:&#x2F;&#x2F;intra.univie.ac.at&#x2F;&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener&quot;&gt;Intranet für MitarbeiterInnen&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Intranet für MitarbeiterInnen&#39; (Intranet for Employees) clearly describes the purpose and destination of the link. The accessible name is explicit and unambiguous, indicating access to an employee intranet system. No additional context is needed to understand where the link leads.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">37</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;https:&#x2F;&#x2F;www.univie.ac.at&#x2F;ueber-uns&#x2F;weitere-informationen&#x2F;kon&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;icon-uni-kontakt&quot; href&#x3D;&quot;https:&#x2F;&#x2F;www.univie.ac.at&#x2F;ueber-uns&#x2F;weitere-informationen&#x2F;kontakt-services-von-a-z&#x2F;&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener&quot;&gt;Kontakt &amp;amp; Services von A-Z&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Kontakt &amp; Services von A-Z&#39; (Contact &amp; Services A-Z) clearly describes its purpose: to provide access to a comprehensive contact and services directory. The accessible name is explicit and self-explanatory, requiring no additional context to understand the link&#39;s destination and function.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">38</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;help.html&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;uspaceOutlineSupressInner&quot; href&#x3D;&quot;help.html&quot;&gt;Hilfe&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Hilfe&#39; (German for &#39;Help&#39;) clearly indicates the link&#39;s purpose—to access help&#x2F;support information. The surrounding context &#39;Lokale Navigation: &gt; Hilfe&#39; further confirms this is a navigation link to a help section. The accessible name alone is sufficiently descriptive.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">39</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;search.html?y_f&#x3D;%2Bfav&amp;filter&#x3D;all&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;uspaceOutlineSupressInner&quot; href&#x3D;&quot;search.html?y_f&#x3D;%2Bfav&amp;amp;filter&#x3D;all&quot;&gt;Merkliste&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Merkliste&#39; (German for &#39;watchlist&#39; or &#39;bookmarks&#39;) is a clear, specific term that indicates the link&#39;s purpose—to access a saved items or bookmarks list. This is further supported by the surrounding context showing &#39;Lokale Navigation: &gt; Merkliste&#39; and the URL parameter &#39;y_f&#x3D;%2Bfav&#39; (favorite filter), which confirms the link leads to a favorites&#x2F;bookmarks view. The purpose is unambiguous.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">40</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;vvz.html&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;vvz.html&quot;&gt;Vorlesungsverzeichnis&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Vorlesungsverzeichnis&#39; (Course Catalogue) is a clear, descriptive term that explicitly indicates the link&#39;s purpose—to access the course directory&#x2F;catalogue. The surrounding context as part of local navigation further confirms this is a navigation link to course listings. The purpose is unambiguous from the accessible name alone.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">41</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;pvz.html&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;pvz.html&quot;&gt;Personen-&#x2F;Organisationsverzeichnis&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Personen-&#x2F;Organisationsverzeichnis&#39; (Person&#x2F;Organization Directory) is a clear, descriptive label that explicitly states the purpose of the link. The accessible name alone is sufficient to understand that this link leads to a directory of persons and organizations, without requiring surrounding context.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">42</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;https:&#x2F;&#x2F;ufind.univie.ac.at&#x2F;de&#x2F;help.html#korrekturen&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;icon-usse-user&quot; href&#x3D;&quot;https:&#x2F;&#x2F;ufind.univie.ac.at&#x2F;de&#x2F;help.html#korrekturen&quot;&gt;Daten ändern&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The accessible name &#39;Daten ändern&#39; (Change data) clearly indicates the link&#39;s purpose—to modify or change data. This is further reinforced by the surrounding context showing it as part of local navigation (&#39;Lokale Navigation: &gt; Daten ändern&#39;). The link purpose is unambiguous and understandable from the accessible name alone.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">43</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;https:&#x2F;&#x2F;servicedesk.univie.ac.at&#x2F;servicedesk&#x2F;customer&#x2F;portal&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a class&#x3D;&quot;icon-usse-comment&quot; href&#x3D;&quot;https:&#x2F;&#x2F;servicedesk.univie.ac.at&#x2F;servicedesk&#x2F;customer&#x2F;portal&#x2F;2&#x2F;create&#x2F;189&quot; target&#x3D;&quot;_blank&quot;&gt;Kommentar&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Kommentar&#39; (Comment) clearly indicates the purpose of the link - to add or view a comment. This is further supported by the surrounding context showing &#39;Lokale Navigation: &gt; Kommentar&#39; and the URL structure indicating a service desk portal for creating&#x2F;managing comments. The accessible name alone is sufficiently clear.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">44</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;https:&#x2F;&#x2F;www.facebook.com&#x2F;univienna&#x2F;?key&#x3D;quicklink&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;https:&#x2F;&#x2F;www.facebook.com&#x2F;univienna&#x2F;?key&#x3D;quicklink&quot; target&#x3D;&quot;_blank&quot; title&#x3D;&quot;Facebook&quot; aria-label&#x3D;&quot;Facebook&quot; rel&#x3D;&quot;noopener&quot;&gt;&lt;span class&#x3D;&quot;icon-uni-facebook&quot;&gt;&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link has a clear accessible name &#39;Facebook&#39; that unambiguously identifies the destination and purpose. The href confirms it navigates to the University of Vienna&#39;s Facebook page. The context (social media section in footer) further reinforces this purpose. The link purpose is determinable from the accessible name alone.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">45</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;https:&#x2F;&#x2F;bsky.app&#x2F;profile&#x2F;univie.ac.at&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;https:&#x2F;&#x2F;bsky.app&#x2F;profile&#x2F;univie.ac.at&quot; target&#x3D;&quot;_blank&quot; title&#x3D;&quot;Bluesky&quot; aria-label&#x3D;&quot;Bluesky&quot; rel&#x3D;&quot;noopener&quot;&gt;&lt;span class&#x3D;&quot;icon-uni-bluesky&quot;&gt;&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link has a clear accessible name &#39;Bluesky&#39; that identifies the social media platform it links to. The href confirms it navigates to the University of Vienna&#39;s Bluesky profile (https:&#x2F;&#x2F;bsky.app&#x2F;profile&#x2F;univie.ac.at). The purpose is unambiguous—to access the institution&#39;s Bluesky social media account.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">46</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;univienna&#x2F;?d&#x3D;0&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;univienna&#x2F;?d&#x3D;0&quot; target&#x3D;&quot;_blank&quot; title&#x3D;&quot;YouTube&quot; aria-label&#x3D;&quot;YouTube&quot; rel&#x3D;&quot;noopener&quot;&gt;&lt;span class&#x3D;&quot;icon-uni-youtube&quot;&gt;&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link has a clear accessible name &#39;YouTube&#39; and the href confirms it navigates to the University of Vienna&#39;s YouTube channel (youtube.com&#x2F;univienna). The purpose is unambiguous—to access the institution&#39;s YouTube social media presence. The surrounding context showing &#39;Social Media&#39; further reinforces this purpose.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">47</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;https:&#x2F;&#x2F;www.instagram.com&#x2F;univienna&#x2F;?d&#x3D;0&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;https:&#x2F;&#x2F;www.instagram.com&#x2F;univienna&#x2F;?d&#x3D;0&quot; target&#x3D;&quot;_blank&quot; title&#x3D;&quot;Instagram&quot; aria-label&#x3D;&quot;Instagram&quot; rel&#x3D;&quot;noopener&quot;&gt;&lt;span class&#x3D;&quot;icon-uni-instagram&quot;&gt;&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link has a clear accessible name &#39;Instagram&#39; and the href confirms it navigates to the University of Vienna&#39;s Instagram profile. The purpose is unambiguous—to access the institution&#39;s Instagram social media account. The link is presented in a &#39;Social Media&#39; context section, further reinforcing its purpose.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">48</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;http:&#x2F;&#x2F;www.univie.ac.at&#x2F;impressum&#x2F;&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;http:&#x2F;&#x2F;www.univie.ac.at&#x2F;impressum&#x2F;&quot;&gt;Impressum&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Impressum&#39; clearly identifies its purpose—it is a standard German legal term referring to the legal notice&#x2F;imprint page required on websites. The accessible name alone is sufficient to understand the link&#39;s destination and function, and the surrounding footer context (alongside &#39;Barrierefreiheit&#39; and &#39;Datenschutzerklärung&#39;) further confirms this is a standard footer legal link.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">49</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;accessibility.html&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;accessibility.html&quot;&gt;Barrierefreiheit&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Barrierefreiheit&#39; (German for &#39;Accessibility&#39;) clearly indicates the link&#39;s purpose—to access accessibility information or a statement. The accessible name is self-explanatory and unambiguous, requiring no additional context to understand the destination.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">50</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;https:&#x2F;&#x2F;dsba.univie.ac.at&#x2F;datenschutzerklaerung&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a href&#x3D;&quot;https:&#x2F;&#x2F;dsba.univie.ac.at&#x2F;datenschutzerklaerung&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener&quot;&gt;Datenschutzerklärung&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The accessible name &#39;Datenschutzerklärung&#39; (Privacy Policy in German) is clear and self-descriptive. It explicitly indicates the link leads to a privacy&#x2F;data protection declaration. The surrounding context in the footer confirms this is a standard privacy policy link alongside other footer items like &#39;Impressum&#39; and &#39;Barrierefreiheit&#39;. The purpose is unambiguous from the accessible name alone.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">51</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">a[href&#x3D;&quot;javascript:window.print()&quot;]</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;a title&#x3D;&quot;Aktuelle Seite drucken&quot; href&#x3D;&quot;javascript:window.print()&quot;&gt;Druckversion&lt;&#x2F;a&gt;</code></pre>
+                        </td>
+                        <td>The link text &#39;Druckversion&#39; (Print version) clearly indicates the purpose is to print the current page. This is reinforced by the title attribute &#39;Aktuelle Seite drucken&#39; (Print current page) and the href &#39;javascript:window.print()&#39; which confirms the action. The purpose is unambiguous from the accessible name alone.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3 style="margin-top: 1.5rem">SC 3.1.2 &mdash; Language of Parts</h3>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 4%">#</th>
+                        <th style="width: 9%">Verdict</th>
+                        <th style="width: 9%">Confidence</th>
+                        <th style="width: 38%">Element</th>
+                        <th style="width: 40%">Rationale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="verdict-fail">
+                        <th scope="row">1</th>
+                        <td>
+                            
+                            <span class="badge badge-danger">FAIL</span>
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div.comment</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div class&#x3D;&quot;comment text&quot;&gt;Signals with temporal or spatial structure are ubiquitous. Whether they are 1D signals, as in audio or time-dependent measurement&#x2F;sensors, whether these are 2D photographs and LIDAR images or whether they are 3D medical volumes, climate models, or computational fluid studie</code></pre>
+                        </td>
+                        <td>The text is a substantive English-language passage comprising multiple complete sentences and clauses that convey meaningful content about signal processing and course topics. It is clearly in English, not German (the page primary language). The passage is not a proper name, loanword, technical term, or single word—it is a full descriptive paragraph with full sentences (&#39;Signals with temporal or spatial structure are ubiquitous...&#39;, &#39;In this course, we study...&#39;), which constitutes substantive foreign-language content requiring a [lang] attribute per SC 3.1.2.</td>
+                    </tr>
+                    <tr class="verdict-fail">
+                        <th scope="row">2</th>
+                        <td>
+                            
+                            <span class="badge badge-danger">FAIL</span>
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div.performance</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div class&#x3D;&quot;performance text&quot;&gt;* Two feedback sheets: 4%&lt;br&gt;* Midterm programming exam: 30%&lt;br&gt;* Final: 66%&lt;p&gt;&lt;&#x2F;p&gt;In addition, you can earn up to 10% of bonus points by answering questions on Moodle about the pre-recorded videos. These bonus points count towards the overall points independently of th</code></pre>
+                        </td>
+                        <td>The text is entirely in English, not German. It contains multiple substantive English sentences and clauses (&#39;Two feedback sheets: 4%&#39;, &#39;Midterm programming exam: 30%&#39;, &#39;Final: 66%&#39;, &#39;In addition, you can earn up to 10% of bonus points...&#39;, &#39;These bonus points count towards the overall points...&#39;, &#39;they can help you pass the course&#39;). This is meaningful English-language content that conveys course grading information and is not covered by the proper-name, loanword, technical-term, or single-word exceptions. SC 3.1.2 requires a [lang&#x3D;&quot;en&quot;] attribute on this element or an ancestor.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">3</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div.literature</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div class&#x3D;&quot;literature text&quot;&gt;1. Alan V. Oppenheim, Ronald W. Schafer, Discrete-Time Signal Processing, 3rd Edition, Pearson, 2010&lt;br&gt;2. Rafael C. Gonzales, Richard E. Woods Digital Image Processing 4th edition, Addison-Wesley, 2018.&lt;br&gt;3. Donald B. Percival, Andrew T. Walden, Spectral Analysis for P</code></pre>
+                        </td>
+                        <td>This is a bibliography listing English-language academic references. The content consists entirely of proper names (author names, book titles, publisher names) and publication metadata (edition numbers, years). Per SC 3.1.2 normative exceptions, proper names—including personal names, place names, and registered publisher&#x2F;company names—are exempt from language annotation requirements. The substantive bibliographic information (titles, publishers, dates) is presented as a reference list where such multilingual citations are standard practice and do not constitute a substantive foreign-language passage requiring annotation.</td>
+                    </tr>
+                    <tr class="verdict-fail">
+                        <th scope="row">4</th>
+                        <td>
+                            
+                            <span class="badge badge-danger">FAIL</span>
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div.preconditions</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div class&#x3D;&quot;preconditions text&quot;&gt;Teilnahmevorraussetzungen: StEOP, PR2, MG2, THI, MOD, ADS&lt;br&gt;Empfohlene Teilnahmevoraussetzung: NUM&lt;p&gt;&lt;&#x2F;p&gt;The grading scale for the course will be:&lt;br&gt;1: at least 87.5%&lt;br&gt;2: at least 75.0%&lt;br&gt;3: at least 62.5%&lt;br&gt;4: at least 50.0%&lt;p&gt;&lt;&#x2F;p&gt;In each exam, a minimum of 10%</code></pre>
+                        </td>
+                        <td>The element contains multiple substantive English-language sentences and clauses that convey meaning and are not covered by SC 3.1.2 exceptions. &#39;The grading scale for the course will be:&#39; is a complete English sentence introducing a grading rubric. &#39;In each exam, a minimum of 10% of the maximum reachable points is required to pass the course.&#39; is another complete English sentence. These are meaningful passages in English on a German-language page (pageLang&#x3D;&#39;de&#39;), presented without a [lang] attribute. While the opening German text and course codes (StEOP, PR2, etc.) are in the page language or are technical abbreviations, the English sentences constitute substantive foreign-language content requiring annotation per SC 3.1.2.</td>
+                    </tr>
+                    <tr class="verdict-fail">
+                        <th scope="row">5</th>
+                        <td>
+                            
+                            <span class="badge badge-danger">FAIL</span>
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div.examination</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div class&#x3D;&quot;examination text&quot;&gt;The major goals of this course include:&lt;br&gt;* understanding the mathematical foundations of signal processing&lt;br&gt;* being able to implement commonly used signal processing algorithms in Python&lt;br&gt;* applying signal processing algorithms to time-series and image analysis&lt;&#x2F;d</code></pre>
+                        </td>
+                        <td>The text is entirely in English, which is clearly different from the page primary language (German). It contains substantive, meaningful content: a full course description with multiple complete clauses and bullet points (&#39;understanding the mathematical foundations of signal processing&#39;, &#39;being able to implement commonly used signal processing algorithms in Python&#39;, &#39;applying signal processing algorithms to time-series and image analysis&#39;). This is not a proper name, loanword, technical term, or single word; it is a multi-sentence passage conveying course learning objectives. SC 3.1.2 requires a [lang&#x3D;&quot;en&quot;] attribute on this element or an ancestor, which is absent.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">6</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div&gt;&lt;div&gt;
+            &lt;ul class&#x3D;&quot;quicklinkslist&quot;&gt;
+              &lt;li&gt;&lt;a class&#x3D;&quot;icon-uni-studienpoint&quot; href&#x3D;&quot;https:&#x2F;&#x2F;studieren.univie.ac.at&#x2F;&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener&quot;&gt;Studieren an der Universität Wien&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+              &lt;li&gt;&lt;a class&#x3D;&quot;icon-uni-uspace&quot; href&#x3D;&quot;https:&#x2F;&#x2F;uspace.univie.ac.at&#x2F;de&quot; ta</code></pre>
+                        </td>
+                        <td>The text is entirely in German (pageLang&#x3D;&#39;de&#39;). All substantive content—&#39;Studieren an der Universität Wien&#39;, &#39;das Portal für Studierende&#39;, &#39;Bibliotheksservices&#39;, &#39;Fakultäten &amp; Zentren&#39;, &#39;Webmail&#39;, &#39;Intranet für MitarbeiterInnen&#39;, &#39;Kontakt &amp; Services von A-Z&#39;—is German. &#39;U:SPACE&#39; and &#39;Moodle&#39; are proper names (platform&#x2F;product names) and technical terms that do not require [lang] annotation under the normative exceptions. No substantive foreign-language content is present.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">7</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div.registrations</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div class&#x3D;&quot;registrations textinfo&quot;&gt;&lt;b&gt;Hinweis:&lt;&#x2F;b&gt; Ihr Anmeldezeitpunkt innerhalb der Frist hat keine Auswirkungen auf die Platzvergabe (kein &quot;first come, first served&quot;).&lt;&#x2F;div&gt;</code></pre>
+                        </td>
+                        <td>The text is entirely in German, matching the page primary language (de). The phrase &#39;first come, first served&#39; is a single English loanword&#x2F;idiom that has become part of the vernacular in German business and technical contexts, and it appears in quotation marks indicating it is being cited as a foreign term rather than used as substantive foreign-language content. The surrounding sentence is German and conveys the primary meaning. No [lang] annotation is required.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">8</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div.summary</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div class&#x3D;&quot;summary groups&quot;&gt;
+      &lt;div class&#x3D;&quot;wwevent&quot;&gt;
+        &lt;div class&#x3D;&quot;lvinfo&quot;&gt;
+          &lt;a href&#x3D;&quot;https:&#x2F;&#x2F;moodle.univie.ac.at&#x2F;course&#x2F;view.php?id&#x3D;464411&quot; class&#x3D;&quot;platform link nicon-usse-slink&quot;&gt;Moodle&lt;&#x2F;a&gt;
+          
+        &lt;&#x2F;div&gt;
+      
+  &lt;span class&#x3D;&quot;day-date-time&quot;&gt;Di 19.05. 13:15-14:45&lt;&#x2F;span</code></pre>
+                        </td>
+                        <td>The text is entirely in German or language-neutral content. &#39;Moodle&#39; is a product name (loanword&#x2F;technical term); &#39;Di&#39; is German abbreviation for Dienstag (Tuesday); the date, time, and location details (&#39;19.05.&#39;, &#39;13:15-14:45&#39;, &#39;Hörsaal 16&#39;, &#39;Hauptgebäude&#39;, &#39;Hochparterre&#39;, &#39;Stiege 5&#39;) are all German or language-neutral (numbers, abbreviations). No substantive foreign-language phrase or clause is present. The entire element is consistent with the page language (de).</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">9</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div.details</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div class&#x3D;&quot;details&quot;&gt;&lt;span class&#x3D;&quot;ects&quot;&gt;6.00&lt;&#x2F;span&gt; ECTS (&lt;span class&#x3D;&quot;sws&quot;&gt;4.00&lt;&#x2F;span&gt; &lt;abbr title&#x3D;&quot;Semesterwochenstunden&quot;&gt;SWS&lt;&#x2F;abbr&gt;), &lt;a href&#x3D;&quot;vvz_sub.html?from&#x3D;1&amp;amp;to&#x3D;2&amp;amp;path&#x3D;S8505&amp;amp;semester&#x3D;2026S&quot; class&#x3D;&quot;spl&quot;&gt;SPL 5 - Informatik und Wirtschaftsinformatik&lt;&#x2F;a&gt;&lt;&#x2F;div&gt;</code></pre>
+                        </td>
+                        <td>The text contains &#39;ECTS&#39; and &#39;SWS&#39; (both technical abbreviations&#x2F;acronyms used internationally in German academic contexts), &#39;SPL 5&#39; (a course code), and &#39;Informatik und Wirtschaftsinformatik&#39; (German words meaning &#39;Computer Science and Business Informatics&#39;). The entire phrase is in German or uses German-language technical terms and codes standard in German universities. No substantive foreign-language content in a different language than German is present; all meaningful words are German or language-neutral technical abbreviations.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">10</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div.details</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div class&#x3D;&quot;details&quot;&gt;&lt;em&gt;&lt;a href&#x3D;&quot;vvz_sub.html?path&#x3D;333630&amp;amp;semester&#x3D;2026S&quot; class&#x3D;&quot;category&quot;&gt;Master Medieninformatik (935 [3] - Version 2022)&lt;&#x2F;a&gt; &lt;span class&#x3D;&quot;arrow&quot;&gt;➡&lt;&#x2F;span&gt; &lt;a href&#x3D;&quot;vvz_sub.html?path&#x3D;333633&amp;amp;semester&#x3D;2026S&quot; class&#x3D;&quot;subcategory&quot;&gt;Digital Media Technologies (24 ECTS)&lt;&#x2F;a&gt;&lt;&#x2F;em&gt;&lt;&#x2F;d</code></pre>
+                        </td>
+                        <td>The text contains two program titles: &#39;Master Medieninformatik&#39; (German) and &#39;Digital Media Technologies&#39; (English). The English portion is a registered program&#x2F;degree name (a proper name in the SC 3.1.2 sense), not a substantive foreign-language phrase. The numeric identifiers and ECTS credit are language-neutral. Although the English title is present, it functions as a formal designation rather than meaningful English prose, and proper names are explicitly exempted from SC 3.1.2 annotation requirements.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">11</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">medium</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div.details</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div class&#x3D;&quot;details&quot;&gt;&lt;em&gt;&lt;a href&#x3D;&quot;vvz_sub.html?path&#x3D;333521&amp;amp;semester&#x3D;2026S&quot; class&#x3D;&quot;category&quot;&gt;Master Data Science (645 [1])&lt;&#x2F;a&gt; &lt;span class&#x3D;&quot;arrow&quot;&gt;➡&lt;&#x2F;span&gt; &lt;a href&#x3D;&quot;vvz_sub.html?path&#x3D;333524&amp;amp;semester&#x3D;2026S&quot; class&#x3D;&quot;subcategory&quot;&gt;Specialisation in Areas of Data Science (34 ECTS)&lt;&#x2F;a&gt;&lt;&#x2F;em&gt;&lt;&#x2F;div&gt;</code></pre>
+                        </td>
+                        <td>The text contains &#39;Master Data Science&#39; and &#39;Specialisation in Areas of Data Science&#39;, which are course&#x2F;program titles in English. However, these are descriptive academic program names rather than registered proper names of entities. The substantive content is minimal and consists primarily of a program title and ECTS credit notation. On a German-language page, English course titles are common loanwords&#x2F;technical terms in academic contexts and do not constitute substantive foreign-language content requiring annotation. The numbers and symbols (645, 34 ECTS, ➡) are language-neutral. The overall phrase does not form a meaningful English sentence or clause that conveys independent meaning separate from its function as a label.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">12</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div.details</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div class&#x3D;&quot;details&quot;&gt;&lt;em&gt;&lt;a href&#x3D;&quot;vvz_sub.html?path&#x3D;333447&amp;amp;semester&#x3D;2026S&quot; class&#x3D;&quot;category&quot;&gt;Bachelor Wirtschaftsinformatik (526 [3] - Version 2016)&lt;&#x2F;a&gt; &lt;span class&#x3D;&quot;arrow&quot;&gt;➡&lt;&#x2F;span&gt; &lt;a href&#x3D;&quot;vvz_sub.html?path&#x3D;333453&amp;amp;semester&#x3D;2026S&quot; class&#x3D;&quot;subcategory&quot;&gt;Wahlfach (15 ECTS)&lt;&#x2F;a&gt;&lt;&#x2F;em&gt;&lt;&#x2F;div&gt;</code></pre>
+                        </td>
+                        <td>The text is a German-language academic program descriptor. &#39;Bachelor Wirtschaftsinformatik&#39; is a registered degree program name (proper name of an educational offering), and &#39;Wahlfach&#39; and &#39;ECTS&#39; are standard German academic terminology. The numbers, brackets, and arrow are language-neutral. All substantive content is in German (the page language), and any non-German tokens (the degree title itself, which is a proper name) fall under the normative exception for proper names. No substantive foreign-language content requiring annotation is present.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">13</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div.version</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div class&#x3D;&quot;version&quot;&gt;&lt;em&gt;Letzte Änderung: &lt;span class&#x3D;&quot;time&quot;&gt;Mi 04.03.2026 14:26&lt;&#x2F;span&gt;&lt;&#x2F;em&gt;&lt;&#x2F;div&gt;</code></pre>
+                        </td>
+                        <td>The text &#39;Letzte Änderung: Wi 04.03.2026 14:26&#39; is entirely in German, matching the page primary language (de). It is a metadata timestamp label (&#39;Last change: Wed 04.03.2026 14:26&#39;) with no foreign-language content. No [lang] annotation is required.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">14</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div.details</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div class&#x3D;&quot;details&quot;&gt;&lt;em&gt;&lt;a href&#x3D;&quot;vvz_sub.html?path&#x3D;333587&amp;amp;semester&#x3D;2026S&quot; class&#x3D;&quot;category&quot;&gt;Master Informatik (921 [2] - Version 2022)&lt;&#x2F;a&gt; &lt;span class&#x3D;&quot;arrow&quot;&gt;➡&lt;&#x2F;span&gt; &lt;a href&#x3D;&quot;vvz_sub.html?path&#x3D;333591&amp;amp;semester&#x3D;2026S&quot; class&#x3D;&quot;subcategory&quot;&gt;Ausprägungsfächer (54 ECTS)&lt;&#x2F;a&gt;&lt;&#x2F;em&gt;&lt;&#x2F;div&gt;</code></pre>
+                        </td>
+                        <td>The text is primarily in German (&#39;Master Informatik&#39;, &#39;Ausprägungsfächer&#39;, &#39;ECTS&#39;). The non-German elements are: &#39;Master&#39; (a loanword&#x2F;technical term widely used in German academia), &#39;Informatik&#39; (German), numbers and codes (language-neutral), and &#39;ECTS&#39; (a technical acronym, language-neutral). The entire phrase is a course&#x2F;program title in German with standard academic terminology. No substantive foreign-language phrase or clause requiring annotation is present.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">15</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div.address</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div class&#x3D;&quot;address&quot;&gt;
+        &lt;address&gt;Universität Wien | Universitätsring 1 | 1010 Wien | &lt;abbr title&#x3D;&quot;Telefon&quot;&gt;T&lt;&#x2F;abbr&gt; +43-1-4277-0&lt;&#x2F;address&gt;
+      &lt;&#x2F;div&gt;</code></pre>
+                        </td>
+                        <td>The text contains a proper name (&#39;Universität Wien&#39;), a place name (&#39;Universitätsring 1&#39;, &#39;1010 Wien&#39;), a telephone number, and a separator. All substantive content is either a proper name (exempt under SC 3.1.2) or language-neutral (numbers, punctuation). There is no substantive foreign-language phrase or clause that requires annotation.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">16</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div.other</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div class&#x3D;&quot;other&quot;&gt;
+  &lt;a href&#x3D;&quot;http:&#x2F;&#x2F;www.univie.ac.at&#x2F;impressum&#x2F;&quot;&gt;Impressum&lt;&#x2F;a&gt; | &lt;a href&#x3D;&quot;accessibility.html&quot;&gt;Barrierefreiheit&lt;&#x2F;a&gt; | &lt;a href&#x3D;&quot;https:&#x2F;&#x2F;dsba.univie.ac.at&#x2F;datenschutzerklaerung&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener&quot;&gt;Datenschutzerklärung&lt;&#x2F;a&gt; | &lt;a title&#x3D;&quot;Aktuelle Seite drucken&quot; href&#x3D;&quot;javascrip</code></pre>
+                        </td>
+                        <td>The text consists of four German words&#x2F;phrases: &#39;Impressum&#39; (legal notice), &#39;Barrierefreiheit&#39; (accessibility), &#39;Datenschutzerklärung&#39; (privacy policy), and &#39;Druckversion&#39; (print version). All are in German, matching the page primary language (de). No foreign-language content is present, so no [lang] annotation is required.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">17</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div.details</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div class&#x3D;&quot;details&quot;&gt;&lt;em&gt;&lt;a href&#x3D;&quot;vvz_sub.html?path&#x3D;333544&amp;amp;semester&#x3D;2026S&quot; class&#x3D;&quot;category&quot;&gt;Bachelor Informatik (521 [5] - Version 2022)&lt;&#x2F;a&gt; &lt;span class&#x3D;&quot;arrow&quot;&gt;➡&lt;&#x2F;span&gt; &lt;a href&#x3D;&quot;vvz_sub.html?path&#x3D;333550&amp;amp;semester&#x3D;2026S&quot; class&#x3D;&quot;subcategory&quot;&gt;Wahlfach (45 ECTS)&lt;&#x2F;a&gt;&lt;&#x2F;em&gt;&lt;&#x2F;div&gt;</code></pre>
+                        </td>
+                        <td>The text is a program title and course descriptor in German. &#39;Bachelor Informatik&#39; is a German-language degree program name; &#39;Wahlfach&#39; is a German word meaning &#39;elective course&#39;. The numbers (521, 5, 45, ECTS) are language-neutral. Although &#39;ECTS&#39; is an English acronym, it is a widely-used technical standard term with no German equivalent and functions as a loanword in German academic contexts. The entire phrase is in German or language-neutral content; there is no substantive foreign-language passage requiring annotation.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">18</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div&gt;&lt;div&gt;
+            &lt;ul&gt;
+              &lt;li&gt;&lt;a href&#x3D;&quot;vvz.html&quot;&gt;Vorlesungsverzeichnis&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+              &lt;li&gt;&lt;a href&#x3D;&quot;pvz.html&quot;&gt;Personen-&#x2F;Organisationsverzeichnis&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+            &lt;&#x2F;ul&gt;
+          &lt;&#x2F;div&gt;&lt;&#x2F;div&gt;</code></pre>
+                        </td>
+                        <td>The text &#39;Vorlesungsverzeichnis Personen-&#x2F;Organisationsverzeichnis&#39; is entirely in German, matching the page primary language (de). Both words are German compound nouns (&#39;lecture directory&#39; and &#39;person&#x2F;organisation directory&#39;). Since the text is in the same language as pageLang, no [lang] annotation is required.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">19</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">li.event</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;li class&#x3D;&quot;event line past&quot;&gt;
+    &lt;span class&#x3D;&quot;mark&quot;&gt;&lt;&#x2F;span&gt;
+    &lt;span class&#x3D;&quot;day&quot;&gt;Mittwoch&lt;&#x2F;span&gt;
+    &lt;span class&#x3D;&quot;date&quot;&gt;13.05.&lt;&#x2F;span&gt;
+    &lt;span class&#x3D;&quot;time&quot;&gt;08:00 - 09:30&lt;&#x2F;span&gt;
+    &lt;span class&#x3D;&quot;room&quot;&gt;PC-Unterrichtsraum 2, Währinger Straße 29 1.OG&lt;br&gt;PC-Unterrichtsraum 3, Währinger Straße 29 1.OG&lt;b</code></pre>
+                        </td>
+                        <td>The text content is entirely in German (pageLang&#x3D;&#39;de&#39;). It contains a date, time, and location information: &#39;Mittwoch&#39; (Wednesday), times, and place names (&#39;PC-Unterrichtsraum&#39;, &#39;Währinger Straße&#39;). All substantive words are German. The street name &#39;Währinger Straße&#39; is a proper place name (Vienna street) and requires no annotation. No foreign-language substantive content is present.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">20</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div.title</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div class&#x3D;&quot;title&quot;&gt;&lt;a class&#x3D;&quot;link&quot; href&#x3D;&quot;vvz_sub.html?path&#x3D;333640&amp;amp;semester&#x3D;2026S&quot;&gt;DMT1 Digital Media Technologies 1 (6 ECTS)&lt;&#x2F;a&gt;&lt;&#x2F;div&gt;</code></pre>
+                        </td>
+                        <td>The text &#39;DMT1 Digital Media Technologies 1 (6 ECTS)&#39; is a course&#x2F;module title. &#39;DMT1&#39; is an acronym&#x2F;code identifier (language-neutral). &#39;Digital Media Technologies&#39; appears to be a registered program or course name (a proper name &#x2F; institutional designation), not a substantive English-language phrase requiring annotation. &#39;ECTS&#39; is a technical acronym (European Credit Transfer System) with no widely-used German equivalent. The numeric &#39;1&#39; and &#39;6&#39; are language-neutral. Together, these elements form a title&#x2F;identifier that falls under the proper-name and technical-term exceptions to SC 3.1.2, and no substantive English-language content requiring annotation is present.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">21</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div.immanent</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div class&#x3D;&quot;immanent&quot;&gt;Prüfungsimmanente Lehrveranstaltung&lt;&#x2F;div&gt;</code></pre>
+                        </td>
+                        <td>The text &#39;Prüfungsimmanente Lehrveranstaltung&#39; is in German, matching the page primary language (de). It is a descriptive academic term meaning &#39;examination-immanent course&#39; and requires no [lang] annotation.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">22</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">medium</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div.title</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div class&#x3D;&quot;title&quot;&gt;&lt;a class&#x3D;&quot;link&quot; href&#x3D;&quot;vvz_sub.html?path&#x3D;333579&amp;amp;semester&#x3D;2026S&quot;&gt;Cluster Digital Media Technologies&lt;&#x2F;a&gt;&lt;&#x2F;div&gt;</code></pre>
+                        </td>
+                        <td>The text &#39;Cluster Digital Media Technologies&#39; is a descriptive title or program name composed of English words, but it functions as a proper name or registered entity designation in this context. The term &#39;Cluster&#39; here appears to be part of a formal program&#x2F;initiative name rather than a common noun. Even if parsed as English words on a German page, the entire phrase is a single named entity (a program, department, or initiative name) and does not constitute substantive foreign-language content requiring annotation. It is not a full sentence or meaningful phrase conveying propositional meaning in English; it is a label&#x2F;title that has become part of the institutional nomenclature.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">23</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div.title</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div class&#x3D;&quot;title&quot;&gt;&lt;a class&#x3D;&quot;link&quot; href&#x3D;&quot;vvz_sub.html?path&#x3D;333541&amp;amp;semester&#x3D;2026S&quot;&gt;Informatik Vertiefung (Cluster)&lt;&#x2F;a&gt;&lt;&#x2F;div&gt;</code></pre>
+                        </td>
+                        <td>The text &#39;Informatik Vertiefung (Cluster)&#39; is entirely in German. &#39;Informatik&#39; (computer science) and &#39;Vertiefung&#39; (specialization&#x2F;deepening) are standard German words. The parenthetical &#39;(Cluster)&#39; contains the English word &#39;Cluster&#39;, but this is a single technical term that has become a loanword in German academic and business contexts, and is not substantive foreign-language content requiring annotation. The overall phrase is a German curriculum&#x2F;program title, not a proper name of a registered entity, and requires no [lang] annotation.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">24</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div.title</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div class&#x3D;&quot;title&quot;&gt;&lt;a class&#x3D;&quot;link&quot; href&#x3D;&quot;vvz_sub.html?path&#x3D;333615&amp;amp;semester&#x3D;2026S&quot;&gt;Digital Media Technologies&lt;&#x2F;a&gt;&lt;&#x2F;div&gt;</code></pre>
+                        </td>
+                        <td>The text &#39;Digital Media Technologies&#39; is a descriptive title or course&#x2F;program name composed of English words. However, it functions as a proper name or registered entity name (e.g., a department, program, or product name) in this context, which falls under the proper-name exception to SC 3.1.2. Even if treated as English loanwords or technical terminology on a German page, these are common terms that have become part of the vernacular in German-language technology and education contexts. The content is not a substantive foreign-language phrase conveying meaning independent of its naming function.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">25</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">div.titleblock</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;div class&#x3D;&quot;titleblock&quot;&gt;
+      &lt;span class&#x3D;&quot;uni uspaceOutline&quot;&gt;
+        &lt;a href&#x3D;&quot;https:&#x2F;&#x2F;univie.ac.at&#x2F;&quot;&gt;Universität Wien&lt;&#x2F;a&gt;
+      &lt;&#x2F;span&gt;
+      &lt;span class&#x3D;&quot;separator hidden&quot;&gt; | &lt;&#x2F;span&gt;
+      &lt;span class&#x3D;&quot;title&quot;&gt;
+        &lt;a class&#x3D;&quot;link uspaceOutlineSupressInner&quot; href&#x3D;&quot;&#x2F;de&#x2F;index.html&quot; aria-label&#x3D;&quot;u:</code></pre>
+                        </td>
+                        <td>The text &#39;Universität Wien | | Menu&#39; contains only German-language content and proper names. &#39;Universität Wien&#39; (University of Vienna) is a proper name — the registered name of an Austrian institution — and &#39;Menu&#39; is a single English word that functions as a UI label and has become a loanword in German web interfaces. No substantive foreign-language phrase or clause requiring annotation is present.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">26</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">h3</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;h3&gt;Termine &lt;span class&#x3D;&quot;group calendar decoration&quot;&gt; (&lt;&#x2F;span&gt;&lt;a href&#x3D;&quot;https:&#x2F;&#x2F;m1-ufind.univie.ac.at&#x2F;courses&#x2F;052600&#x2F;2026S&#x2F;1&#x2F;ww.ics&quot; class&#x3D;&quot;group calendar link&quot;&gt;iCal&lt;&#x2F;a&gt;&lt;span class&#x3D;&quot;group calendar decoration&quot;&gt;)&lt;&#x2F;span&gt; &lt;span class&#x3D;&quot;classes events help&quot;&gt; - nächster Termin ist mit N markiert&lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;</code></pre>
+                        </td>
+                        <td>The text &#39;Termine (iCal) - nächster Termin ist mit N markiert&#39; is entirely in German. &#39;Termine&#39; means &#39;appointments&#x2F;dates&#39;, &#39;nächster Termin&#39; means &#39;next appointment&#39;, and &#39;ist mit N markiert&#39; means &#39;is marked with N&#39;. The only non-German token is &#39;iCal&#39;, which is a technical term (a calendar file format standard) with no widely-used German equivalent and falls under the technical-term exception. Since the substantive content is in the page language (German), no [lang] annotation is required.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">27</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">h3.performance</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;h3 class&#x3D;&quot;performance heading&quot;&gt;Art der Leistungskontrolle und erlaubte Hilfsmittel&lt;&#x2F;h3&gt;</code></pre>
+                        </td>
+                        <td>The text &#39;Art der Leistungskontrolle und erlaubte Hilfsmittel&#39; is in German, which matches the page primary language (de). No [lang] annotation is required because the content is in the same language as pageLang.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">28</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">h3.comment</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;h3 class&#x3D;&quot;comment heading&quot;&gt;Ziele, Inhalte und Methode der Lehrveranstaltung&lt;&#x2F;h3&gt;</code></pre>
+                        </td>
+                        <td>The text &#39;Ziele, Inhalte und Methode der Lehrveranstaltung&#39; is entirely in German, matching the page primary language (de). No foreign-language content is present, so no [lang] annotation is required.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">29</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">h1.title</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;h1 class&#x3D;&quot;title&quot;&gt;&lt;span title&#x3D;&quot;merken&quot; class&#x3D;&quot;vault&quot; tabindex&#x3D;&quot;0&quot; data-target&#x3D;&quot;052600-1-2026S&quot;&gt;&lt;&#x2F;span&gt;&lt;span&gt;&lt;span class&#x3D;&quot;number&quot;&gt;052600&lt;&#x2F;span&gt; &lt;abbr class&#x3D;&quot;type&quot; title&#x3D;&quot;Vorlesung verbunden mit Übung&quot;&gt;VU&lt;&#x2F;abbr&gt; &lt;span class&#x3D;&quot;what&quot;&gt;Signal and Image Processing&lt;&#x2F;span&gt; (&lt;span class&#x3D;&quot;when&quot;&gt;2026S&lt;&#x2F;span&gt;)&lt;&#x2F;s</code></pre>
+                        </td>
+                        <td>The text consists of a course code (&#39;052600&#39;), a course title (&#39;Signal and Image Processing&#39;), and an academic term identifier (&#39;2026S&#39;). The course title is a descriptive academic module name in English, but it functions as a proper name &#x2F; registered identifier for the course offering. The entire string is a course designation, not substantive foreign-language prose. Even though &#39;Signal and Image Processing&#39; is English on a German page, it is a technical term and registered course title with no widely-used German equivalent in this institutional context, and falls under the technical-term and proper-name exceptions to SC 3.1.2.</td>
+                    </tr>
+                    <tr class="verdict-pass">
+                        <th scope="row">30</th>
+                        <td>
+                            <span class="badge badge-success">PASS</span>
+                            
+                            
+                        </td>
+                        <td><span class="badge badge-secondary">high</span></td>
+                        <td>
+                            <p class="mb-1"><strong>Element location</strong></p>
+                            <pre><code class="css text-wrap">h3.preconditions</code></pre>
+                            <p class="mb-1"><strong>Element source</strong></p>
+                            <pre><code class="html text-wrap">&lt;h3 class&#x3D;&quot;preconditions heading&quot;&gt;Mindestanforderungen und Beurteilungsmaßstab&lt;&#x2F;h3&gt;</code></pre>
+                        </td>
+                        <td>The text &#39;Mindestanforderungen und Beurteilungsmaßstab&#39; is in German, which matches the page primary language (de). No [lang] annotation is required because the content is in the same language as pageLang.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <script>hljs.initHighlightingOnLoad();</script>
+    </main>
+</html>
